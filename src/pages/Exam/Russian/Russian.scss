@@ -1,0 +1,88 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    .russian {
+        .header {
+            background-color: #561209;
+            color: #fff;
+            .container {
+                width: 90%;
+                margin: 0 auto;
+            }
+            #header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                height: 12vh;
+                .header__right {
+                    display: flex;
+                    gap: 20px;
+                    .name-user {
+                        font: 25px Arial, Helvetica, sans-serif;
+                    }
+                }
+            }
+
+        }
+        .middle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            padding: 20px 0;
+            background-color: #6c6c6c;
+            .mid {
+                display: flex;
+                justify-content: center;    
+                flex-direction: column;
+                align-items: center;
+                width: 80vw;
+                gap: 10px;
+                background: rgb(248, 247, 247);
+                border-radius: 10px;
+                box-shadow: 0 0 10px 2px rgba(100, 100, 100, .1);
+                overflow: hidden;
+                padding: 20px 20px;
+                .qns {
+                    margin: 10px;
+                }
+                .btn {
+                    border: 0;
+                    color: #000;
+                    font-size: 30px;
+                    width: 100%;
+                    max-width: 55vw;
+                    height: 40px;
+                    font-family: Verdana;
+                    font-weight: 400;
+                    line-height: 49px;
+                    letter-spacing: 0em;
+                    text-align: center;
+                    background-color: rgb(248, 247, 247);
+                    &:hover {
+                        width: 300px;
+                        height: 50px;
+                        border: 1px solid #000;
+                        cursor: pointer;
+                        filter: drop-shadow(0px 0px 33px #000);
+                        box-shadow: 0px 0px 10px 10px #000;
+                        border-radius: 10px;
+                    }
+                }
+            }
+        }
+        .footer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #a64437;
+            color: #fff ;
+            bottom: 0;
+            width: 100%;
+            height: 12vh;
+        }
+    }
+}

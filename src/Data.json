@@ -1,0 +1,22 @@
+{
+    "tr":{
+        "text":"Adınız:",
+        "footer":"© 2023 KIRGIZİSTAN-TÜRKİYE MANAS ÜNİVERSİTESİ",
+        "button":"Sonra"
+    },
+    "kg":{
+        "text":"Сиздин атыңыз:",
+        "footer":"© 2023 КЫРГЫЗ-ТҮРК МАНАС УНИВЕРСИТЕТИ",
+        "button":"Кийинки"
+    },
+    "ru":{
+        "text":"Ваше имя:",
+        "footer":"© 2023 КЫРГЫЗСКО-ТУРЕЦКИЙ УНИВЕРСИТЕТ МАНАС",
+        "button":"Далее"
+    },
+    "en":{
+        "text":"Your name:",
+        "footer":"© 2023 KYRGYZ-TURKISH MANAS UNIVERSITY",
+        "button":"Next"
+    }
+}
