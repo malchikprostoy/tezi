@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import "./Russian.scss";
 import logo from "./../../../assets/img/Manas_logo.png";
 import questionData from "./../../../questionData";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const Russian = (props) => {
+const Russian = ({userName}) => {
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -45,7 +45,7 @@ const Russian = (props) => {
             </a>
           </div>
           <div className="header__right">
-            <span className="name-user">{name}</span>
+            <span className="name-user">{userName}</span>
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@ import logo from '../../assets/img/Manas_logo.png'
 import './Lesson.scss'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-const Lesson = (props) => {
+const Lesson = ({userName}) => {
     const navigate = useNavigate();
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
@@ -23,10 +23,10 @@ const Lesson = (props) => {
         <div className="header">
             <div className="container" id="header">
                 <div className="header__left">
-                    <a href="#" onClick={handleLogoClick}><img src={logo} width={60} alt='Logo'/></a>
+                    <a onClick={handleLogoClick}><img src={logo} width={60} alt='Logo'/></a>
                 </div>
                 <div className="header__right">
-                    <span className="name-user">{name}</span>
+                    <span className="name-user">{userName}</span>
                 </div>
             </div>
         </div>  

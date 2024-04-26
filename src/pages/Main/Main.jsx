@@ -3,22 +3,18 @@ import logo from '../../assets/img/Manas_logo.png'
 import './Main.scss'
 import { useNavigate } from 'react-router-dom'
 import Translation from '../../Data.json'
-import Russian from '../Exam/Russian/Russian'
 
-const Main = () => {
-    const [name, setName] = useState('')
+const Main = ({setUserName}) => {
+    const [ name, setName] = useState('')
     const navigate = useNavigate();
     const [lang, setLang] = useState("tr")
     const [content, setContent] = useState({})
 
-    const handleInputChange = (e) => {
-        setName(e.target.value)
-    }
-
     const handleSubmit = (e) => {
-        e.preventDefault()
+        e.preventDefault();
+        setUserName(name);
         navigate(`/lesson?name=${name}`);
-    };
+    }
 
     useEffect(()=>{
         if(lang==="tr"){
@@ -52,9 +48,9 @@ const Main = () => {
             <form onSubmit={handleSubmit}>
                 <label htmlFor="name">  
                 {content.text}
-                    <input type="text" value={name} onChange={handleInputChange}/>
+                    <input type="text" name='name' value={name} onChange={(e) => setName(e.target.value)}/>
                 </label>
-                <button onClick={handleSubmit} type='submit'>{content.button}</button>
+                <button type='submit'>{content.button}</button>
             </form>
         </div>
         <footer class="footer">
@@ -62,7 +58,6 @@ const Main = () => {
                 <div class="lng-footer">{content.footer}</div>
             </div>
         </footer>
-        <Russian name={name} />
     </div>
   )
 }
