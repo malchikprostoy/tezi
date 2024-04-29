@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import "./Russian.scss";
 import logo from "./../../../assets/img/Manas_logo.png";
 import questionData from "./../../../questionData";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
-const Russian = ({userName}) => {
+const Russian = ({ userName }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -12,23 +12,26 @@ const Russian = ({userName}) => {
 
   const [answers, setAnswers] = useState({});
   const [showResult, setShowResult] = useState(false);
+  const [wrongAnswers, setWrongAnswers] = useState([]);
 
   const handleAnswerChange = (questionIndex, answer) => {
     setAnswers({ ...answers, [questionIndex]: answer });
+    const isCorrect = questionData[questionIndex].correctAnswer === answer;
+    if (!isCorrect) {
+      setWrongAnswers([...wrongAnswers, questionIndex]);
+    } else {
+      const filtered = wrongAnswers.filter((index) => index !== questionIndex);
+      setWrongAnswers(filtered);
+    }
   };
+
+  const score = Object.values(answers).filter(
+    (answer, index) => questionData[index].correctAnswer === answer
+  ).length;
+  const totalQuestions = questionData.length;
 
   const handleSubmit = () => {
     setShowResult(true);
-  };
-
-  const calculateScore = () => {
-    let score = 0;
-    questionData.forEach((question, index) => {
-      if (question.correctAnswer === answers[index]) {
-        score++;
-      }
-    });
-    return score;
   };
 
   const handleLogoClick = () => {
@@ -68,7 +71,13 @@ const Russian = ({userName}) => {
           <div>
             <h2>Ответьте на вопросы:</h2>
             {questionData.map((question, index) => (
-              <div key={index}>
+              <div
+                key={index}
+                style={{
+                  borderBottom:
+                    wrongAnswers.includes(index) ? "2px solid red" : "none",
+                }}
+              >
                 <p className="qns">
                   Вопрос {index + 1}: {question.question}
                 </p>
@@ -94,7 +103,7 @@ const Russian = ({userName}) => {
           <button onClick={handleSubmit}>Узнать результат</button>
           {showResult && (
             <p>
-              Ваш результат: {calculateScore()} из {questionData.length}
+              Ваш результат: {score} из {totalQuestions}
             </p>
           )}
         </div>
@@ -102,7 +111,7 @@ const Russian = ({userName}) => {
       <footer class="footer">
         <div class="container">
           <div class="lng-footer">
-            © 2023 KIRGIZİSTAN-TÜRKİYE MANAS ÜNİVERSİTESİ
+            © 2024 KIRGIZİSTAN-TÜRKİYE MANAS ÜNİVERSİTESİ
           </div>
         </div>
       </footer>
