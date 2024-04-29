@@ -71,13 +71,7 @@ const Russian = ({ userName }) => {
           <div>
             <h2>Ответьте на вопросы:</h2>
             {questionData.map((question, index) => (
-              <div
-                key={index}
-                style={{
-                  borderBottom:
-                    wrongAnswers.includes(index) ? "2px solid red" : "none",
-                }}
-              >
+              <div key={index}>
                 <p className="qns">
                   Вопрос {index + 1}: {question.question}
                 </p>

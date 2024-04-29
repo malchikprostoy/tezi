@@ -52,6 +52,10 @@
                 .qns {
                     margin: 10px;
                 }
+                input[type="radio"] { 
+                    cursor: pointer;
+                    background-color: #6c6c6c;
+                }
                 .btn {
                     border: 0;
                     color: #000;
