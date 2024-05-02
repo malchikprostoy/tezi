@@ -9,6 +9,7 @@ const Main = ({setUserName}) => {
     const navigate = useNavigate();
     const [lang, setLang] = useState("tr")
     const [content, setContent] = useState({})
+    
 
     const handleSubmit = (e) => {
         e.preventDefault();

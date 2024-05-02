@@ -3,6 +3,10 @@ import "./Russian.scss";
 import logo from "./../../../assets/img/Manas_logo.png";
 import questionData from "./../../../questionData";
 import { useNavigate, useLocation } from "react-router-dom";
+import { Typography, Box, Breadcrumbs } from "@mui/material";
+import { NavigateNext } from "@mui/icons-material";
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import { NavLink } from "react-router-dom";
 
 const Russian = ({ userName }) => {
   const navigate = useNavigate();
@@ -53,6 +57,25 @@ const Russian = ({ userName }) => {
         </div>
       </div>
       <div className="middle">
+        <div className="bcrumbs">
+          <Box m={2}>
+            <Breadcrumbs
+              aria-label="breadcrumb"
+              separator={<NavigateNext fontSize="large" color="#fff" />}
+            >
+              <NavLink to={"/"}>
+                <HomeRoundedIcon
+                  color="primary"
+                  sx={{ fontSize: 50, color: "#fff" }}
+                />
+              </NavLink>
+              <NavLink to={"/lesson"} style={{color: '#fff'}}>
+                Lesson
+              </NavLink>
+              <Typography color="#fff">Russian</Typography>
+            </Breadcrumbs>
+          </Box>
+        </div>
         <div className="mid">
           <h1>Моя семья</h1>
           <p>
