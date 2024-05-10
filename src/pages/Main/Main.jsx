@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import logo from '../../assets/img/Manas_logo.png'
 import './Main.scss'
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom'
 import Translation from '../../Data.json'
 
@@ -11,10 +12,30 @@ const Main = ({setUserName}) => {
     const [content, setContent] = useState({})
     
 
+    useEffect(() => {
+        const savedName = localStorage.getItem('userName');
+        if (savedName) {
+            setUserName(savedName);
+            setName(savedName)
+        }
+
+        const savedLang = localStorage.getItem('language');
+        if (savedLang) {
+            setLang(savedLang);
+        }
+    }, [])
+
     const handleSubmit = (e) => {
         e.preventDefault();
         setUserName(name);
+        localStorage.setItem('userName', name);
         navigate(`/lesson?name=${name}`);
+    }
+
+    const handleLangChange = (e) => {
+        const selectedLang = e.target.value;
+        setLang(selectedLang);
+        localStorage.setItem('language', selectedLang);
     }
 
     useEffect(()=>{
@@ -27,7 +48,7 @@ const Main = ({setUserName}) => {
         } else if(lang==="en") {
             setContent(Translation.en)
         }
-    })
+    }, [lang])
   return (
     <div className='main'>
         <div className="header">
@@ -36,7 +57,7 @@ const Main = ({setUserName}) => {
                     <a href="#"><img src={logo} width={60} alt='Logo'/></a>
                 </div>
                 <div className="header__right">
-                    <select value={lang} onChange={(e)=>{setLang(e.target.value)}} className="change-lang">
+                    <select value={lang} onChange={handleLangChange} className="change-lang">
                         <option value="tr" selected>TR</option>
                         <option value="kg">KG</option>
                         <option value="ru">RU</option>
@@ -54,8 +75,8 @@ const Main = ({setUserName}) => {
                 <button type='submit'>{content.button}</button>
             </form>
         </div>
-        <footer class="footer">
-            <div class="container">
+        <footer class="footer d-flex justify-content-center align-items-center fixed">
+            <div class="container d-flex justify-content-center align-items-center">
                 <div class="lng-footer">{content.footer}</div>
             </div>
         </footer>

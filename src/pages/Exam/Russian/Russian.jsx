@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Russian.scss";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from "./../../../assets/img/Manas_logo.png";
 import questionData from "./../../../questionData";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -8,11 +9,11 @@ import { NavigateNext } from "@mui/icons-material";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import { NavLink } from "react-router-dom";
 
-const Russian = ({ userName }) => {
+const Russian = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const name = searchParams.get("name");
+  const name = new URLSearchParams(location.search).get('name');
+  const userName = localStorage.getItem('userName');
 
   const [answers, setAnswers] = useState({});
   const [showResult, setShowResult] = useState(false);
@@ -47,7 +48,7 @@ const Russian = ({ userName }) => {
       <div className="header">
         <div className="container" id="header">
           <div className="header__left">
-            <a href="#" onClick={handleLogoClick}>
+            <a onClick={handleLogoClick}>
               <img src={logo} width={60} alt="Logo" />
             </a>
           </div>
@@ -117,7 +118,7 @@ const Russian = ({ userName }) => {
               </div>
             ))}
           </div>
-          <button onClick={handleSubmit}>Узнать результат</button>
+          <button className="btn btn-outline-danger btn-lg" onClick={handleSubmit}>Узнать результат</button>
           {showResult && (
             <p>
               Ваш результат: {score} из {totalQuestions}
@@ -126,7 +127,7 @@ const Russian = ({ userName }) => {
         </div>
       </div>
       <footer class="footer">
-        <div class="container">
+        <div class="container d-flex justify-content-center align-items-center flex-column">
           <div class="lng-footer">
             © 2024 KIRGIZİSTAN-TÜRKİYE MANAS ÜNİVERSİTESİ
           </div>
