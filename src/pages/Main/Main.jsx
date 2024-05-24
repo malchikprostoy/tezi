@@ -67,7 +67,7 @@ const Main = ({setUserName}) => {
             </div>
         </div>
         <div className="middle">
-            <form onSubmit={handleSubmit}>
+            <form className='form d-flex flex-column align-items-center justiyfy-content-center' onSubmit={handleSubmit}>
                 <label htmlFor="name">  
                 {content.text}
                     <input type="text" name='name' value={name} onChange={(e) => setName(e.target.value)}/>

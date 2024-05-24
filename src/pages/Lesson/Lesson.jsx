@@ -80,7 +80,7 @@ const Lesson = () => {
         </div>
       </div>
       <footer class="footer">
-        <div class="container d-flex justify-content-center align-items-center">
+        <div class="container d-flex justify-content-center align-items-center text-center">
           <div class="lng-footer">
             {content.footer}
           </div>

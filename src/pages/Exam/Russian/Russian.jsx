@@ -8,6 +8,7 @@ import { NavigateNext } from "@mui/icons-material";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import { NavLink } from "react-router-dom";
 import ruData from "../../../components/data/ru/dataru.json";
+import AudioPlayer from "../../../components/AudioPlayer/AudioPlayer"
 
 const Russian = () => {
   const navigate = useNavigate();
@@ -79,6 +80,7 @@ const Russian = () => {
               <span dangerouslySetInnerHTML={{ __html: content1.comment }} />
             </div>
           </div>
+          <AudioPlayer />
         </div>
       </div>
       <footer class="footer">

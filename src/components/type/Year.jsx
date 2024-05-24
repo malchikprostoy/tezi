@@ -61,7 +61,7 @@ const Year = () => {
         </div>
       </div>
       <footer class="footer">
-        <div class="container d-flex justify-content-center align-items-center flex-column">
+        <div class="container d-flex justify-content-center align-items-center flex-column text-center">
           <div class="lng-footer">
             © 2024 KIRGIZİSTAN-TÜRKİYE MANAS ÜNİVERSİTESİ
           </div>
