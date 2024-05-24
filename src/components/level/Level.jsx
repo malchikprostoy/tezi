@@ -1,29 +1,29 @@
-import React, { useEffect, useState } from "react";
-import "./Russian.scss";
+import React, { useState } from "react";
+import "./Level.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
-import logo from "./../../../assets/img/Manas_logo.png";
+import logo from "../../assets/img/Manas_logo.png";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Typography, Box, Breadcrumbs } from "@mui/material";
 import { NavigateNext } from "@mui/icons-material";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import { NavLink } from "react-router-dom";
-import ruData from "../../../components/data/ru/dataru.json";
 
-const Russian = () => {
+const Level = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const name = new URLSearchParams(location.search).get("name");
   const userName = localStorage.getItem("userName");
 
-  const content = ruData.content;
-  const content1 = ruData.content1;
-
   const handleLogoClick = () => {
     navigate("/");
   };
 
+  const handleA1 = () => {
+    navigate("/russian")
+  }
+
   return (
-    <div className="russian">
+    <div className="type">
       <div className="header">
         <div className="container" id="header">
           <div className="header__left">
@@ -52,33 +52,16 @@ const Russian = () => {
               <NavLink to={"/lesson"} style={{ color: "#fff" }}>
                 Lesson
               </NavLink>
-              <NavLink to={"/type"} style={{ color: "#fff" }}>
-                Type
-              </NavLink>
-              <NavLink to={"/level"} style={{ color: "#fff" }}>
-                Level
-              </NavLink>
-              <Typography color="#fff">Russian</Typography>
+              <Typography color="#fff">Level</Typography>
             </Breadcrumbs>
           </Box>
         </div>
-        <div className="mid align-items-start">
-          <div className="mid-content">
-            <h1>{content.title}</h1>
-            <p dangerouslySetInnerHTML={{ __html: content.text }} />
-            <div className="line"></div>
-            <div className="comment text-start">
-              <span dangerouslySetInnerHTML={{ __html: content.comment }} />
-            </div>
-          </div>
-          <div className="mid-content">
-            <h1>{content1.title}</h1>
-            <p dangerouslySetInnerHTML={{ __html: content1.text }} />
-            <div className="line"></div>
-            <div className="comment text-start">
-              <span dangerouslySetInnerHTML={{ __html: content1.comment }} />
-            </div>
-          </div>
+        <div className="mid">
+          <button className="btn btn-outline-danger btn-lg lng" onClick={handleA1}>А1</button>
+          <button className="btn btn-outline-danger btn-lg lng">А2</button>
+          <button className="btn btn-outline-danger btn-lg lng">B1</button>
+          <button className="btn btn-outline-danger btn-lg lng">B2</button>
+          <button className="btn btn-outline-danger btn-lg lng">C1</button>
         </div>
       </div>
       <footer class="footer">
@@ -92,4 +75,4 @@ const Russian = () => {
   );
 };
 
-export default Russian;
+export default Level;

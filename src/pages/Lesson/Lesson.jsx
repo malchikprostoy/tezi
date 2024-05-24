@@ -21,7 +21,7 @@ const Lesson = () => {
   };
 
   const handleRussianClick = () => {
-    navigate("/russian");
+    navigate("/type");
   };
 
   
