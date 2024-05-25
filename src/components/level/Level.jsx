@@ -1,22 +1,18 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import "./Level.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
-import logo from "../../assets/img/Manas_logo.png";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Typography, Box, Breadcrumbs } from "@mui/material";
 import { NavigateNext } from "@mui/icons-material";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import { NavLink } from "react-router-dom";
+import Footer from "../footer/Footer";
+import Header from "../header/Header";
+import { LanguageContext } from "../../LanguageContext";
 
 const Level = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const name = new URLSearchParams(location.search).get("name");
-  const userName = localStorage.getItem("userName");
-
-  const handleLogoClick = () => {
-    navigate("/");
-  };
+  const { content } = useContext(LanguageContext);
 
   const handleA1 = () => {
     navigate("/russian")
@@ -24,18 +20,7 @@ const Level = () => {
 
   return (
     <div className="type">
-      <div className="header">
-        <div className="container" id="header">
-          <div className="header__left">
-            <a onClick={handleLogoClick}>
-              <img src={logo} width={60} alt="Logo" />
-            </a>
-          </div>
-          <div className="header__right">
-            <span className="name-user">{userName}</span>
-          </div>
-        </div>
-      </div>
+      <Header/>
       <div className="middle">
         <div className="bcrumbs">
           <Box m={2}>
@@ -52,6 +37,9 @@ const Level = () => {
               <NavLink to={"/lesson"} style={{ color: "#fff" }}>
                 Lesson
               </NavLink>
+              <NavLink to={"/type"} style={{ color: "#fff" }}>
+                Year
+              </NavLink>
               <Typography color="#fff">Level</Typography>
             </Breadcrumbs>
           </Box>
@@ -64,13 +52,7 @@ const Level = () => {
           <button className="btn btn-outline-danger btn-lg lng">C1</button>
         </div>
       </div>
-      <footer class="footer">
-        <div class="container d-flex justify-content-center align-items-center flex-column">
-          <div class="lng-footer">
-            © 2024 KIRGIZİSTAN-TÜRKİYE MANAS ÜNİVERSİTESİ
-          </div>
-        </div>
-      </footer>
+      <Footer content={content}/>
     </div>
   );
 };

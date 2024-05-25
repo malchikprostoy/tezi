@@ -1,43 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import "./Russian.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
-import logo from "./../../../assets/img/Manas_logo.png";
-import { useNavigate, useLocation } from "react-router-dom";
 import { Typography, Box, Breadcrumbs } from "@mui/material";
 import { NavigateNext } from "@mui/icons-material";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import { NavLink } from "react-router-dom";
 import ruData from "../../../components/data/ru/dataru.json";
 import AudioPlayer from "../../../components/AudioPlayer/AudioPlayer"
+import Header from "../../../components/header/Header";
+import Footer from "../../../components/footer/Footer";
+import { LanguageContext } from "../../../LanguageContext";
 
 const Russian = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const name = new URLSearchParams(location.search).get("name");
-  const userName = localStorage.getItem("userName");
-
-  const content = ruData.content;
+  const { content } = useContext(LanguageContext);
   const content1 = ruData.content1;
+  const content2 = ruData.content2;
 
-  const handleLogoClick = () => {
-    navigate("/");
-  };
 
   return (
-    <div className="russian">
-      <div className="header">
-        <div className="container" id="header">
-          <div className="header__left">
-            <a onClick={handleLogoClick}>
-              <img src={logo} width={60} alt="Logo" />
-            </a>
-          </div>
-          <div className="header__right">
-            <span className="name-user">{userName}</span>
-          </div>
-        </div>
-      </div>
-      <div className="middle">
+    <div className="russian d-flex flex-column">
+      <Header/>
+      <div className="middle d-flex flex-column justify-content-center align-items-center">
         <div className="bcrumbs">
           <Box m={2}>
             <Breadcrumbs
@@ -59,19 +42,11 @@ const Russian = () => {
               <NavLink to={"/level"} style={{ color: "#fff" }}>
                 Level
               </NavLink>
-              <Typography color="#fff">Russian</Typography>
+              <Typography color="#fff">Exam</Typography>
             </Breadcrumbs>
           </Box>
         </div>
-        <div className="mid align-items-start">
-          <div className="mid-content">
-            <h1>{content.title}</h1>
-            <p dangerouslySetInnerHTML={{ __html: content.text }} />
-            <div className="line"></div>
-            <div className="comment text-start">
-              <span dangerouslySetInnerHTML={{ __html: content.comment }} />
-            </div>
-          </div>
+        <div className="mid d-flex flex-column justify-content-center align-items-start">
           <div className="mid-content">
             <h1>{content1.title}</h1>
             <p dangerouslySetInnerHTML={{ __html: content1.text }} />
@@ -80,16 +55,18 @@ const Russian = () => {
               <span dangerouslySetInnerHTML={{ __html: content1.comment }} />
             </div>
           </div>
+          <div className="mid-content">
+            <h1>{content2.title}</h1>
+            <p dangerouslySetInnerHTML={{ __html: content2.text }} />
+            <div className="line"></div>
+            <div className="comment text-start">
+              <span dangerouslySetInnerHTML={{ __html: content2.comment }} />
+            </div>
+          </div>
           <AudioPlayer />
         </div>
       </div>
-      <footer class="footer">
-        <div class="container d-flex justify-content-center align-items-center flex-column">
-          <div class="lng-footer">
-            © 2024 KIRGIZİSTAN-TÜRKİYE MANAS ÜNİVERSİTESİ
-          </div>
-        </div>
-      </footer>
+      <Footer content={content}/>
     </div>
   );
 };

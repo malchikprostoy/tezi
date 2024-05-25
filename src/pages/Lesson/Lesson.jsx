@@ -1,58 +1,26 @@
-import React, { useEffect, useState } from "react";
-import logo from "../../assets/img/Manas_logo.png";
+import React, { useContext } from "react";
 import "./Lesson.scss";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Typography, Box, Breadcrumbs } from "@mui/material";
 import { NavigateNext } from "@mui/icons-material";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import { NavLink } from "react-router-dom";
-import Translation from '../../Data.json'
+import Header from "../../components/header/Header";
+import Footer from "../../components/footer/Footer";
+import { LanguageContext } from "../../LanguageContext";
 
 const Lesson = () => {
+  const { content } = useContext(LanguageContext);
   const navigate = useNavigate();
-  const location = useLocation();
-  const name = new URLSearchParams(location.search).get('name');
-  const userName = localStorage.getItem('userName');
-  const [content, setContent] = useState({});
-
-  const handleLogoClick = () => {
-    navigate("/");
-  };
 
   const handleRussianClick = () => {
     navigate("/type");
   };
 
-  
-
-  useEffect(() => {
-    const savedLang = localStorage.getItem('language');
-    if (savedLang === 'tr') {
-        setContent(Translation.tr);
-    } else if (savedLang === 'kg') {
-        setContent(Translation.kg);
-    } else if (savedLang === 'ru') {
-        setContent(Translation.ru);
-    } else if (savedLang === 'en') {
-        setContent(Translation.en);
-    }
-}, []);
-
   return (
     <div className="lesson">
-      <div className="header">
-        <div className="container" id="header">
-          <div className="header__left">
-            <a onClick={handleLogoClick}>
-              <img src={logo} width={60} alt="Logo" />
-            </a>
-          </div>
-          <div className="header__right">
-            <span className="name-user">{userName}</span>
-          </div>
-        </div>
-      </div>
+      <Header />
       <div className="middle d-flex justify-content-center align-items-center flex-column">
         <div className="bcrumbs">
           <Box m={2}>
@@ -79,13 +47,7 @@ const Lesson = () => {
           <button className="btn btn-outline-danger btn-lg lng">English</button>
         </div>
       </div>
-      <footer class="footer">
-        <div class="container d-flex justify-content-center align-items-center text-center">
-          <div class="lng-footer">
-            {content.footer}
-          </div>
-        </div>
-      </footer>
+      <Footer content={content} />
     </div>
   );
 };
