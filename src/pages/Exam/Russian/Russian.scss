@@ -1,31 +1,59 @@
-* {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-  }
-  
-  .russian {
-    min-height: 100vh;
-    .middle {
-      flex-grow: 1;
-      width: 100%;
-      padding: 20px 0;
-      background-color: #6c6c6c;
-  
-      .mid {
-        width: 80%;
-        height: 100vh;
-        gap: 10px;
-        background: rgb(248, 247, 247);
-        border-radius: 10px;
-        box-shadow: 0 0 10px 2px rgba(100, 100, 100, 0.1);
-        padding: 20px;
-        margin: 20px auto;
-        .line {
-          border: 2px solid #000000;
-          width: 75vw;
+.russian {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  .middle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex-grow: 1;
+    width: 100%;
+    padding: 20px 0;
+    background-color: #6c6c6c;
+    overflow-y: auto;
+
+    .mid {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      width: 80%;
+      gap: 10px;
+      background: rgb(248, 247, 247);
+      border-radius: 10px;
+      box-shadow: 0 0 10px 2px rgba(100, 100, 100, 0.1);
+      overflow: hidden;
+      padding: 20px;
+      margin: 20px auto;
+      .questions-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+
+        .question {
+          flex: 0 0 calc(33.333% - 13.333px); // Три колонки на больших экранах
+
+          @media (max-width: 992px) {
+            // Две колонки на средних экранах
+            flex: 0 0 calc(50% - 10px);
+          }
+
+          @media (max-width: 576px) {
+            // Одна колонка на маленьких экранах
+            flex: 0 0 100%;
+          }
         }
+      }
+      .line {
+        border: 2px solid #000000;
+        width: 75vw;
+      }
+
+      @media screen and (max-width: 545px) {
+        width: 90%;
       }
     }
   }
-  
+}
