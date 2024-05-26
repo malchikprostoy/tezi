@@ -37,9 +37,9 @@ const Level = () => {
               <NavLink to={"/lesson"} style={{ color: "#fff" }}>
                 Lesson
               </NavLink>
-              <NavLink to={"/type"} style={{ color: "#fff" }}>
+              {/* <NavLink to={"/type"} style={{ color: "#fff" }}>
                 Year
-              </NavLink>
+              </NavLink> */}
               <Typography color="#fff">Level</Typography>
             </Breadcrumbs>
           </Box>

@@ -2,47 +2,50 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
   border-radius: 10px;
-  width: 100%;
-  max-width: 100%;
-  padding: 30px 0 10px;
+  width: 75vw;
+  max-width: 1600px; 
+  padding: 30px 20px 20px;
   background: #b3aaaa;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
   .controls {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 20px; /* Increase gap between controls */
+    width: 100%;
 
     .time {
-      width: 50px; 
+      width: 100px; 
       text-align: center;
     }
 
     .rewind {
       -webkit-appearance: none;
       appearance: none;
-      height: 8px;
+      height: 16px; 
       border-radius: 5px;
       background: #ddd;
       outline: none;
       opacity: 0.7;
       transition: opacity 0.2s;
-      width: 50vw;
-      max-width: 90%;
+      flex-grow: 1;
+      max-width: 100%;
 
       &::-webkit-slider-thumb {
         -webkit-appearance: none;
         appearance: none;
-        width: 20px;
-        height: 20px;
+        width: 30px; 
+        height: 30px; 
         border-radius: 50%;
         background: #727772;
         cursor: pointer;
       }
 
       &::-moz-range-thumb {
-        width: 20px;
-        height: 20px;
+        width: 40px; 
+        height: 40px; 
         border-radius: 50%;
         background: #99af9a;
         cursor: pointer;
@@ -53,16 +56,18 @@
       }
     }
   }
+
   .btn-voice {
     display: flex;
     flex-direction: row;
     align-items: center;
+    gap: 20px; 
 
     .voice {
       -webkit-appearance: none;
       appearance: none;
-      width: 100px;
-      height: 8px;
+      width: 300px; 
+      height: 16px; 
       border-radius: 5px;
       background: #ddd;
       outline: none;
@@ -72,16 +77,16 @@
       &::-webkit-slider-thumb {
         -webkit-appearance: none;
         appearance: none;
-        width: 20px;
-        height: 20px;
+        width: 30px; 
+        height: 30px; 
         border-radius: 50%;
         background: #727772;
         cursor: pointer;
       }
 
       &::-moz-range-thumb {
-        width: 20px;
-        height: 20px;
+        width: 40px; 
+        height: 40px; 
         border-radius: 50%;
         background: #99af9a;
         cursor: pointer;
@@ -92,15 +97,82 @@
       }
     }
   }
-  .btn {
+
+  .btn-p {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100vw;
+    width: 100%;
+    gap: 40px; 
   }
+
   button {
     outline: none;
     border: none;
     background-color: transparent;
+    cursor: pointer;
+  }
+
+  
+  @media (max-width: 768px) {
+    max-width: 90%; 
+    
+    .controls .rewind {
+      height: 12px; 
+      &::-webkit-slider-thumb, &::-moz-range-thumb {
+        width: 20px; 
+        height: 20px; 
+      }
+    }
+
+    .btn-voice .voice {
+      width: 160px; 
+      height: 12px; 
+      &::-webkit-slider-thumb, &::-moz-range-thumb {
+        width: 20px; 
+        height: 20px; 
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    max-width: 95%; 
+    
+    .controls .rewind {
+      height: 8px; 
+      &::-webkit-slider-thumb, &::-moz-range-thumb {
+        width: 15px; 
+        height: 15px; 
+      }
+    }
+
+    .btn-voice .voice {
+      width: 100px; 
+      height: 8px; 
+      &::-webkit-slider-thumb, &::-moz-range-thumb {
+        width: 15px; 
+        height: 15px; 
+      }
+    }
+  }
+  @media (max-width: 390px) {
+    max-width: 90%; 
+    
+    .controls .rewind {
+      height: 6px; 
+      &::-webkit-slider-thumb, &::-moz-range-thumb {
+        width: 10px; 
+        height: 10px; 
+      }
+    }
+
+    .btn-voice .voice {
+      width: 80px; 
+      height: 6px; 
+      &::-webkit-slider-thumb, &::-moz-range-thumb {
+        width: 10px; 
+        height: 10px; 
+      }
+    }
   }
 }

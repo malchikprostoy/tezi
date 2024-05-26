@@ -96,7 +96,7 @@ const AudioPlayer = () => {
             .padStart(2, "0")}
         </div>
       </div>
-      <div className="btn">
+      <div className="btn-p">
         <div></div>
         <div className="btn-play">
           <button onClick={handlePlayPause}>

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import logo from '../../assets/img/Manas_logo.png';
 import './Main.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -10,14 +10,6 @@ const Main = ({ setUserName }) => {
   const [name, setName] = useState('');
   const navigate = useNavigate();
   const { lang, content, changeLanguage } = useContext(LanguageContext);
-
-  useEffect(() => {
-    const savedName = localStorage.getItem('userName');
-    if (savedName) {
-      setUserName(savedName);
-      setName(savedName);
-    }
-  }, [setUserName]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -35,7 +27,7 @@ const Main = ({ setUserName }) => {
       <div className="header">
         <div className="container" id="header">
           <div className="header__left">
-            <a href="#"><img src={logo} width={60} alt='Logo'/></a>
+            <img src={logo} width={60} alt='Logo'/>
           </div>
           <div className="header__right">
             <select value={lang} onChange={handleLangChange} className="change-lang">
@@ -47,9 +39,9 @@ const Main = ({ setUserName }) => {
           </div>
         </div>
       </div>
-      <div className="middle">
+      <div className="middle d-flex justify-content-center align-items-center">
         <form className='form d-flex flex-column align-items-center justify-content-center' onSubmit={handleSubmit}>
-          <label htmlFor="name">  
+          <label className="d-flex flex-column" htmlFor="name">  
             {content.text}
             <input type="text" name='name' value={name} onChange={(e) => setName(e.target.value)} />
           </label>

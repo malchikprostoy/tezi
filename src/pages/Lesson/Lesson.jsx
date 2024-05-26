@@ -15,7 +15,7 @@ const Lesson = () => {
   const navigate = useNavigate();
 
   const handleRussianClick = () => {
-    navigate("/type");
+    navigate("/level");
   };
 
   return (
