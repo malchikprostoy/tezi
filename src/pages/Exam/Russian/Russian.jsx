@@ -513,8 +513,8 @@ const Russian = () => {
                                 className="form-check-input"
                                 type="radio"
                                 value={answer}
-                                checked={answers8[index] === answer}
-                                onChange={() => handleAnswer8(index, answer)}
+                                checked={answers9[index] === answer}
+                                onChange={() => handleAnswer9(index, answer)}
                               />
                               {answer}
                             </label>
@@ -539,8 +539,8 @@ const Russian = () => {
                                 className="form-check-input"
                                 type="radio"
                                 value={answer}
-                                checked={answers8[index] === answer}
-                                onChange={() => handleAnswer8(index, answer)}
+                                checked={answers10[index] === answer}
+                                onChange={() => handleAnswer10(index, answer)}
                               />
                               {answer}
                             </label>
@@ -565,8 +565,8 @@ const Russian = () => {
                                 className="form-check-input"
                                 type="radio"
                                 value={answer}
-                                checked={answers8[index] === answer}
-                                onChange={() => handleAnswer8(index, answer)}
+                                checked={answers11[index] === answer}
+                                onChange={() => handleAnswer11(index, answer)}
                               />
                               {answer}
                             </label>
@@ -600,8 +600,8 @@ const Russian = () => {
                                 className="form-check-input"
                                 type="radio"
                                 value={answer}
-                                checked={answers7[index] === answer}
-                                onChange={() => handleAnswer7(index, answer)}
+                                checked={answers12[index] === answer}
+                                onChange={() => handleAnswer12(index, answer)}
                               />
                               {answer}
                             </label>
@@ -626,8 +626,8 @@ const Russian = () => {
                                 className="form-check-input"
                                 type="radio"
                                 value={answer}
-                                checked={answers7[index] === answer}
-                                onChange={() => handleAnswer7(index, answer)}
+                                checked={answers13[index] === answer}
+                                onChange={() => handleAnswer13(index, answer)}
                               />
                               {answer}
                             </label>
@@ -652,8 +652,8 @@ const Russian = () => {
                                 className="form-check-input"
                                 type="radio"
                                 value={answer}
-                                checked={answers7[index] === answer}
-                                onChange={() => handleAnswer7(index, answer)}
+                                checked={answers14[index] === answer}
+                                onChange={() => handleAnswer14(index, answer)}
                               />
                               {answer}
                             </label>
