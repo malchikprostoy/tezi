@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import logo from "../../assets/img/Manas_logo.png";
 import "./Header.scss";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const name = new URLSearchParams(location.search).get('name');
   const userName = localStorage.getItem('userName');
   const handleLogoClick = () => {
     navigate("/");
@@ -17,9 +15,7 @@ const Header = () => {
     <div className="header">
         <div className="container" id="header">
           <div className="header__left">
-            <a onClick={handleLogoClick}>
-              <img src={logo} width={60} alt="Logo" />
-            </a>
+            <img onClick={handleLogoClick} src={logo} width={60} alt="Logo" />
           </div>
           <div className="header__right">
             <span className="name-user">{userName}</span>

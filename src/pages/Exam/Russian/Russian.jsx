@@ -65,8 +65,25 @@ const Russian = () => {
   const [answers8, setAnswers8] = useState(
     new Array(questions8.length).fill(null)
   );
+  const [answers9, setAnswers9] = useState(
+    new Array(questions9.length).fill(null)
+  );
+  const [answers10, setAnswers10] = useState(
+    new Array(questions10.length).fill(null)
+  );
+  const [answers11, setAnswers11] = useState(
+    new Array(questions11.length).fill(null)
+  );
+  const [answers12, setAnswers12] = useState(
+    new Array(questions12.length).fill(null)
+  );
+  const [answers13, setAnswers13] = useState(
+    new Array(questions13.length).fill(null)
+  );
+  const [answers14, setAnswers14] = useState(
+    new Array(questions14.length).fill(null)
+  );
   const [resultShown, setResultShown] = useState(false);
-
   const [activeStep, setActiveStep] = useState(0);
 
   const handleNext = () => {
@@ -122,6 +139,42 @@ const Russian = () => {
     const newAnswers = [...answers8];
     newAnswers[index] = answer;
     setAnswers8(newAnswers);
+  };
+  
+  const handleAnswer9 = (index, answer) => {
+    const newAnswers = [...answers9];
+    newAnswers[index] = answer;
+    setAnswers9(newAnswers);
+  };
+
+  const handleAnswer10 = (index, answer) => {
+    const newAnswers = [...answers10];
+    newAnswers[index] = answer;
+    setAnswers10(newAnswers);
+  };
+
+  const handleAnswer11 = (index, answer) => {
+    const newAnswers = [...answers11];
+    newAnswers[index] = answer;
+    setAnswers11(newAnswers);
+  };
+
+  const handleAnswer12 = (index, answer) => {
+    const newAnswers = [...answers12];
+    newAnswers[index] = answer;
+    setAnswers12(newAnswers);
+  };
+
+  const handleAnswer13 = (index, answer) => {
+    const newAnswers = [...answers13];
+    newAnswers[index] = answer;
+    setAnswers13(newAnswers);
+  };
+
+  const handleAnswer14 = (index, answer) => {
+    const newAnswers = [...answers14];
+    newAnswers[index] = answer;
+    setAnswers14(newAnswers);
   };
 
   const showResult = () => {
@@ -596,7 +649,7 @@ const Russian = () => {
                           <li className="list-group-item" key={ansIndex}>
                             <label>
                               <input
-                                className="form-check-input pr-1"
+                                className="form-check-input"
                                 type="radio"
                                 value={answer}
                                 checked={answers7[index] === answer}
@@ -630,30 +683,29 @@ const Russian = () => {
             className="btn btn-outline-danger btn-lg lng"
             variant="contained"
             onClick={showResult}
+            style={{ display: activeStep === steps.length - 1 ? 'block' : 'none' }}
           >
             Показать результат
           </button>
           {resultShown && (
-            <div>
-              <h2>Результат:</h2>
-              <p>
-                Вы ответили правильно на {calculateScore(questions1, answers1)}{" "}
-                из {questions1.length} вопросов.
-              </p>
-              <p>
-                Вы ответили правильно на {calculateScore(questions2, answers2)}{" "}
-                из {questions2.length} дополнительных вопросов.
-              </p>
-              <p>
-                Вы ответили правильно на {calculateScore(questions3, answers3)}{" "}
-                из {questions3.length} вопросов по соотнесению.
-              </p>
-              <p>
-                Вы ответили правильно на {calculateScore(questions4, answers4)}{" "}
-                из {questions4.length} вопросов из content2.
-              </p>
-            </div>
-          )}
+          <div className="result">
+            <h2>Results</h2>
+            <p>Чтение и понимание 1: {calculateScore(questions1, answers1)} / {questions1.length}</p>
+            <p>Чтение и понимание 2: {calculateScore(questions2, answers2)} / {questions2.length}</p>
+            <p>Чтение и понимание 3: {calculateScore(questions3, answers3)} / {questions3.length}</p>
+            <p>Чтение и понимание 4: {calculateScore(questions4, answers4)} / {questions4.length}</p>
+            <p>Чтение и понимание 5: {calculateScore(questions5, answers5)} / {questions5.length}</p>
+            <p>Чтение и понимание 6: {calculateScore(questions6, answers6)} / {questions6.length}</p>
+            <p>Чтение и понимание 7: {calculateScore(questions7, answers7)} / {questions7.length}</p>
+            <p>Слушание и понимание 1: {calculateScore(questions8, answers8)} / {questions8.length}</p>
+            <p>Слушание и понимание 2: {calculateScore(questions9, answers9)} / {questions9.length}</p>
+            <p>Слушание и понимание 3: {calculateScore(questions10, answers10)} / {questions10.length}</p>
+            <p>Слушание и понимание 4: {calculateScore(questions11, answers11)} / {questions11.length}</p>
+            <p>Слушание и понимание 5: {calculateScore(questions12, answers12)} / {questions12.length}</p>
+            <p>Слушание и понимание 6: {calculateScore(questions13, answers13)} / {questions13.length}</p>
+            <p>Слушание и понимание 7: {calculateScore(questions14, answers14)} / {questions14.length}</p>
+          </div>
+        )}
         </div>
       </div>
       <Footer content={content} />
