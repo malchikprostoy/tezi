@@ -1,25 +1,25 @@
-import React, { useContext, useState } from 'react';
-import logo from '../../assets/img/Manas_logo.png';
-import './Main.scss';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { useNavigate } from 'react-router-dom';
-import { LanguageContext } from '../../LanguageContext';
-import Footer from '../../components/footer/Footer';
+import React, { useState } from "react";
+import logo from "../../assets/img/Manas_logo.png";
+import "./Main.scss";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import Footer from "../../components/footer/Footer";
 
 const Main = ({ setUserName }) => {
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const navigate = useNavigate();
-  const { lang, content, changeLanguage } = useContext(LanguageContext);
+  const { t, i18n } = useTranslation();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setUserName(name);
-    localStorage.setItem('userName', name);
+    localStorage.setItem("userName", name);
     navigate(`/lesson?name=${name}`);
   };
 
   const handleLangChange = (e) => {
-    changeLanguage(e.target.value);
+    i18n.changeLanguage(e.target.value);
   };
 
   return (
@@ -27,10 +27,14 @@ const Main = ({ setUserName }) => {
       <div className="header">
         <div className="container" id="header">
           <div className="header__left">
-            <img src={logo} width={60} alt='Logo'/>
+            <img src={logo} width={60} alt="Logo" />
           </div>
           <div className="header__right">
-            <select value={lang} onChange={handleLangChange} className="change-lang">
+            <select
+              value={i18n.language}
+              onChange={handleLangChange}
+              className="change-lang"
+            >
               <option value="tr">TR</option>
               <option value="kg">KG</option>
               <option value="ru">RU</option>
@@ -40,15 +44,23 @@ const Main = ({ setUserName }) => {
         </div>
       </div>
       <div className="middle d-flex justify-content-center align-items-center">
-        <form className='form d-flex flex-column align-items-center justify-content-center' onSubmit={handleSubmit}>
-          <label className="d-flex flex-column" htmlFor="name">  
-            {content.text}
-            <input type="text" name='name' value={name} onChange={(e) => setName(e.target.value)} />
+        <form
+          className="form d-flex flex-column align-items-center justify-content-center"
+          onSubmit={handleSubmit}
+        >
+          <label className="d-flex flex-column" htmlFor="name">
+            {t("text")}
+            <input
+              type="text"
+              name="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
           </label>
-          <button type='submit'>{content.button}</button>
+          <button type="submit">{t("button")}</button>
         </form>
       </div>
-      <Footer content={content} />
+      <Footer content={t} />
     </div>
   );
 };

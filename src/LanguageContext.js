@@ -1,28 +1,21 @@
-import React, { createContext, useState, useEffect } from 'react';
-import Translation from './Data.json';
+import React, { createContext, useState, useEffect } from "react";
+import i18n from "./i18n";
 
 export const LanguageContext = createContext();
 
 export const LanguageProvider = ({ children }) => {
-  const [lang, setLang] = useState('tr');
-  const [content, setContent] = useState(Translation.tr);
+  const [lang, setLang] = useState(i18n.language);
 
   useEffect(() => {
-    const savedLang = localStorage.getItem('language');
-    if (savedLang) {
-      setLang(savedLang);
-      setContent(Translation[savedLang]);
-    }
-  }, []);
+    i18n.changeLanguage(lang);
+  }, [lang]);
 
-  const changeLanguage = (selectedLang) => {
-    setLang(selectedLang);
-    setContent(Translation[selectedLang]);
-    localStorage.setItem('language', selectedLang);
+  const changeLanguage = (language) => {
+    setLang(language);
   };
 
   return (
-    <LanguageContext.Provider value={{ lang, content, changeLanguage }}>
+    <LanguageContext.Provider value={{ lang, changeLanguage, content: i18n.t }}>
       {children}
     </LanguageContext.Provider>
   );
