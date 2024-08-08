@@ -5,6 +5,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Footer from "../../components/footer/Footer";
+import Box from "@mui/material/Box";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
 
 const Main = ({ setUserName }) => {
   const [name, setName] = useState("");
@@ -30,16 +33,12 @@ const Main = ({ setUserName }) => {
             <img src={logo} width={60} alt="Logo" />
           </div>
           <div className="header__right">
-            <select
-              value={i18n.language}
-              onChange={handleLangChange}
-              className="change-lang"
-            >
-              <option value="tr">TR</option>
-              <option value="kg">KG</option>
-              <option value="ru">RU</option>
-              <option value="en">EN</option>
-            </select>
+            <Select value={i18n.language} onChange={handleLangChange}>
+              <MenuItem value="tr">TR</MenuItem>
+              <MenuItem value="kg">KG</MenuItem>
+              <MenuItem value="ru">RU</MenuItem>
+              <MenuItem value="en">EN</MenuItem>
+            </Select>
           </div>
         </div>
       </div>
