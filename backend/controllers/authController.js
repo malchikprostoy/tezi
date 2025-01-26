@@ -1,92 +1,123 @@
-const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const User = require("../models/User"); // Модель User
 
-// User registration
-exports.registerUser = async (req, res) => {
+// Регистрация пользователя
+const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
-  const photo = req.file;
-
-  // Check if all required fields are provided
-  if (!name || !email || !password) {
-    return res.status(400).json({ message: "Please enter all fields" });
-  }
 
   try {
-    // Check if the user already exists
-    let user = await User.findOne({ email });
-    if (user) {
+    // Проверяем, существует ли пользователь с таким email
+    const userExists = await User.findOne({ email });
+    if (userExists) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // Hash the password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    // Хешируем пароль
+    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("Hashed password during registration:", hashedPassword); // Логируем хеш
 
-    // Create a new user
-    user = new User({
+    // Создаем нового пользователя
+    const newUser = new User({
       name,
       email,
       password: hashedPassword,
+      photo: req.file ? req.file.path : null, // Сохраняем путь к фото, если оно загружено
     });
 
-    // Save the user to the database
-    await user.save();
+    await newUser.save();
 
-    // Create a JWT token
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+    // Создаем JWT токен
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
 
-    // Send the token as a response
-    res.json({ token });
+    res.status(201).json({ message: "User registered successfully", token });
   } catch (error) {
-    console.error(error.message);
+    console.error("Error during registration:", error);
+    res
+      .status(500)
+      .json({ error: "Registration failed", details: error.message });
+  }
+};
+
+// Вход пользователя
+const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Ищем пользователя по email
+    const user = await User.findOne({ email });
+    if (!user) {
+      console.log(`No user found with email: ${email}`);
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    console.log(`User found: ${user.name}`);
+
+    // Сравниваем введенный пароль с хешем из базы данных
+    bcrypt.compare(password, user.password, (err, isMatch) => {
+      if (err) {
+        console.log("Error during password comparison:", err);
+        return res
+          .status(500)
+          .json({ message: "Server error during password comparison" });
+      }
+
+      console.log("Password match:", isMatch); // Лог для результата сравнения паролей
+
+      if (!isMatch) {
+        return res.status(400).json({ message: "Invalid credentials" });
+      }
+
+      // Если пароли совпали, генерируем JWT токен
+      const token = jwt.sign(
+        { id: user._id }, // ID пользователя передаем в payload
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" } // Срок действия токена 1 час
+      );
+
+      // Отправляем ответ только один раз
+      return res.json({
+        message: "Login successful",
+        token,
+      });
+    });
+  } catch (err) {
+    console.error("Error in loginUser:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
 
-// User login
-exports.loginUser = async (req, res) => {
-  const { email, password } = req.body;
+// Получение профиля пользователя
+const getUserProfile = async (req, res) => {
+  const userId = req.userId;
+
+  if (!userId) {
+    return res.status(400).json({ message: "User ID not found in request." });
+  }
 
   try {
-    let user = await User.findOne({ email });
+    const user = await User.findById(userId); // Ищем пользователя по ID
     if (!user) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(404).json({ message: "User not found." });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Invalid credentials" });
-    }
+    // Возвращаем путь к фото с базовым URL
+    const photoUrl = user.photo ? `http://localhost:5000/${user.photo}` : null;
 
-    const payload = {
-      id: user.id,
-    };
-
-    jwt.sign(
-      payload,
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" },
-      (err, token) => {
-        if (err) throw err;
-        res.json({ token });
-      }
-    );
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server error");
+    return res.status(200).json({
+      message: "User profile fetched successfully",
+      user: {
+        name: user.name,
+        email: user.email,
+        photo: photoUrl, // Возвращаем полный путь к фото
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
-// Get user profile
-exports.getUserProfile = async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id).select("-password");
-    res.json(user);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server error");
-  }
-};
+module.exports = { registerUser, loginUser, getUserProfile };

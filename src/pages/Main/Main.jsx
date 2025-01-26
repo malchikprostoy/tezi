@@ -5,9 +5,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Footer from "../../components/footer/Footer";
-import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+import Profile from "../../components/profile/Profile";
 
 const Main = ({ setUserName }) => {
   const [name, setName] = useState("");
@@ -33,12 +33,32 @@ const Main = ({ setUserName }) => {
             <img src={logo} width={60} alt="Logo" />
           </div>
           <div className="header__right">
-            <Select value={i18n.language} onChange={handleLangChange}>
+            <Select
+              value={i18n.language}
+              onChange={handleLangChange}
+              sx={{
+                border: "none",
+                color: "white",
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "white",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "white",
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "white",
+                },
+                "& .MuiSvgIcon-root": {
+                  color: "white",
+                },
+              }}
+            >
               <MenuItem value="tr">TR</MenuItem>
               <MenuItem value="kg">KG</MenuItem>
               <MenuItem value="ru">RU</MenuItem>
               <MenuItem value="en">EN</MenuItem>
             </Select>
+            <Profile />
           </div>
         </div>
       </div>

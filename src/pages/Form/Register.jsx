@@ -48,10 +48,10 @@ const Register = () => {
         }
       );
 
-      // Сохранение токена в localStorage
       const token = response.data.token;
       if (token) {
         localStorage.setItem("token", token);
+
         const profileResponse = await axios.get(
           "http://localhost:5000/api/profile",
           {
@@ -61,11 +61,11 @@ const Register = () => {
           }
         );
 
-        // Обновление состояния пользователя
-        setUser(profileResponse.data);
+        const userData = profileResponse.data;
+        localStorage.setItem("user", JSON.stringify(userData));
+        setUser(userData); // Обновляем состояние пользователя
       }
 
-      // Перенаправление на домашнюю страницу
       navigate("/");
     } catch (error) {
       console.error(
