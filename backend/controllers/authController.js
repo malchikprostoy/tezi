@@ -1,6 +1,34 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User"); // Модель User
+const nodemailer = require("nodemailer");
+const crypto = require("crypto"); // Для генерации случайного кода
+
+// Функция для отправки верификационного email
+const sendVerificationEmail = async (user, verificationCode) => {
+  const transporter = nodemailer.createTransport({
+    host: "smtp.mail.ru",
+    port: 465, // Correct port for SSL
+    secure: true, // Use SSL
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: user.email,
+    subject: "Email Verification",
+    text: `Hello ${user.name},\n\nYour verification code is: ${verificationCode}\n\nThis code is valid for 1 hour.`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.error("Error sending email:", error);
+  }
+};
 
 // Регистрация пользователя
 const registerUser = async (req, res) => {
@@ -15,7 +43,10 @@ const registerUser = async (req, res) => {
 
     // Хешируем пароль
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log("Hashed password during registration:", hashedPassword); // Логируем хеш
+
+    // Генерация верификационного кода
+    const verificationCode = crypto.randomBytes(16).toString("hex");
+    const expirationTime = new Date(Date.now() + 3600000); // 1 час
 
     // Создаем нового пользователя
     const newUser = new User({
@@ -23,21 +54,96 @@ const registerUser = async (req, res) => {
       email,
       password: hashedPassword,
       photo: req.file ? req.file.path : null, // Сохраняем путь к фото, если оно загружено
+      emailVerificationCode: verificationCode, // Сохраняем верификационный код
+      verificationCodeExpiration: expirationTime, // Устанавливаем время истечения
     });
 
+    // Сохраняем пользователя
     await newUser.save();
+
+    // Отправляем верификационный email
+    await sendVerificationEmail(newUser, verificationCode);
 
     // Создаем JWT токен
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
 
-    res.status(201).json({ message: "User registered successfully", token });
+    res.status(201).json({
+      message:
+        "User registered successfully. Please check your email for verification.",
+      token,
+    });
   } catch (error) {
     console.error("Error during registration:", error);
     res
       .status(500)
       .json({ error: "Registration failed", details: error.message });
+  }
+};
+
+// Верификация email
+const verifyEmail = async (req, res) => {
+  const { email, verificationCode } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Проверяем, совпадает ли код
+    if (
+      user.emailVerificationCode !== verificationCode ||
+      Date.now() > user.verificationCodeExpiration
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Invalid or expired verification code" });
+    }
+
+    // Подтверждаем email
+    user.isEmailVerified = true; // Устанавливаем флаг подтверждения на true
+    user.emailVerificationCode = null; // Убираем верификационный код после подтверждения
+    await user.save();
+
+    res.status(200).json({ message: "Email successfully verified" });
+  } catch (error) {
+    console.error("Error during email verification:", error);
+    res.status(500).json({ message: "Server error during email verification" });
+  }
+};
+
+const resendVerificationEmail = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    // Находим пользователя по email
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "Пользователь не найден" });
+    }
+
+    // Проверяем, что email еще не подтвержден
+    if (user.isEmailVerified) {
+      return res.status(400).json({ message: "Email уже подтвержден" });
+    }
+
+    // Генерация нового кода и обновление времени истечения
+    const verificationCode = crypto.randomBytes(16).toString("hex");
+    const expirationTime = new Date(Date.now() + 3600000); // 1 час
+    user.emailVerificationCode = verificationCode;
+    user.verificationCodeExpiration = expirationTime;
+    await user.save();
+
+    // Отправка нового email
+    await sendVerificationEmail(user, verificationCode);
+
+    res.status(200).json({ message: "Новый код верификации отправлен" });
+  } catch (error) {
+    console.error("Ошибка при повторной отправке кода:", error);
+    res.status(500).json({ message: "Произошла ошибка на сервере" });
   }
 };
 
@@ -49,22 +155,16 @@ const loginUser = async (req, res) => {
     // Ищем пользователя по email
     const user = await User.findOne({ email });
     if (!user) {
-      console.log(`No user found with email: ${email}`);
       return res.status(400).json({ message: "Invalid credentials" });
     }
-
-    console.log(`User found: ${user.name}`);
 
     // Сравниваем введенный пароль с хешем из базы данных
     bcrypt.compare(password, user.password, (err, isMatch) => {
       if (err) {
-        console.log("Error during password comparison:", err);
         return res
           .status(500)
           .json({ message: "Server error during password comparison" });
       }
-
-      console.log("Password match:", isMatch); // Лог для результата сравнения паролей
 
       if (!isMatch) {
         return res.status(400).json({ message: "Invalid credentials" });
@@ -72,19 +172,18 @@ const loginUser = async (req, res) => {
 
       // Если пароли совпали, генерируем JWT токен
       const token = jwt.sign(
-        { id: user._id }, // ID пользователя передаем в payload
+        { userId: user._id }, // ID пользователя передаем в payload
         process.env.JWT_SECRET,
         { expiresIn: "1h" } // Срок действия токена 1 час
       );
 
       // Отправляем ответ только один раз
-      return res.json({
+      return res.status(200).json({
         message: "Login successful",
         token,
       });
     });
   } catch (err) {
-    console.error("Error in loginUser:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -120,4 +219,11 @@ const getUserProfile = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, getUserProfile };
+module.exports = {
+  registerUser,
+  sendVerificationEmail,
+  verifyEmail,
+  resendVerificationEmail,
+  loginUser,
+  getUserProfile,
+};

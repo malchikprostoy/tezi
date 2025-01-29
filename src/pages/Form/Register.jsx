@@ -9,15 +9,15 @@ import {
   InputAdornment,
   styled,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../features/AuthContext";
+import "./Form.scss";
 
 const Register = () => {
-  const { setUser } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,54 +25,40 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [photo, setPhoto] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => event.preventDefault();
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("email", email);
-    formData.append("password", password);
-    if (photo) formData.append("photo", photo);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Invalid email adress");
+      return;
+    }
 
+    setLoading(true);
     try {
+      const formData = new FormData();
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("name", name);
+      if (photo) formData.append("photo", photo);
+
       const response = await axios.post(
         "http://localhost:5000/api/register",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        formData
       );
 
-      const token = response.data.token;
-      if (token) {
-        localStorage.setItem("token", token);
-
-        const profileResponse = await axios.get(
-          "http://localhost:5000/api/profile",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        const userData = profileResponse.data;
-        localStorage.setItem("user", JSON.stringify(userData));
-        setUser(userData); // Обновляем состояние пользователя
+      if (response.status === 201) {
+        navigate("/verific", { state: { email } });
       }
-
-      navigate("/");
     } catch (error) {
       console.error(
         "Error registering:",
         error.response?.data || error.message
       );
-      setError(error.response?.data?.message || "Registration failed");
     }
   };
 
@@ -187,17 +173,9 @@ const Register = () => {
                     style={{ background: "transparent" }}
                   >
                     {showPassword ? (
-                      <Visibility
-                        style={{
-                          color: "black",
-                        }}
-                      />
+                      <Visibility style={{ color: "black" }} />
                     ) : (
-                      <VisibilityOff
-                        style={{
-                          color: "black",
-                        }}
-                      />
+                      <VisibilityOff style={{ color: "black" }} />
                     )}
                   </IconButton>
                 </InputAdornment>
@@ -240,8 +218,9 @@ const Register = () => {
               marginTop: 20,
               background: "transparent",
             }}
+            disabled={loading}
           >
-            Register
+            {loading ? <CircularProgress size={24} /> : "Register"}
           </Button>
           <Typography
             m={2}

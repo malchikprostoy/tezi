@@ -8,6 +8,9 @@ import Year from "./components/type/Year";
 import { AuthProvider } from "./features/AuthContext";
 import Register from "./pages/Form/Register";
 import Login from "./pages/Form/Login";
+import Verific from "./pages/Form/Verific";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const [userName, setUserName] = useState("");
@@ -15,6 +18,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
+        <ToastContainer />
         <Routes>
           <Route path="/" element={<Main setUserName={setUserName} />} />
           <Route path="/lesson" element={<Lesson userName={userName} />} />
@@ -23,6 +27,7 @@ function App() {
           <Route path="/type" element={<Year userName={setUserName} />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/verific" element={<Verific />} />
         </Routes>
       </Router>
     </AuthProvider>

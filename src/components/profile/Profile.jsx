@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Avatar, Typography, Box } from "@mui/material";
+import { Avatar, Typography, Box, Alert } from "@mui/material";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -29,14 +29,24 @@ const Profile = () => {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem("token");
+        if (!token) {
+          setError("No token found");
+          return;
+        }
 
         const response = await axios.get("http://localhost:5000/api/profile", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        setUser(response.data);
+        if (response.status === 200) {
+          setUser(response.data);
+        }
       } catch (err) {
-        setError(err.message);
+        if (err.response && err.response.status === 404) {
+          setError("User not found or invalid token");
+        } else {
+          setError(err.message || "An error occurred while fetching user data");
+        }
       }
     };
 
@@ -44,12 +54,19 @@ const Profile = () => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
+    localStorage.removeItem("token");
     navigate("/login");
   };
 
   if (error) {
-    return <Typography color="error">Error: {error}</Typography>;
+    return (
+      <Alert
+        sx={{ backgroundColor: "transparent", color: "#fff" }}
+        color="error"
+      >
+        {error}
+      </Alert>
+    );
   }
 
   if (!user) {

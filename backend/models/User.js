@@ -18,6 +18,8 @@ const UserSchema = new mongoose.Schema({
   photo: {
     type: String,
   },
+  isVerified: { type: Boolean, default: false }, // Новый флаг для статуса верификации
+  verificationCode: { type: String }, // Код для верификации
 });
 
 module.exports = mongoose.model("User", UserSchema);
