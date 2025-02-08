@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Avatar, Typography, Box, Alert } from "@mui/material";
+import { Avatar, Box, Alert } from "@mui/material";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -39,7 +39,7 @@ const Profile = () => {
         });
 
         if (response.status === 200) {
-          setUser(response.data);
+          setUser(response.data.user);
         }
       } catch (err) {
         if (err.response && err.response.status === 404) {
@@ -73,6 +73,11 @@ const Profile = () => {
     return <CircularProgress color="inherit" />;
   }
 
+  // Определяем URL фото профиля
+  const profilePhoto = user?.photo?.startsWith("http")
+    ? user.photo
+    : user?.picture || `http://localhost:5000${user.photo}`;
+
   return (
     <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
       <Tooltip title="Account settings">
@@ -85,7 +90,7 @@ const Profile = () => {
           aria-expanded={open ? "true" : undefined}
         >
           <Avatar
-            src={`http://localhost:5000${user.photo}`}
+            src={profilePhoto}
             alt={user.name}
             sx={{ width: 50, height: 50 }}
           />
@@ -139,12 +144,6 @@ const Profile = () => {
           Logout
         </MenuItem>
       </Menu>
-      {/* <Typography variant="h5" fontWeight="bold">
-        {user.name}
-      </Typography>
-      <Typography variant="body1" color="textSecondary">
-        {user.email}
-      </Typography> */}
     </Box>
   );
 };

@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
 const UserSchema = new mongoose.Schema({
+  googleId: { type: String, unique: true, sparse: true },
   name: {
     type: String,
     required: true,
@@ -13,11 +14,11 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: function () {
+      return !this.googleId; // Пароль обязателен только если нет Google ID
+    },
   },
-  photo: {
-    type: String,
-  },
+  photo: { type: String, default: "" },
   isVerified: { type: Boolean, default: false }, // Новый флаг для статуса верификации
   verificationCode: { type: String }, // Код для верификации
 });

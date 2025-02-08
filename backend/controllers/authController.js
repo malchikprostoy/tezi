@@ -95,7 +95,7 @@ const verifyEmail = async (req, res) => {
     // Проверяем, совпадает ли код
     if (
       user.emailVerificationCode !== verificationCode ||
-      Date.now() > user.verificationCodeExpiration
+      new Date() > user.verificationCodeExpiration
     ) {
       return res
         .status(400)
@@ -132,9 +132,8 @@ const resendVerificationEmail = async (req, res) => {
 
     // Генерация нового кода и обновление времени истечения
     const verificationCode = crypto.randomBytes(16).toString("hex");
-    const expirationTime = new Date(Date.now() + 3600000); // 1 час
     user.emailVerificationCode = verificationCode;
-    user.verificationCodeExpiration = expirationTime;
+    user.verificationCodeExpiration = new Date(Date.now() + 3600000);
     await user.save();
 
     // Отправка нового email
@@ -152,45 +151,33 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Ищем пользователя по email
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    // Сравниваем введенный пароль с хешем из базы данных
-    bcrypt.compare(password, user.password, (err, isMatch) => {
-      if (err) {
-        return res
-          .status(500)
-          .json({ message: "Server error during password comparison" });
-      }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
 
-      if (!isMatch) {
-        return res.status(400).json({ message: "Invalid credentials" });
-      }
-
-      // Если пароли совпали, генерируем JWT токен
-      const token = jwt.sign(
-        { userId: user._id }, // ID пользователя передаем в payload
-        process.env.JWT_SECRET,
-        { expiresIn: "1h" } // Срок действия токена 1 час
-      );
-
-      // Отправляем ответ только один раз
-      return res.status(200).json({
-        message: "Login successful",
-        token,
-      });
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
     });
-  } catch (err) {
+
+    res.status(200).json({
+      message: "Login successful",
+      token,
+    });
+  } catch (error) {
+    console.error("Login error:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
 
 // Получение профиля пользователя
 const getUserProfile = async (req, res) => {
-  const userId = req.userId;
+  const userId = req.user?.userId;
 
   if (!userId) {
     return res.status(400).json({ message: "User ID not found in request." });
@@ -202,8 +189,13 @@ const getUserProfile = async (req, res) => {
       return res.status(404).json({ message: "User not found." });
     }
 
-    // Возвращаем путь к фото с базовым URL
-    const photoUrl = user.photo ? `http://localhost:5000/${user.photo}` : null;
+    // ✅ Проверяем, является ли фото полным URL
+    let photoUrl = null;
+    if (user.photo) {
+      photoUrl = user.photo.startsWith("http")
+        ? user.photo // Если это URL, оставляем как есть
+        : `http://localhost:5000/${user.photo.replace(/\\/g, "/")}`; // Если локальный, добавляем базовый URL
+    }
 
     return res.status(200).json({
       message: "User profile fetched successfully",

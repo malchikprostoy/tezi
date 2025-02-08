@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../../assets/img/Manas_logo.png";
 import "./Main.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -13,6 +13,16 @@ const Main = ({ setUserName }) => {
   const [name, setName] = useState("");
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+
+    if (token) {
+      localStorage.setItem("token", token);
+      navigate("/"); // Убираем токен из URL после сохранения
+    }
+  }, [navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

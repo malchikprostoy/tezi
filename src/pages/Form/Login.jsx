@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
@@ -14,16 +14,27 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useAuth } from "../../features/AuthContext";
 import "./Form.scss";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Login = () => {
-  const { login } = useAuth();
+  const { login, loginWithToken } = useAuth();
   const navigate = useNavigate(); // Use this to navigate after login
+  const location = useLocation();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(""); // Add state to hold error messages
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const token = params.get("token");
+    if (token) {
+      localStorage.setItem("token", token);
+      loginWithToken(token);
+      navigate("/"); // Перенаправляем на главную
+    }
+  }, [location, loginWithToken, navigate]);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => event.preventDefault();
@@ -37,6 +48,10 @@ const Login = () => {
       console.error(error.response?.data);
       setError(error.response?.data?.message || "Error logging in");
     }
+  };
+
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:5000/auth/google";
   };
 
   const inputStyles = {
@@ -190,6 +205,9 @@ const Login = () => {
               {" Register"}
             </Link>
           </Typography>
+          <Button variant="outlined" fullWidth onClick={handleGoogleLogin}>
+            Войти через Google
+          </Button>
         </Box>
       </div>
     </div>
