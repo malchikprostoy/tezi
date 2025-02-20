@@ -1,27 +1,69 @@
 import React from "react";
 import logo from "../../assets/img/Manas_logo.png";
-import "./Header.scss";
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from "react-router-dom";
+import { Avatar, MenuItem, Select, Box } from "@mui/material";
+import Profile from "../profile/Profile";
+import { useTranslation } from "react-i18next";
 
 const Header = () => {
   const navigate = useNavigate();
-  const userName = localStorage.getItem('userName');
+  const { i18n } = useTranslation();
+
   const handleLogoClick = () => {
     navigate("/");
   };
 
+  const handleLangChange = (e) => {
+    i18n.changeLanguage(e.target.value);
+  };
+
   return (
-    <div className="header">
-        <div className="container" id="header">
-          <div className="header__left">
-            <img onClick={handleLogoClick} src={logo} width={60} alt="Logo" />
-          </div>
-          <div className="header__right">
-            <span className="name-user">{userName}</span>
-          </div>
-        </div>
-      </div>
+    <Box
+      sx={{
+        backgroundColor: "#561209",
+        color: "white",
+        height: "12vh",
+        display: "flex",
+        alignItems: "center",
+        px: 4, // Внутренний отступ
+      }}
+    >
+      {/* Левая часть (логотип) */}
+      <Avatar
+        src={logo}
+        alt="Logo"
+        sx={{ width: 60, height: 60, cursor: "pointer" }}
+        onClick={handleLogoClick}
+      />
+
+      {/* Центрирующий Box (пушит правую часть вправо) */}
+      <Box sx={{ flexGrow: 1 }} />
+
+      {/* Правая часть (язык + профиль) */}
+      <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+        <Select
+          value={i18n.language}
+          onChange={handleLangChange}
+          sx={{
+            color: "white",
+            "& .MuiOutlinedInput-notchedOutline": { borderColor: "white" },
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: "white",
+            },
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "white",
+            },
+            "& .MuiSvgIcon-root": { color: "white" },
+          }}
+        >
+          <MenuItem value="tr">TR</MenuItem>
+          <MenuItem value="kg">KG</MenuItem>
+          <MenuItem value="ru">RU</MenuItem>
+          <MenuItem value="en">EN</MenuItem>
+        </Select>
+        <Profile />
+      </Box>
+    </Box>
   );
 };
 

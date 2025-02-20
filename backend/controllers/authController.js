@@ -48,6 +48,10 @@ const registerUser = async (req, res) => {
     const verificationCode = crypto.randomBytes(16).toString("hex");
     const expirationTime = new Date(Date.now() + 3600000); // 1 час
 
+    // ✅ Определяем роль: если только цифры — студент, иначе — учитель
+    const isStudent = /^\d+$/.test(username);
+    const role = isStudent ? "student" : "teacher";
+
     // Создаем нового пользователя
     const newUser = new User({
       name,
@@ -56,6 +60,7 @@ const registerUser = async (req, res) => {
       photo: req.file ? req.file.path : null, // Сохраняем путь к фото, если оно загружено
       emailVerificationCode: verificationCode, // Сохраняем верификационный код
       verificationCodeExpiration: expirationTime, // Устанавливаем время истечения
+      role,
     });
 
     // Сохраняем пользователя
@@ -65,14 +70,19 @@ const registerUser = async (req, res) => {
     await sendVerificationEmail(newUser, verificationCode);
 
     // Создаем JWT токен
-    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { userId: newUser._id, role: user.role },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
 
     res.status(201).json({
       message:
         "User registered successfully. Please check your email for verification.",
       token,
+      role,
     });
   } catch (error) {
     console.error("Error during registration:", error);
@@ -161,13 +171,18 @@ const loginUser = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { userId: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
 
     res.status(200).json({
       message: "Login successful",
       token,
+      role: user.role,
     });
   } catch (error) {
     console.error("Login error:", error);
@@ -202,6 +217,7 @@ const getUserProfile = async (req, res) => {
       user: {
         name: user.name,
         email: user.email,
+        role: user.role,
         photo: photoUrl, // Возвращаем полный путь к фото
       },
     });

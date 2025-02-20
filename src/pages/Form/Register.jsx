@@ -30,6 +30,10 @@ const Register = () => {
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => event.preventDefault();
 
+  const determineUserRole = (username) => {
+    return /\d/.test(username) ? "student" : "teacher";
+  };
+
   const handleRegister = async (e) => {
     e.preventDefault();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -38,12 +42,14 @@ const Register = () => {
       return;
     }
 
+    const role = determineUserRole(email.split("@")[0]);
     setLoading(true);
     try {
       const formData = new FormData();
       formData.append("email", email);
       formData.append("password", password);
       formData.append("name", name);
+      formData.append("role", role);
       if (photo) formData.append("photo", photo);
 
       const response = await axios.post(
@@ -60,6 +66,10 @@ const Register = () => {
         error.response?.data || error.message
       );
     }
+  };
+
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:5000/auth/google";
   };
 
   const VisuallyHiddenInput = styled("input")({
@@ -241,6 +251,9 @@ const Register = () => {
               {" Login"}
             </Link>
           </Typography>
+          <Button variant="outlined" fullWidth onClick={handleGoogleLogin}>
+            Войти через Google
+          </Button>
         </Box>
       </div>
     </div>

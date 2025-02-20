@@ -7,6 +7,7 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const session = require("express-session");
 const jwt = require("jsonwebtoken");
 const User = require("./models/User");
+const lessonRoutes = require("./routes/lessonRoutes");
 const path = require("path");
 
 dotenv.config({ path: "../.env.local" });
@@ -51,6 +52,7 @@ passport.use(
             name: profile.displayName,
             photo: profile._json.picture || "",
             isVerified: profile._json.email_verified,
+            role,
           });
           await user.save();
         }
@@ -89,9 +91,13 @@ app.get(
       return res.status(401).json({ message: "Authentication failed" });
     }
     // Генерируем JWT токен после успешной авторизации через Google
-    const token = jwt.sign({ userId: req.user.id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { userId: req.user._id, role: req.user.role },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
 
     // Успешная авторизация, перенаправляем на главную страницу
     res.redirect(`http://localhost:3000/login?token=${token}`);
@@ -102,11 +108,21 @@ app.get(
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Middlewares
-app.use(cors());
-app.use(express.json({ limit: "10mb" }));
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: "Content-Type,Authorization",
+  })
+);
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Подключение маршрутов
 app.use("/api", require("./routes/auth"));
+app.use("/api/lessons", lessonRoutes);
 
 const PORT = process.env.PORT || 5000;
 

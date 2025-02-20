@@ -43,6 +43,10 @@ const Login = () => {
     e.preventDefault();
     try {
       await login(email, password);
+      const username = email.split("@")[0];
+      const isStudent = /^[\d.]+$/.test(username); // Только цифры и точки
+      const role = isStudent ? "student" : "teacher";
+
       navigate("/"); // Redirect to homepage or protected route after login
     } catch (error) {
       console.error(error.response?.data);

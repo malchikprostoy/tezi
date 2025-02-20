@@ -1,18 +1,34 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-const { ObjectId } = require("mongoose").Types;
 
-const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
-  if (!token) return res.status(401).json({ message: "No token provided" });
-
+const authenticateToken = async (req, res, next) => {
   try {
-    const decoded = jwt.verify(
-      token.replace("Bearer ", ""),
-      process.env.JWT_SECRET
-    );
-    req.user = { userId: decoded.userId }; // Save the decoded user data into req.user
+    const authHeader = req.headers["authorization"];
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      console.log("❌ No or invalid Authorization header");
+      return res.status(401).json({ message: "No token provided" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    if (!token) {
+      console.log("❌ Token missing");
+      return res.status(401).json({ message: "No token provided" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await User.findById(decoded.userId);
+    if (!user) {
+      console.log("❌ User not found");
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (!user.role) {
+      console.log("❌ User has no role assigned");
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    req.user = { userId: user._id, role: user.role }; // ✅ Теперь есть role
     next();
   } catch (err) {
     return res.status(403).json({ message: "Invalid token" });
@@ -41,23 +57,6 @@ const checkVerified = async (req, res, next) => {
   } catch (error) {
     console.error("checkVerified error:", error);
     res.status(500).json({ message: "Server error" });
-  }
-};
-
-const createUser = async (profile) => {
-  try {
-    const user = new User({
-      googleId: profile.id,
-      email: profile.emails[0].value,
-      name: profile.displayName,
-      isVerified: profile._json.email_verified,
-    });
-
-    await user.save();
-    return user;
-  } catch (error) {
-    console.error("Error saving user:", error);
-    throw error;
   }
 };
 

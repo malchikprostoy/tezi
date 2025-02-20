@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
-import logo from "../../assets/img/Manas_logo.png";
-import "./Main.scss";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { Container, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../../features/AuthContext"; // Импортируем контекст
+import { toast } from "react-toastify";
 import Footer from "../../components/footer/Footer";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import Profile from "../../components/profile/Profile";
+import Header from "../../components/header/Header";
+import StudentDashboard from "../Student/StudentDashboard";
+import TeacherDashboard from "../Teacher/TeacherDashboard";
 
-const Main = ({ setUserName }) => {
-  const [name, setName] = useState("");
+const Main = () => {
+  const { user } = useAuth(); // Получаем пользователя из контекста
   const navigate = useNavigate();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -20,77 +21,68 @@ const Main = ({ setUserName }) => {
 
     if (token) {
       localStorage.setItem("token", token);
-      navigate("/"); // Убираем токен из URL после сохранения
+      navigate("/");
     }
   }, [navigate]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setUserName(name);
-    localStorage.setItem("userName", name);
-    navigate(`/lesson?name=${name}`);
-  };
+  useEffect(() => {
+    if (user !== undefined) {
+      setIsCheckingAuth(false);
+    }
+  }, [user]);
 
-  const handleLangChange = (e) => {
-    i18n.changeLanguage(e.target.value);
-  };
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+
+    if (!isCheckingAuth && !user && !storedToken) {
+      toast.warning(
+        t("Вы не авторизованы. Перенаправление на страницу входа..."),
+        {
+          autoClose: 3000,
+        }
+      );
+      setTimeout(() => {
+        navigate("/login");
+      }, 3000);
+    }
+  }, [user, navigate, t, isCheckingAuth]);
+
+  if (isCheckingAuth) {
+    return null; // Ждем, пока получим информацию о пользователе
+  }
 
   return (
-    <div className="main">
-      <div className="header">
-        <div className="container" id="header">
-          <div className="header__left">
-            <img src={logo} width={60} alt="Logo" />
-          </div>
-          <div className="header__right">
-            <Select
-              value={i18n.language}
-              onChange={handleLangChange}
-              sx={{
-                border: "none",
-                color: "white",
-                "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "white",
-                },
-                "&:hover .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "white",
-                },
-                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "white",
-                },
-                "& .MuiSvgIcon-root": {
-                  color: "white",
-                },
-              }}
-            >
-              <MenuItem value="tr">TR</MenuItem>
-              <MenuItem value="kg">KG</MenuItem>
-              <MenuItem value="ru">RU</MenuItem>
-              <MenuItem value="en">EN</MenuItem>
-            </Select>
-            <Profile />
-          </div>
-        </div>
-      </div>
-      <div className="middle d-flex justify-content-center align-items-center">
-        <form
-          className="form d-flex flex-column align-items-center justify-content-center"
-          onSubmit={handleSubmit}
-        >
-          <label className="d-flex flex-column" htmlFor="name">
-            {t("text")}
-            <input
-              type="text"
-              name="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </label>
-          <button type="submit">{t("button")}</button>
-        </form>
-      </div>
-      <Footer content={t} />
-    </div>
+    <Container
+      maxWidth={false}
+      disableGutters
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        color: "white",
+      }}
+    >
+      <Header />
+      <Box
+        sx={{
+          flexGrow: 1,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {user?.role === "student" ? <StudentDashboard /> : <TeacherDashboard />}
+      </Box>
+      <Box
+        sx={{
+          width: "100%",
+          backgroundColor: "#561209",
+          color: "white",
+        }}
+      >
+        <Footer content={t} />
+      </Box>
+    </Container>
   );
 };
 

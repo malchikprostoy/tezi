@@ -19,6 +19,7 @@ const UserSchema = new mongoose.Schema({
     },
   },
   photo: { type: String, default: "" },
+  role: { type: String, enum: ["student", "teacher"], default: "student" }, // ✅ Должно быть!
   isVerified: { type: Boolean, default: false }, // Новый флаг для статуса верификации
   verificationCode: { type: String }, // Код для верификации
 });

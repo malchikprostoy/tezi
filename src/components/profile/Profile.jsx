@@ -1,20 +1,23 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { Avatar, Box, Alert } from "@mui/material";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
+import { useAuth } from "../../features/AuthContext"; // Используем AuthContext
+import {
+  Avatar,
+  Box,
+  Alert,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  Divider,
+  IconButton,
+  Tooltip,
+  CircularProgress,
+} from "@mui/material";
 import Logout from "@mui/icons-material/Logout";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
-  const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const { user, loading, logout } = useAuth(); // Получаем данные из контекста
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
 
@@ -25,58 +28,30 @@ const Profile = () => {
     setAnchorEl(null);
   };
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          setError("No token found");
-          return;
-        }
-
-        const response = await axios.get("http://localhost:5000/api/profile", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (response.status === 200) {
-          setUser(response.data.user);
-        }
-      } catch (err) {
-        if (err.response && err.response.status === 404) {
-          setError("User not found or invalid token");
-        } else {
-          setError(err.message || "An error occurred while fetching user data");
-        }
-      }
-    };
-
-    fetchUserData();
-  }, []);
-
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    logout();
     navigate("/login");
   };
 
-  if (error) {
+  if (loading) {
+    return <CircularProgress color="inherit" />;
+  }
+
+  if (!user) {
     return (
       <Alert
         sx={{ backgroundColor: "transparent", color: "#fff" }}
         color="error"
       >
-        {error}
+        User not found or unauthorized
       </Alert>
     );
   }
 
-  if (!user) {
-    return <CircularProgress color="inherit" />;
-  }
-
-  // Определяем URL фото профиля
+  const cachedPhoto = localStorage.getItem("userPhoto");
   const profilePhoto = user?.photo?.startsWith("http")
     ? user.photo
-    : user?.picture || `http://localhost:5000${user.photo}`;
+    : cachedPhoto || `http://localhost:5000${user.photo}`;
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
@@ -93,6 +68,7 @@ const Profile = () => {
             src={profilePhoto}
             alt={user.name}
             sx={{ width: 50, height: 50 }}
+            imgProps={{ referrerPolicy: "no-referrer" }}
           />
         </IconButton>
       </Tooltip>
