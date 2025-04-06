@@ -20,7 +20,8 @@ const Header = () => {
   return (
     <Box
       sx={{
-        backgroundColor: "#561209",
+        backgroundColor: "#8B0000",
+        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.4)",
         color: "white",
         height: "12vh",
         display: "flex",

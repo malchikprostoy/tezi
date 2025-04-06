@@ -1,19 +1,24 @@
 import React from "react";
-import "./Footer.scss";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { Box, Typography, Container } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
-const Footer = ({ content }) => {
-  const { t, i18n } = useTranslation();
+const Footer = () => {
+  const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
+
   return (
-    <div className="footer d-flex justify-content-center align-items-center text-center">
-      <div className="container">
-        <div className="lng-footer">
-          © {currentYear} {t("footer") || "Loading..."}
-        </div>
-      </div>
-    </div>
+    <Box
+      sx={{
+        backgroundColor: "#8B0000",
+        boxShadow: "0px -4px 8px rgba(0, 0, 0, 0.4)",
+        py: 2,
+        textAlign: "center",
+      }}
+    >
+      <Typography variant="body2" color="white">
+        © {currentYear} {t("footer") || "Loading..."}
+      </Typography>
+    </Box>
   );
 };
 

@@ -20,6 +20,7 @@ import {
   DialogTitle,
 } from "@mui/material";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 import { toast } from "react-toastify";
@@ -223,9 +224,31 @@ const TaskStudent = () => {
 
         {/* Отображаем таймер */}
         {timeLeft && (
-          <Typography variant="h6" sx={{ mt: 2, color: "red" }}>
-            {timeLeft}
-          </Typography>
+          <Box
+            sx={{
+              mt: 4,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 1,
+              background: "linear-gradient(90deg, #ff4e50, #f9d423)",
+              padding: "12px 24px",
+              width: "300px",
+              borderRadius: "12px",
+              color: "white",
+              fontWeight: "bold",
+              fontSize: "1.5rem",
+              boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
+            }}
+          >
+            <AccessTimeIcon sx={{ fontSize: "2rem" }} />
+            <Typography
+              variant="h4"
+              sx={{ color: "white", fontWeight: "bold" }}
+            >
+              {timeLeft}
+            </Typography>
+          </Box>
         )}
 
         <Typography variant="h6" sx={{ mt: 4 }}>
@@ -314,7 +337,7 @@ const TaskStudent = () => {
         </List>
 
         {/* Кнопка завершения задания */}
-        <Box sx={{ mt: 3 }}>
+        <Box sx={{ mt: 3, mb: 3 }}>
           <Button
             variant="contained"
             color="primary"
