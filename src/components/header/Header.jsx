@@ -47,12 +47,12 @@ const Header = () => {
           onChange={handleLangChange}
           sx={{
             color: "white",
-            "& .MuiOutlinedInput-notchedOutline": { borderColor: "white" },
+            "& .MuiOutlinedInput-notchedOutline": { border: "none" },
             "&:hover .MuiOutlinedInput-notchedOutline": {
-              borderColor: "white",
+              border: "none",
             },
             "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-              borderColor: "white",
+              border: "none",
             },
             "& .MuiSvgIcon-root": { color: "white" },
           }}
