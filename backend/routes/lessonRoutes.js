@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const {
+  addTask,
+  getTasksByLessonId,
+} = require("../controllers/taskController");
+const {
   createLesson,
   joinLesson,
   getMyLessons,
@@ -20,5 +24,7 @@ router.get("/:lessonId", authenticateToken, getLessonById);
 router.delete("/:lessonId/leave", authenticateToken, leaveLesson);
 router.put("/:id", authenticateToken, updateLesson);
 router.delete("/:id", authenticateToken, deleteLesson);
+router.post("/:lessonId/tasks", authenticateToken, addTask);
+router.get("/:lessonId/tasks", authenticateToken, getTasksByLessonId);
 
 module.exports = router;

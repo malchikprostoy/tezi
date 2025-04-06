@@ -81,13 +81,7 @@ const TeacherDashboard = () => {
           lessons.map((lesson) => (
             <ListItemButton
               key={lesson._id}
-              onClick={() =>
-                navigate(
-                  user.role === "teacher"
-                    ? `/teacher/lesson/${lesson._id}`
-                    : `/lesson/${lesson._id}`
-                )
-              }
+              onClick={() => navigate(`/teacher/lesson/${lesson._id}`)}
             >
               <ListItemText sx={{ color: "#000" }} primary={lesson.title} />
             </ListItemButton>

@@ -9,6 +9,7 @@ const lessonSchema = new mongoose.Schema({
   },
   code: { type: String, required: true, unique: true },
   students: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Task" }],
 });
 
 module.exports = mongoose.model("Lesson", lessonSchema);

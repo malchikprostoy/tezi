@@ -8,6 +8,7 @@ const session = require("express-session");
 const jwt = require("jsonwebtoken");
 const User = require("./models/User");
 const lessonRoutes = require("./routes/lessonRoutes");
+const taskRoutes = require("./routes/taskRoutes");
 const path = require("path");
 
 dotenv.config({ path: "../.env.local" });
@@ -95,7 +96,7 @@ app.get(
       { userId: req.user._id, role: req.user.role },
       process.env.JWT_SECRET,
       {
-        expiresIn: "1h",
+        expiresIn: "1d",
       }
     );
 
@@ -123,6 +124,7 @@ app.use(express.urlencoded({ extended: true }));
 // Подключение маршрутов
 app.use("/api", require("./routes/auth"));
 app.use("/api/lessons", lessonRoutes);
+app.use("/api/tasks", taskRoutes);
 
 const PORT = process.env.PORT || 5000;
 

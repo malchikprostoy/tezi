@@ -90,7 +90,7 @@ const StudentDashboard = () => {
   return (
     <Container maxWidth="sm" sx={{ textAlign: "center", mt: 4 }}>
       <Typography variant="h4" color={"#000"} gutterBottom>
-        Студент: Присоединение к уроку
+        Присоединение к уроку
       </Typography>
 
       <Typography variant="h5" sx={{ mt: 4, color: "#000" }}>

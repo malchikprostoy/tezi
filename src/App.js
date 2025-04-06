@@ -11,6 +11,8 @@ import LessonPageStudent from "./pages/Lesson/LessonPage";
 import StudentDashboard from "./pages/Student/StudentDashboard";
 import TeacherDashboard from "./pages/Teacher/TeacherDashboard";
 import LessonPage from "./pages/Lesson/Lesson";
+import TaskTeacher from "./pages/Task/TaskTeacher";
+import TaskStudent from "./pages/Task/TaskStudent";
 
 function App() {
   return (
@@ -23,9 +25,17 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/verific" element={<Verific />} />
           <Route path="/student" element={<StudentDashboard />} />
-          <Route path="/lesson/:lessonId" element={<LessonPageStudent />} />
           <Route path="/teacher" element={<TeacherDashboard />} />
+          <Route path="/lesson/:lessonId" element={<LessonPageStudent />} />
           <Route path="/teacher/lesson/:lessonId" element={<LessonPage />} />
+          <Route
+            path="/teacher/lesson/:lessonId/tasks/:taskId/edit"
+            element={<TaskTeacher />}
+          />
+          <Route
+            path="/student/lesson/:lessonId/tasks/:taskId"
+            element={<TaskStudent />}
+          />
         </Routes>
       </AuthProvider>
     </GoogleOAuthProvider>

@@ -4,6 +4,7 @@ import React, {
   useEffect,
   useState,
   useRef,
+  useCallback,
 } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -19,25 +20,10 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const isFetching = useRef(false);
 
-  useEffect(() => {
-    const tokenFromUrl = new URLSearchParams(location.search).get("token");
+  const fetchUserProfile = useCallback(async (token) => {
+    if (!token || isFetching.current) return;
+    isFetching.current = true;
 
-    if (tokenFromUrl && !localStorage.getItem("token")) {
-      localStorage.setItem("token", tokenFromUrl);
-      navigate("/", { replace: true });
-    }
-
-    const token = localStorage.getItem("token");
-
-    if (token && !user && !isFetching.current) {
-      isFetching.current = true;
-      fetchUserProfile(token);
-    } else {
-      setLoading(false);
-    }
-  }, [location.search]); // Следит только за изменением параметров URL
-
-  const fetchUserProfile = async (token) => {
     try {
       const response = await axios.get("http://localhost:5000/api/profile", {
         headers: { Authorization: `Bearer ${token}` },
@@ -60,7 +46,24 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
       isFetching.current = false;
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    const tokenFromUrl = new URLSearchParams(location.search).get("token");
+    let token = localStorage.getItem("token");
+
+    if (tokenFromUrl && !token) {
+      localStorage.setItem("token", tokenFromUrl);
+      token = tokenFromUrl;
+      navigate("/", { replace: true }); // ✅ Избегаем лишнего вызова
+    }
+
+    if (token && !user) {
+      fetchUserProfile(token);
+    } else {
+      setLoading(false);
+    }
+  }, [location.search]); // ✅ Убрали user из зависимостей
 
   const determineRole = (email) => {
     const username = email.split("@")[0];

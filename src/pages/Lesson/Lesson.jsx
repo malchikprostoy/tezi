@@ -8,17 +8,22 @@ import {
   Button,
   Box,
   Breadcrumbs,
+  List,
+  ListItemText,
+  ListItemButton,
 } from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import { useTranslation } from "react-i18next";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 
 const LessonPage = () => {
-  const { lessonId } = useParams(); // Получаем lessonId из URL
+  const { lessonId } = useParams();
   const navigate = useNavigate();
   const [lesson, setLesson] = useState(null);
   const [newTitle, setNewTitle] = useState("");
+  const [newTask, setNewTask] = useState("");
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -26,15 +31,14 @@ const LessonPage = () => {
   }, [lessonId]);
 
   const fetchLesson = async () => {
-    if (!lessonId) return;
-
     try {
       const token = localStorage.getItem("token");
-      const url = `http://localhost:5000/api/lessons/${lessonId}`;
-
-      const response = await axios.get(url, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        `http://localhost:5000/api/lessons/${lessonId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       setLesson(response.data);
     } catch (error) {
@@ -68,6 +72,23 @@ const LessonPage = () => {
     }
   };
 
+  const addTask = async () => {
+    if (!newTask.trim()) return;
+
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        `http://localhost:5000/api/lessons/${lessonId}/tasks`,
+        { lessonId, title: newTask },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setNewTask("");
+      fetchLesson();
+    } catch (error) {
+      console.error("❌ Ошибка добавления задания:", error);
+    }
+  };
+
   if (!lesson) return <LinearProgress />;
 
   return (
@@ -77,13 +98,7 @@ const LessonPage = () => {
         {/* Breadcrumbs */}
         <Breadcrumbs separator="›" aria-label="breadcrumb" sx={{ mb: 2 }}>
           <Link to="/" style={{ textDecoration: "none", color: "#1976d2" }}>
-            Главная
-          </Link>
-          <Link
-            to="/lessons"
-            style={{ textDecoration: "none", color: "#1976d2" }}
-          >
-            Уроки
+            <HomeOutlinedIcon />
           </Link>
           <Typography color="text.primary">{lesson.title}</Typography>
         </Breadcrumbs>
@@ -96,6 +111,7 @@ const LessonPage = () => {
           Код урока: {lesson.code}
         </Typography>
 
+        {/* Редактирование названия урока */}
         <TextField
           label="Название урока"
           fullWidth
@@ -120,6 +136,49 @@ const LessonPage = () => {
         >
           Удалить урок
         </Button>
+
+        {/* Блок с заданиями */}
+        <Typography variant="h5" sx={{ mt: 4 }}>
+          Задания
+        </Typography>
+        {lesson.tasks && lesson.tasks.length > 0 ? (
+          <List sx={{ mt: 2 }}>
+            {lesson.tasks.map((task) => (
+              <ListItemButton
+                key={task._id}
+                onClick={() => {
+                  navigate(
+                    `/teacher/lesson/${lessonId}/tasks/${task._id}/edit`
+                  );
+                }}
+              >
+                <ListItemText primary={task.title} />
+              </ListItemButton>
+            ))}
+          </List>
+        ) : (
+          <Typography variant="body1" sx={{ mt: 2, color: "gray" }}>
+            Нет заданий
+          </Typography>
+        )}
+
+        {/* Добавление нового задания */}
+        <Box sx={{ mt: 3 }}>
+          <TextField
+            label="Новое задание"
+            fullWidth
+            value={newTask}
+            onChange={(e) => setNewTask(e.target.value)}
+          />
+          <Button
+            variant="contained"
+            color="secondary"
+            sx={{ mt: 2 }}
+            onClick={addTask}
+          >
+            Добавить задание
+          </Button>
+        </Box>
       </Container>
       <Footer content={t} />
     </Box>

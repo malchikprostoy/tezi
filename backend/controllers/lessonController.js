@@ -1,4 +1,5 @@
 const Lesson = require("../models/Lesson");
+const Task = require("../models/Task");
 const mongoose = require("mongoose");
 
 // Функция генерации кода урока
@@ -132,20 +133,23 @@ const leaveLesson = async (req, res) => {
 };
 
 const getLessonById = async (req, res) => {
-  const { lessonId } = req.params;
-
-  if (!lessonId || !mongoose.Types.ObjectId.isValid(String(lessonId))) {
-    return res.status(400).json({ error: "Invalid lesson ID" });
-  }
-
   try {
-    const lesson = await Lesson.findById(lessonId);
-    if (!lesson) {
-      return res.status(404).json({ error: "Lesson not found" });
+    const { lessonId } = req.params;
+
+    if (!lessonId || lessonId === "undefined") {
+      return res.status(400).json({ error: "Некорректный ID урока" });
     }
-    res.json(lesson);
+
+    const lesson = await Lesson.findById(lessonId).populate("tasks");
+
+    if (!lesson) {
+      return res.status(404).json({ error: "Урок не найден" });
+    }
+
+    res.status(200).json(lesson);
   } catch (error) {
-    res.status(500).json({ error: "Server error" });
+    console.error("Ошибка загрузки урока:", error);
+    res.status(500).json({ error: "Ошибка сервера" });
   }
 };
 
