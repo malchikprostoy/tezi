@@ -18,7 +18,7 @@ function App() {
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
       <AuthProvider>
-        <ToastContainer />
+        <ToastContainer autoClose={2500} />
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/login" element={<Login />} />

@@ -14,6 +14,7 @@ const ExerciseSchema = new mongoose.Schema(
     correctOption: Number,
     word: String,
     antonym: String,
+    audioSrc: String,
     type: {
       type: String,
       required: true,

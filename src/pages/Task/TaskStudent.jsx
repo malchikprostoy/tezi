@@ -24,6 +24,7 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 import { toast } from "react-toastify";
+import AudioPlayer from "../../components/AudioPlayer/AudioPlayer";
 
 const TaskStudent = () => {
   const { lessonId, taskId } = useParams();
@@ -36,6 +37,7 @@ const TaskStudent = () => {
   const [timeLeft, setTimeLeft] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [answers, setAnswers] = useState([]);
+  const [audioSrc, setAudioSrc] = useState(null);
   const timerIntervalRef = useRef(null);
 
   const { role } = JSON.parse(localStorage.getItem("user")) || {};
@@ -120,7 +122,7 @@ const TaskStudent = () => {
         const timeRemaining = endTime - currentTime;
 
         if (timeRemaining <= 0) {
-          setTimeLeft("Время вышло!");
+          setTimeLeft("00:00:00!");
           clearInterval(timerIntervalRef.current);
         } else {
           const hours = Math.floor(timeRemaining / 1000 / 3600);
@@ -196,6 +198,10 @@ const TaskStudent = () => {
 
     setShowResults(true);
     setOpenDialog(true); // Open the dialog to show results
+  };
+
+  const handleAudioChange = (newAudioSrc) => {
+    setAudioSrc(newAudioSrc); // Update the state with the new audio source
   };
 
   if (loading) return <LinearProgress />;
@@ -330,6 +336,17 @@ const TaskStudent = () => {
                       <Typography>Антонимы не добавлены</Typography>
                     )}
                   </Box>
+                )}
+
+                {exercise.type === "audio" && (
+                  <>
+                    <Box sx={{ p: 2, bgcolor: "#f5f5f5", borderRadius: 2 }}>
+                      <AudioPlayer
+                        audioSrc={exercise.audioSrc}
+                        onAudioChange={handleAudioChange}
+                      />
+                    </Box>
+                  </>
                 )}
               </Box>
             </ListItem>

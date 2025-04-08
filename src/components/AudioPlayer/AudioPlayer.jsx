@@ -1,46 +1,61 @@
-import React, { useRef, useState, useEffect } from "react";
-import "./AudioPlayer.scss";
-import mp3 from "../audio/ru_1_1v.mp3";
-import VolumeOffIcon from "@mui/icons-material/VolumeOff";
-import VolumeUpIcon from "@mui/icons-material/VolumeUp";
+import React, { useState, useRef, useEffect } from "react";
+import { Box, Typography, Slider, IconButton } from "@mui/material";
 import PlayCircleOutlineOutlinedIcon from "@mui/icons-material/PlayCircleOutlineOutlined";
 import PauseCircleOutlinedIcon from "@mui/icons-material/PauseCircleOutlined";
 import StopCircleOutlinedIcon from "@mui/icons-material/StopCircleOutlined";
+import VolumeUpIcon from "@mui/icons-material/VolumeUp";
+import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 
-const AudioPlayer = () => {
+const AudioPlayer = ({ audioSrc, onAudioChange }) => {
   const audioRef = useRef(null);
   const [playing, setPlaying] = useState(false);
   const [volume, setVolume] = useState(1);
   const [muted, setMuted] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const audio = audioRef.current;
 
-    const handleTimeUpdate = () => {
-      setCurrentTime(audio.currentTime);
-    };
+    if (audioSrc) {
+      audio.src = audioSrc; // Обновляем источник аудио
+      audio.load(); // Загружаем аудио файл заново
 
-    const handleLoadedMetadata = () => {
-      setDuration(audio.duration);
-    };
+      const handleTimeUpdate = () => {
+        setCurrentTime(audio.currentTime);
+      };
 
-    audio.addEventListener("timeupdate", handleTimeUpdate);
-    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
+      const handleLoadedMetadata = () => {
+        setDuration(audio.duration);
+      };
 
-    return () => {
-      audio.removeEventListener("timeupdate", handleTimeUpdate);
-      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
-    };
-  }, []);
+      const handleError = (event) => {
+        console.error("Error loading audio:", event);
+        setError(event.message || "Unknown error");
+      };
+
+      audio.addEventListener("timeupdate", handleTimeUpdate);
+      audio.addEventListener("loadedmetadata", handleLoadedMetadata);
+      audio.addEventListener("error", handleError);
+
+      return () => {
+        audio.removeEventListener("timeupdate", handleTimeUpdate);
+        audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
+        audio.removeEventListener("error", handleError);
+      };
+    }
+  }, [audioSrc]); // Слежение за изменениями аудио источника
 
   const handlePlayPause = () => {
     const audio = audioRef.current;
     if (playing) {
       audio.pause();
     } else {
-      audio.play();
+      audio.play().catch((err) => {
+        setError(err);
+        console.error("Error playing audio:", err);
+      });
     }
     setPlaying(!playing);
   };
@@ -53,8 +68,7 @@ const AudioPlayer = () => {
     setCurrentTime(0);
   };
 
-  const handleVolumeChange = (e) => {
-    const newVolume = parseFloat(e.target.value);
+  const handleVolumeChange = (e, newVolume) => {
     setVolume(newVolume);
     audioRef.current.volume = newVolume;
   };
@@ -64,73 +78,99 @@ const AudioPlayer = () => {
     audioRef.current.muted = !muted;
   };
 
-  const handleTimeChange = (e) => {
-    const newTime = parseFloat(e.target.value);
+  const handleTimeChange = (e, newTime) => {
     setCurrentTime(newTime);
     audioRef.current.currentTime = newTime;
   };
 
   return (
-    <div className="audio-player">
-      <audio ref={audioRef} src={mp3} />
-      <div className="controls">
-        <div className="time">
+    <Box
+      sx={{
+        width: "100%",
+        maxWidth: 600,
+        padding: 2,
+        bgcolor: "#808080",
+        borderRadius: 2,
+      }}
+    >
+      <audio ref={audioRef} type="audio/mp3" />
+      {error && (
+        <Typography color="error">
+          Ошибка при воспроизведении аудио: {error.message}
+        </Typography>
+      )}
+
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: 2,
+        }}
+      >
+        <Typography variant="body2">
           {Math.floor(currentTime / 60)}:
           {Math.floor(currentTime % 60)
             .toString()
             .padStart(2, "0")}
-        </div>
-        <input
-          type="range"
-          min="0"
-          max={duration}
-          step="0.01"
+        </Typography>
+
+        <Slider
           value={currentTime}
+          min={0}
+          max={duration || 0}
+          step={0.01}
           onChange={handleTimeChange}
-          className="rewind"
+          sx={{ flexGrow: 1, margin: "0 10px" }}
         />
-        <div className="time">
+
+        <Typography variant="body2">
           {Math.floor(duration / 60)}:
           {Math.floor(duration % 60)
             .toString()
             .padStart(2, "0")}
-        </div>
-      </div>
-      <div className="btn-p">
-        <div></div>
-        <div className="btn-play">
-          <button onClick={handlePlayPause}>
-            {playing ? (
-              <PauseCircleOutlinedIcon fontSize="large" />
-            ) : (
-              <PlayCircleOutlineOutlinedIcon fontSize="large" />
-            )}
-          </button>
-          <button onClick={handleStop}>
-            <StopCircleOutlinedIcon fontSize="large" />
-          </button>
-        </div>
-        <div className="btn-voice">
-          <button onClick={handleMuteUnmute}>
-            {muted ? (
-              <VolumeOffIcon fontSize="large" />
-            ) : (
-              <VolumeUpIcon fontSize="large" />
-            )}
-          </button>
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            value={volume}
-            onChange={handleVolumeChange}
-            disabled={muted}
-            className="voice"
-          />
-        </div>
-      </div>
-    </div>
+        </Typography>
+      </Box>
+
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 2,
+        }}
+      >
+        <IconButton onClick={handlePlayPause}>
+          {playing ? (
+            <PauseCircleOutlinedIcon fontSize="large" />
+          ) : (
+            <PlayCircleOutlineOutlinedIcon fontSize="large" />
+          )}
+        </IconButton>
+
+        <IconButton onClick={handleStop}>
+          <StopCircleOutlinedIcon fontSize="large" />
+        </IconButton>
+
+        <IconButton onClick={handleMuteUnmute}>
+          {muted ? (
+            <VolumeOffIcon fontSize="large" />
+          ) : (
+            <VolumeUpIcon fontSize="large" />
+          )}
+        </IconButton>
+
+        <Slider
+          value={volume}
+          min={0}
+          max={1}
+          step={0.01}
+          onChange={handleVolumeChange}
+          disabled={muted}
+          sx={{ width: 150 }}
+        />
+      </Box>
+    </Box>
   );
 };
 

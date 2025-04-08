@@ -167,6 +167,7 @@ const addExercise = async (req, res) => {
       options,
       optionas,
       correctOption,
+      audioSrc,
     } = req.body;
 
     // Проверяем корректность taskId
@@ -175,7 +176,7 @@ const addExercise = async (req, res) => {
     }
 
     // Проверяем, что тип упражнения корректный
-    if (!["text", "test", "antonym"].includes(type)) {
+    if (!["text", "test", "antonym", "audio"].includes(type)) {
       return res.status(400).json({ message: "Некорректный тип упражнения" });
     }
 
@@ -200,6 +201,7 @@ const addExercise = async (req, res) => {
       options,
       optionas,
       correctOption,
+      audioSrc,
     };
 
     // Добавляем упражнение в задание
@@ -213,6 +215,17 @@ const addExercise = async (req, res) => {
   } catch (error) {
     console.error("Ошибка при добавлении упражнения:", error);
     res.status(500).json({ message: "Ошибка сервера" });
+  }
+};
+
+const uploadAudio = async (req, res) => {
+  if (req.file) {
+    // Включаем базовый URL сервера (например, http://localhost:5000)
+    const audioPath = `http://localhost:5000/uploads/audio/${req.file.filename}`;
+    res.json({ path: audioPath });
+  } else {
+    console.log("Нет файла для загрузки");
+    res.status(400).json({ error: "Нет файла для загрузки" });
   }
 };
 
@@ -249,6 +262,31 @@ const deleteExercise = async (req, res) => {
   }
 };
 
+const deleteTask = async (req, res) => {
+  try {
+    const { taskId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(taskId)) {
+      return res.status(400).json({ message: "Некорректный ID задания" });
+    }
+
+    const task = await Task.findByIdAndDelete(taskId);
+    if (!task) {
+      return res.status(404).json({ message: "Задание не найдено" });
+    }
+
+    // Удаляем ссылку из Lesson
+    await Lesson.findByIdAndUpdate(task.lessonId, {
+      $pull: { tasks: taskId },
+    });
+
+    res.json({ message: "Задание удалено" });
+  } catch (error) {
+    console.error("Ошибка при удалении задания:", error);
+    res.status(500).json({ message: "Ошибка сервера" });
+  }
+};
+
 module.exports = {
   getTasksByLessonId,
   updateTaskTimer,
@@ -257,5 +295,7 @@ module.exports = {
   getTaskById,
   updateTask,
   addExercise,
+  uploadAudio,
   deleteExercise,
+  deleteTask,
 };

@@ -16,6 +16,8 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { styled } from "@mui/material/styles";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 import AntonymExercise from "./AntonymExercise";
@@ -24,6 +26,7 @@ import TextExercise from "./TextExercise";
 import TaskTimer from "./TaskTimer";
 import axios from "axios";
 import { toast } from "react-toastify";
+import AudioPlayer from "../../components/AudioPlayer/AudioPlayer";
 
 const TaskTeacher = () => {
   const { lessonId, taskId } = useParams(); // Получаем taskId из URL
@@ -34,6 +37,7 @@ const TaskTeacher = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [selectedAntonym, setSelectedAntonym] = useState("");
+  const [audioSrc, setAudioSrc] = useState(null);
   const [newExercise, setNewExercise] = useState({
     title: "",
     titlet: "",
@@ -46,6 +50,19 @@ const TaskTeacher = () => {
     word: "",
     antonym: "",
     type: "",
+    audioSrc: "",
+  });
+
+  const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
   });
 
   // Загружаем задание с сервера
@@ -111,10 +128,6 @@ const TaskTeacher = () => {
     }
 
     if (exerciseType === "test") {
-      /* if (!newExercise.titlet) {
-        toast.error("Название обязательно для тестового упражнения!");
-        return false;
-      } */
       if (!newExercise.options || newExercise.options.length < 2) {
         toast.error("Добавьте хотя бы два варианта ответа!");
         return false;
@@ -128,10 +141,10 @@ const TaskTeacher = () => {
       }
     }
 
-    /* if (exerciseType === "antonym" && !newExercise.titlea) {
-      toast.error("Название обязательно для упражнения с антонимами!");
+    if (exerciseType === "audio" && !newExercise.audioSrc) {
+      toast.error("Необходимо загрузить аудиофайл!");
       return false;
-    } */
+    }
 
     return true;
   };
@@ -140,6 +153,12 @@ const TaskTeacher = () => {
   const handleAddExercise = async () => {
     try {
       if (!validateExercise()) return;
+
+      // Проверка, что аудиофайл был выбран
+      if (exerciseType === "audio" && !newExercise.audioSrc) {
+        toast.error("Необходимо загрузить аудиофайл!");
+        return;
+      }
 
       const token = localStorage.getItem("token"); // Получаем токен
       if (!token) {
@@ -152,8 +171,8 @@ const TaskTeacher = () => {
         newExercise,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // ✅ Добавляем токен
-            "Content-Type": "application/json", // ✅ Указываем формат JSON
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         }
       );
@@ -247,6 +266,41 @@ const TaskTeacher = () => {
     }
   };
 
+  const handleAudioChange = (newAudioSrc) => {
+    setAudioSrc(newAudioSrc); // Update the state with the new audio source
+  };
+
+  const handleAudioUpload = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("audio", file);
+
+      const token = localStorage.getItem("token"); // Или получаем токен из контекста
+
+      try {
+        const res = await axios.post(
+          `http://localhost:5000/api/tasks/${taskId}/upload-audio`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`, // Добавляем токен
+            },
+          }
+        );
+
+        // Путь к файлу, который возвращает сервер
+        setNewExercise((prev) => ({
+          ...prev,
+          audioSrc: res.data.path, // Например, /uploads/audio/yourfile.mp3
+        }));
+      } catch (error) {
+        console.error("Error uploading audio:", error);
+      }
+    }
+  };
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Header />
@@ -287,6 +341,9 @@ const TaskTeacher = () => {
           <MenuItem onClick={() => handleSelectExercise("test")}>Тест</MenuItem>
           <MenuItem onClick={() => handleSelectExercise("antonym")}>
             Антонимы
+          </MenuItem>
+          <MenuItem onClick={() => handleSelectExercise("audio")}>
+            Аудио
           </MenuItem>
         </Menu>
 
@@ -388,6 +445,15 @@ const TaskTeacher = () => {
                     )}
                   </Box>
                 )}
+
+                {exercise.type === "audio" && (
+                  <Box sx={{ p: 2, bgcolor: "#f5f5f5", borderRadius: 2 }}>
+                    <AudioPlayer
+                      audioSrc={exercise.audioSrc}
+                      onAudioChange={handleAudioChange}
+                    />
+                  </Box>
+                )}
               </Box>
 
               {/* ✅ Кнопка удаления с DeleteIcon */}
@@ -447,6 +513,27 @@ const TaskTeacher = () => {
                     setNewExercise((prev) => ({ ...prev, [key]: value }))
                   }
                 />
+              )}
+              {exerciseType === "audio" && (
+                <Box sx={{ p: 2, bgcolor: "#f5f5f5", borderRadius: 2 }}>
+                  <AudioPlayer
+                    audioSrc={newExercise.audioSrc} // Используем путь, полученный с сервера
+                    onAudioChange={handleAudioChange}
+                  />
+                  <Button
+                    component="label"
+                    variant="contained"
+                    startIcon={<CloudUploadIcon />}
+                    sx={{ mt: 2, width: "100%" }}
+                  >
+                    Upload audio
+                    <VisuallyHiddenInput
+                      type="file"
+                      accept="audio/*"
+                      onChange={handleAudioUpload} // Загрузка файла
+                    />
+                  </Button>
+                </Box>
               )}
             </Box>
             <Button
