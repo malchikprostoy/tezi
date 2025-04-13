@@ -94,11 +94,7 @@ const AudioPlayer = ({ audioSrc, onAudioChange }) => {
       }}
     >
       <audio ref={audioRef} type="audio/mp3" />
-      {error && (
-        <Typography color="error">
-          Ошибка при воспроизведении аудио: {error.message}
-        </Typography>
-      )}
+      {error && <Typography color="error">{error.message}</Typography>}
 
       <Box
         sx={{

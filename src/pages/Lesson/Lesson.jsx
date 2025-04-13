@@ -15,6 +15,7 @@ import {
 import LinearProgress from "@mui/material/LinearProgress";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 
@@ -43,6 +44,7 @@ const LessonPage = () => {
       setLesson(response.data);
     } catch (error) {
       console.error("❌ Ошибка загрузки урока:", error);
+      toast.error(t("Error loading lesson"));
     }
   };
 
@@ -54,9 +56,12 @@ const LessonPage = () => {
         { title: newTitle },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      setNewTitle("");
       fetchLesson();
+      toast.success(t("Lesson title updated successfully"));
     } catch (error) {
       console.error("❌ Ошибка обновления названия:", error);
+      toast.error(t("Error updating lesson title"));
     }
   };
 
@@ -67,8 +72,10 @@ const LessonPage = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       navigate("/");
+      toast.success(t("Lesson deleted successfully"));
     } catch (error) {
       console.error("❌ Ошибка удаления урока:", error);
+      toast.error(t("Error deleting lesson"));
     }
   };
 
@@ -84,8 +91,10 @@ const LessonPage = () => {
       );
       setNewTask("");
       fetchLesson();
+      toast.success(t("Task added successfully"));
     } catch (error) {
       console.error("❌ Ошибка добавления задания:", error);
+      toast.error(t("Error adding task"));
     }
   };
 
@@ -94,7 +103,10 @@ const LessonPage = () => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Header />
-      <Container maxWidth="lg" sx={{ flex: 1, textAlign: "center", mt: 4 }}>
+      <Container
+        maxWidth="lg"
+        sx={{ flex: 1, textAlign: "center", mt: 4, mb: 3 }}
+      >
         {/* Breadcrumbs */}
         <Breadcrumbs separator="›" aria-label="breadcrumb" sx={{ mb: 2 }}>
           <Link to="/" style={{ textDecoration: "none", color: "#1976d2" }}>
@@ -103,17 +115,17 @@ const LessonPage = () => {
           <Typography color="text.primary">{lesson.title}</Typography>
         </Breadcrumbs>
 
-        <Typography variant="h4">Управление уроком</Typography>
+        <Typography variant="h4">{t("Manage Lesson")}</Typography>
         <Typography variant="h6" sx={{ mt: 2 }}>
-          Название урока: {lesson.title}
+          {t("Lesson title")}: {lesson.title}
         </Typography>
         <Typography variant="h6" sx={{ mt: 2 }}>
-          Код урока: {lesson.code}
+          {t("Lesson code")}: {lesson.code}
         </Typography>
 
         {/* Редактирование названия урока */}
         <TextField
-          label="Название урока"
+          label={t("Lesson Title")}
           fullWidth
           value={newTitle}
           onChange={(e) => setNewTitle(e.target.value)}
@@ -125,7 +137,7 @@ const LessonPage = () => {
           sx={{ mt: 2 }}
           onClick={updateLessonTitle}
         >
-          Сохранить
+          {t("Save")}
         </Button>
 
         <Button
@@ -134,12 +146,12 @@ const LessonPage = () => {
           sx={{ mt: 2, ml: 2 }}
           onClick={deleteLesson}
         >
-          Удалить урок
+          {t("Delete Lesson")}
         </Button>
 
         {/* Блок с заданиями */}
         <Typography variant="h5" sx={{ mt: 4 }}>
-          Задания
+          {t("Tasks")}
         </Typography>
         {lesson.tasks && lesson.tasks.length > 0 ? (
           <List sx={{ mt: 2 }}>
@@ -158,14 +170,14 @@ const LessonPage = () => {
           </List>
         ) : (
           <Typography variant="body1" sx={{ mt: 2, color: "gray" }}>
-            Нет заданий
+            {t("No tasks")}
           </Typography>
         )}
 
         {/* Добавление нового задания */}
         <Box sx={{ mt: 3 }}>
           <TextField
-            label="Новое задание"
+            label={t("New Task")}
             fullWidth
             value={newTask}
             onChange={(e) => setNewTask(e.target.value)}
@@ -176,7 +188,7 @@ const LessonPage = () => {
             sx={{ mt: 2 }}
             onClick={addTask}
           >
-            Добавить задание
+            {t("Add Task")}
           </Button>
         </Box>
       </Container>

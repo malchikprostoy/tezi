@@ -27,8 +27,10 @@ import TaskTimer from "./TaskTimer";
 import axios from "axios";
 import { toast } from "react-toastify";
 import AudioPlayer from "../../components/AudioPlayer/AudioPlayer";
+import { useTranslation } from "react-i18next";
 
 const TaskTeacher = () => {
+  const { t } = useTranslation();
   const { lessonId, taskId } = useParams(); // Получаем taskId из URL
   const navigate = useNavigate();
   const [task, setTask] = useState(null);
@@ -71,7 +73,7 @@ const TaskTeacher = () => {
       try {
         const token = localStorage.getItem("token");
         if (!token) {
-          toast.error("Вы не авторизованы");
+          toast.error(t("You are not authorized"));
           return;
         }
 
@@ -93,7 +95,7 @@ const TaskTeacher = () => {
         setTask(taskRes.data);
       } catch (error) {
         console.error("Ошибка загрузки задания:", error);
-        toast.error("Ошибка загрузки задания");
+        toast.error(t("Error loading lesson"));
       }
     };
 
@@ -123,26 +125,26 @@ const TaskTeacher = () => {
   // Проверка перед отправкой данных
   const validateExercise = () => {
     if (exerciseType === "text" && !newExercise.title) {
-      toast.error("Название обязательно для текстового упражнения!");
+      toast.error(t("Title is required for text exercise!"));
       return false;
     }
 
     if (exerciseType === "test") {
       if (!newExercise.options || newExercise.options.length < 2) {
-        toast.error("Добавьте хотя бы два варианта ответа!");
+        toast.error(t("Add at least two answer options!"));
         return false;
       }
       if (
         newExercise.correctOption === null ||
         newExercise.correctOption >= newExercise.options.length
       ) {
-        toast.error("Выберите корректный вариант ответа!");
+        toast.error(t("Select a valid correct option!"));
         return false;
       }
     }
 
     if (exerciseType === "audio" && !newExercise.audioSrc) {
-      toast.error("Необходимо загрузить аудиофайл!");
+      toast.error(t("You must upload an audio file!"));
       return false;
     }
 
@@ -156,13 +158,13 @@ const TaskTeacher = () => {
 
       // Проверка, что аудиофайл был выбран
       if (exerciseType === "audio" && !newExercise.audioSrc) {
-        toast.error("Необходимо загрузить аудиофайл!");
+        toast.error(t("You must upload an audio file!"));
         return;
       }
 
       const token = localStorage.getItem("token"); // Получаем токен
       if (!token) {
-        toast.error("Вы не авторизованы");
+        toast.error(t("You are not authorized"));
         return;
       }
 
@@ -179,7 +181,7 @@ const TaskTeacher = () => {
 
       if (!data.exercise || !data.exercise._id) {
         console.error("Ошибка: сервер не вернул _id!", data);
-        toast.error("Ошибка сохранения упражнения");
+        toast.error(t("Error saving task"));
         return;
       }
 
@@ -187,11 +189,11 @@ const TaskTeacher = () => {
         ...prevTask,
         exercises: [...(prevTask.exercises || []), data.exercise],
       }));
-      toast.success("Упражнение добавлено");
+      toast.success(t("Exercise added"));
       handleCloseModal();
     } catch (error) {
       console.error("Ошибка при добавлении упражнения:", error);
-      toast.error("Ошибка добавления упражнения");
+      toast.error(t("Error adding exercise"));
       if (error.response) {
         console.error("Ответ сервера:", error.response.data);
       }
@@ -207,7 +209,7 @@ const TaskTeacher = () => {
     try {
       const token = localStorage.getItem("token"); // Получаем токен
       if (!token) {
-        toast.error("Вы не авторизованы");
+        toast.error(t("You are not authorized"));
         return;
       }
 
@@ -224,10 +226,10 @@ const TaskTeacher = () => {
         ...prevTask,
         exercises: prevTask.exercises.filter((ex) => ex._id !== exerciseId),
       }));
-      toast.success("Упражнение удалено");
+      toast.success(t("Exercise deleted"));
     } catch (error) {
       console.error("Ошибка при удалении упражнения:", error);
-      toast.error("Ошибка удаления упражнения");
+      toast.error(t("Error deleting exercise"));
     }
   };
 
@@ -236,7 +238,7 @@ const TaskTeacher = () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        toast.error("Вы не авторизованы");
+        toast.error(t("You are not authorized"));
         return;
       }
 
@@ -257,12 +259,12 @@ const TaskTeacher = () => {
         }
       );
 
-      toast.success("Задание сохранено");
+      toast.success(t("Task saved"));
       setTask(data);
       navigate(`/teacher/lesson/${lessonId}`);
     } catch (error) {
       console.error("Ошибка при сохранении задания:", error);
-      toast.error("Ошибка при сохранении задания");
+      toast.error(t("Error saving task"));
     }
   };
 
@@ -295,8 +297,10 @@ const TaskTeacher = () => {
           ...prev,
           audioSrc: res.data.path, // Например, /uploads/audio/yourfile.mp3
         }));
+        toast.success(t("Audio uploaded successfully"));
       } catch (error) {
         console.error("Error uploading audio:", error);
+        toast.error(t("Error uploading audio"));
       }
     }
   };
@@ -327,7 +331,7 @@ const TaskTeacher = () => {
         </Typography>
 
         <Button variant="contained" onClick={handleOpenMenu}>
-          Добавить упражнение
+          {t("Add exercise")}
         </Button>
 
         <Menu
@@ -336,14 +340,16 @@ const TaskTeacher = () => {
           onClose={handleCloseMenu}
         >
           <MenuItem onClick={() => handleSelectExercise("text")}>
-            Текст
+            {t("Text")}
           </MenuItem>
-          <MenuItem onClick={() => handleSelectExercise("test")}>Тест</MenuItem>
+          <MenuItem onClick={() => handleSelectExercise("test")}>
+            {t("Test")}
+          </MenuItem>
           <MenuItem onClick={() => handleSelectExercise("antonym")}>
-            Антонимы
+            {t("Antonyms")}
           </MenuItem>
           <MenuItem onClick={() => handleSelectExercise("audio")}>
-            Аудио
+            {t("Audio")}
           </MenuItem>
         </Menu>
 
@@ -352,7 +358,7 @@ const TaskTeacher = () => {
           {task && task._id && <TaskTimer taskId={task._id} />}
           {/* Кнопка сохранения задания */}
           <Button variant="contained" onClick={handleSaveTask} sx={{ ml: 1 }}>
-            Сохранить задание
+            {t("Save task")}
           </Button>
         </Box>
 
@@ -432,7 +438,7 @@ const TaskTeacher = () => {
                         sx={{ mt: 1, bgcolor: "#fff" }}
                       >
                         <MenuItem disabled value="">
-                          Выберите
+                          {t("Select")}
                         </MenuItem>
                         {exercise.optionas.map((optiona, i) => (
                           <MenuItem key={i} value={optiona}>
@@ -441,7 +447,7 @@ const TaskTeacher = () => {
                         ))}
                       </Select>
                     ) : (
-                      <Typography>Антонимы не добавлены</Typography>
+                      <Typography>{t("No antonyms added")}</Typography>
                     )}
                   </Box>
                 )}
@@ -459,6 +465,7 @@ const TaskTeacher = () => {
               {/* ✅ Кнопка удаления с DeleteIcon */}
               <IconButton
                 onClick={() => handleDeleteExercise(exercise._id)}
+                sx={{ ml: 2 }}
                 color="error"
               >
                 <CloseIcon />
@@ -486,7 +493,7 @@ const TaskTeacher = () => {
             }}
           >
             <Typography variant="h6" sx={{ mb: 2, textAlign: "center" }}>
-              Добавить упражнение
+              {t("Add exercise")}
             </Typography>
 
             <Box sx={{ overflowY: "auto", flex: 1, pr: 1 }}>
@@ -526,7 +533,7 @@ const TaskTeacher = () => {
                     startIcon={<CloudUploadIcon />}
                     sx={{ mt: 2, width: "100%" }}
                   >
-                    Upload audio
+                    {t("Upload audio")}
                     <VisuallyHiddenInput
                       type="file"
                       accept="audio/*"
@@ -541,7 +548,7 @@ const TaskTeacher = () => {
               onClick={handleAddExercise}
               sx={{ mt: 2, width: "100%" }}
             >
-              Сохранить
+              {t("Save")}
             </Button>
           </Box>
         </Modal>

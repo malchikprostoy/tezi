@@ -7,15 +7,16 @@ import {
   Menu,
   MenuItem,
   ListItemIcon,
-  Divider,
   IconButton,
   Tooltip,
   CircularProgress,
 } from "@mui/material";
 import Logout from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const Profile = () => {
+  const { t } = useTranslation();
   const { user, loading, logout } = useAuth(); // Получаем данные из контекста
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -43,7 +44,7 @@ const Profile = () => {
         sx={{ backgroundColor: "transparent", color: "#fff" }}
         color="error"
       >
-        User not found or unauthorized
+        {t("User not found or unauthorized")}
       </Alert>
     );
   }
@@ -55,7 +56,7 @@ const Profile = () => {
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
-      <Tooltip title="Account settings">
+      <Tooltip title={t("Account settings")}>
         <IconButton
           onClick={handleClick}
           size="small"
@@ -109,15 +110,11 @@ const Profile = () => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={handleClose}>
-          <Avatar /> My account
-        </MenuItem>
-        <Divider />
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
-          Logout
+          {t("Logout")}
         </MenuItem>
       </Menu>
     </Box>

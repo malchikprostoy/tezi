@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import logo from "../../assets/img/Manas_logo.png";
 import { useNavigate } from "react-router-dom";
 import { Avatar, MenuItem, Select, Box } from "@mui/material";
@@ -9,12 +9,22 @@ const Header = () => {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
 
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("language");
+    if (savedLanguage) {
+      i18n.changeLanguage(savedLanguage);
+    }
+  }, [i18n]);
+
   const handleLogoClick = () => {
     navigate("/");
   };
 
   const handleLangChange = (e) => {
-    i18n.changeLanguage(e.target.value);
+    const selectedLanguage = e.target.value;
+    i18n.changeLanguage(selectedLanguage);
+    // Сохраняем выбранный язык в localStorage
+    localStorage.setItem("language", selectedLanguage);
   };
 
   return (

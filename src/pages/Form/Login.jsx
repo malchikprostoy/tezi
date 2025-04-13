@@ -209,7 +209,12 @@ const Login = () => {
               {" Register"}
             </Link>
           </Typography>
-          <Button variant="outlined" fullWidth onClick={handleGoogleLogin}>
+          <Button
+            variant="outlined"
+            fullWidth
+            onClick={handleGoogleLogin}
+            style={{ color: "black", border: "1px solid #000" }}
+          >
             Войти через Google
           </Button>
         </Box>

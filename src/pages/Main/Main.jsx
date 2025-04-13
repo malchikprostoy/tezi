@@ -82,7 +82,7 @@ const Main = () => {
           color: "white",
         }}
       >
-        <Footer content={t} />
+        <Footer />
       </Box>
     </Container>
   );

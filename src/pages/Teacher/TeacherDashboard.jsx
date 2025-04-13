@@ -11,11 +11,14 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../features/AuthContext";
+import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
 const TeacherDashboard = () => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [title, setTitle] = useState("");
-  const [setLessonCode] = useState("");
+  const [lessonCode, setLessonCode] = useState("");
   const [lessons, setLessons] = useState([]);
   const navigate = useNavigate();
 
@@ -30,6 +33,7 @@ const TeacherDashboard = () => {
       setLessons(response.data.lessons);
     } catch (error) {
       console.error("❌ Ошибка загрузки уроков:", error);
+      toast.error(t("Error loading lessons"));
     }
   }, [user]); // Выполняется только если `user` изменился
 
@@ -39,10 +43,12 @@ const TeacherDashboard = () => {
 
   const createLesson = async () => {
     if (!user || user.role !== "teacher") {
+      toast.error(t("You don't have permission to create lessons"));
       console.error("❌ У вас нет прав для создания урока!");
       return;
     }
     if (!title.trim()) {
+      toast.error(t("Lesson title cannot be empty"));
       console.error("❌ Название урока не может быть пустым!");
       return;
     }
@@ -65,15 +71,17 @@ const TeacherDashboard = () => {
       setLessonCode(response.data.lesson.code);
       setLessons((prevLessons) => [...prevLessons, response.data.lesson]); // Обновляем список
       setTitle(""); // Очищаем поле ввода
+      toast.success(t("Lesson created successfully"));
     } catch (error) {
       console.error("❌ Ошибка создания урока:", error);
+      toast.error(t("Error creating lesson"));
     }
   };
 
   return (
     <Container maxWidth="md" sx={{ textAlign: "center", mt: 4 }}>
       <Typography variant="h4" gutterBottom color={"#000"}>
-        Мои уроки
+        {t("My Lessons")}
       </Typography>
 
       <List sx={{ mb: 4 }}>
@@ -88,17 +96,17 @@ const TeacherDashboard = () => {
           ))
         ) : (
           <Typography variant="body1" color={"#000"}>
-            🔍 У вас пока нет уроков.
+            {t("You don't have any lessons yet")}
           </Typography>
         )}
       </List>
 
       <Typography variant="h5" gutterBottom color={"#000"}>
-        Создать новый урок
+        {t("Create a new lesson")}
       </Typography>
 
       <TextField
-        label="Название урока"
+        label={t("Lesson Title")}
         variant="outlined"
         fullWidth
         value={title}
@@ -107,7 +115,7 @@ const TeacherDashboard = () => {
       />
 
       <Button variant="contained" color="primary" onClick={createLesson}>
-        Создать урок
+        {t("Create Lesson")}
       </Button>
     </Container>
   );

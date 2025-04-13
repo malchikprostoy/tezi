@@ -8,8 +8,10 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
+import { useTranslation } from "react-i18next";
 
 const TestExercise = ({ newExercise, handleExerciseChange }) => {
+  const { t } = useTranslation();
   // Проверяем, есть ли массив options
   const options = newExercise.options || [];
 
@@ -29,11 +31,11 @@ const TestExercise = ({ newExercise, handleExerciseChange }) => {
   return (
     <Box>
       <Typography variant="h6" gutterBottom>
-        Добавить тест
+        {t("Add test")}
       </Typography>
       <TextField
         fullWidth
-        label="Описание задания"
+        label={t("Task description")}
         value={newExercise.titlet}
         onChange={(e) => handleExerciseChange("titlet", e.target.value)}
         margin="normal"
@@ -42,13 +44,13 @@ const TestExercise = ({ newExercise, handleExerciseChange }) => {
       />
       <TextField
         fullWidth
-        label="Вопрос"
+        label={t("Question")}
         value={newExercise.question}
         onChange={(e) => handleExerciseChange("question", e.target.value)}
         margin="normal"
       />
       {/* Варианты ответов */}
-      <Typography variant="subtitle1">Варианты ответов:</Typography>
+      <Typography variant="subtitle1">{t("Answer options")}:</Typography>
       <RadioGroup
         value={newExercise.correctOption}
         onChange={(e) =>
@@ -63,7 +65,7 @@ const TestExercise = ({ newExercise, handleExerciseChange }) => {
             <Radio value={index} />
             <TextField
               fullWidth
-              label={`Вариант ${index + 1}`}
+              label={`${t("Option")} ${index + 1}`}
               value={option}
               onChange={(e) => {
                 const updatedOptions = [...options];

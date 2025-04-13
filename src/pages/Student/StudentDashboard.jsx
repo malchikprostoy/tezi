@@ -12,8 +12,10 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const StudentDashboard = () => {
+  const { t } = useTranslation();
   const [code, setCode] = useState("");
   const [message, setMessage] = useState("");
   const [lessons, setLessons] = useState([]);
@@ -24,8 +26,8 @@ const StudentDashboard = () => {
     if (token) {
       fetchStudentLessons(token);
     } else {
-      toast.error("Вы не авторизованы!");
-      setMessage("Вы не авторизованы!");
+      toast.error(t("You are not logged in!"));
+      setMessage(t("You are not logged in!"));
     }
   }, []);
 
@@ -67,7 +69,7 @@ const StudentDashboard = () => {
   const joinLesson = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
-      toast.error("Вы не авторизованы.");
+      toast.error(t("You are not logged in!"));
       return;
     }
 
@@ -78,28 +80,28 @@ const StudentDashboard = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      toast.success(response.data.message || "Вы успешно присоединились!");
+      toast.success(t("You have successfully joined!"));
       setCode(""); // Очистить поле ввода
       fetchStudentLessons(); // 🔄 Обновляем список уроков
     } catch (error) {
-      console.error("Ошибка при присоединении:", error);
-      toast.error(error.response?.data?.message || "Ошибка при присоединении.");
+      console.error(t("Error when joining:"), error);
+      toast.error(error.response?.data?.message || t("Error when joining"));
     }
   };
 
   return (
     <Container maxWidth="sm" sx={{ textAlign: "center", mt: 4 }}>
       <Typography variant="h4" color={"#000"} gutterBottom>
-        Присоединение к уроку
+        {t("Joining the lesson")}
       </Typography>
 
       <Typography variant="h5" sx={{ mt: 4, color: "#000" }}>
-        Мои уроки
+        {t("My lessons")}
       </Typography>
 
       {lessons.length === 0 ? (
         <Typography color="text.secondary" sx={{ mt: 2 }}>
-          Вы еще не присоединились ни к одному уроку.
+          {t("You have not joined any lesson yet")}
         </Typography>
       ) : (
         <List sx={{ color: "#000" }}>
@@ -121,7 +123,7 @@ const StudentDashboard = () => {
       )}
 
       <TextField
-        label="Введите код урока"
+        label={t("Enter the lesson code")}
         variant="outlined"
         fullWidth
         value={code}
@@ -130,7 +132,7 @@ const StudentDashboard = () => {
       />
 
       <Button variant="contained" color="primary" onClick={joinLesson}>
-        Присоединиться
+        {t("Join")}
       </Button>
     </Container>
   );

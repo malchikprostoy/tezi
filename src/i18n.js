@@ -7,6 +7,8 @@ import translationRU from "./components/language/ru/ru.json";
 import translationKG from "./components/language/kg/kg.json";
 import translationTR from "./components/language/tr/tr.json";
 
+const savedLanguage = localStorage.getItem("language") || "tr";
+
 const resources = {
   en: {
     translation: translationEN,
@@ -24,7 +26,7 @@ const resources = {
 
 i18n.use(initReactI18next).init({
   resources,
-  lng: "tr", // Язык по умолчанию
+  lng: savedLanguage, // Язык по умолчанию
   fallbackLng: "en", // Резервный язык
   interpolation: {
     escapeValue: false, // React уже защищает от XSS

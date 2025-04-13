@@ -19,8 +19,10 @@ import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 import { toast } from "react-toastify";
 import { format } from "date-fns";
+import { useTranslation } from "react-i18next";
 
 const LessonPageStudent = () => {
+  const { t } = useTranslation();
   const { lessonId } = useParams();
   const navigate = useNavigate();
   const [lesson, setLesson] = useState(null);
@@ -35,7 +37,7 @@ const LessonPageStudent = () => {
   const fetchLesson = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
-      toast.error("Необходимо войти в систему");
+      toast.error(t("You need to log in"));
       navigate("/login");
       return;
     }
@@ -55,7 +57,7 @@ const LessonPageStudent = () => {
 
       setTasks(tasksData.data);
     } catch (error) {
-      toast.error("Ошибка загрузки урока");
+      toast.error(t("Error loading the lesson"));
       navigate("/");
     } finally {
       setLoading(false);
@@ -72,10 +74,10 @@ const LessonPageStudent = () => {
         }
       );
 
-      toast.success("Вы покинули урок");
+      toast.success(t("You have left the lesson"));
       navigate("/");
     } catch (error) {
-      toast.error("Ошибка выхода из урока");
+      toast.error(t("Error leaving the lesson"));
       setLeaving(false);
     }
   };
@@ -90,17 +92,19 @@ const LessonPageStudent = () => {
 
     const formattedStart = start
       ? format(new Date(start), "dd.MM.yyyy HH:mm")
-      : "Не указано";
+      : t("Not specified");
 
     const formattedDuration = duration
-      ? `${Math.round(duration / 60)} мин`
-      : "Не указано";
+      ? `${Math.round(duration / 60)} ${t("min")}`
+      : t("Not specified");
 
-    return `Начало: ${formattedStart} | Длительность: ${formattedDuration}`;
+    return `${t("Start")}: ${formattedStart} | ${t(
+      "Duration"
+    )}: ${formattedDuration}`;
   };
 
   if (loading) return <LinearProgress />;
-  if (!lesson) return <Alert severity="error">Урок не найден</Alert>;
+  if (!lesson) return <Alert severity="error">{t("Lesson not found")}</Alert>;
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
@@ -114,18 +118,15 @@ const LessonPageStudent = () => {
         </Breadcrumbs>
 
         <Typography variant="h4">{lesson.title}</Typography>
-        <Typography variant="body1" sx={{ mt: 2 }}>
-          Вы присоединились к этому уроку
-        </Typography>
 
         <Typography variant="h6" sx={{ mt: 4 }}>
-          Задания:
+          {t("Tasks")}
         </Typography>
 
         <List>
           {tasks.length === 0 ? (
             <Typography variant="body1" sx={{ mt: 2 }}>
-              Нет заданий для этого урока.
+              {t("There are no assignments for this lesson")}
             </Typography>
           ) : (
             tasks.map((task) => (
@@ -149,7 +150,7 @@ const LessonPageStudent = () => {
           onClick={leaveLesson}
           disabled={leaving}
         >
-          {leaving ? "Выходим..." : "Покинуть урок"}
+          {t(leaving ? "Leaving..." : "Leave the lesson")}
         </Button>
       </Container>
       <Footer />

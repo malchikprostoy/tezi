@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography, Container } from "@mui/material";
+import { Box, Typography, CircularProgress } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
 const Footer = () => {
@@ -16,7 +16,8 @@ const Footer = () => {
       }}
     >
       <Typography variant="body2" color="white">
-        © {currentYear} {t("footer") || "Loading..."}
+        © {currentYear}{" "}
+        {t("KYRGYZ-TURKISH MANAS UNIVERSITY") || <CircularProgress />}
       </Typography>
     </Box>
   );

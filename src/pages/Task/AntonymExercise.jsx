@@ -9,8 +9,10 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
+import { useTranslation } from "react-i18next";
 
 const AntonymExercise = ({ newExercise, handleExerciseChange }) => {
+  const { t } = useTranslation();
   const [optionas, setOptionas] = useState([""]); // Начальное состояние — одно поле
 
   // Добавить новое поле для ответа
@@ -42,11 +44,11 @@ const AntonymExercise = ({ newExercise, handleExerciseChange }) => {
       }}
     >
       <Typography variant="h6" gutterBottom>
-        Добавить упражнение
+        {t("Add exercise")}
       </Typography>
       <TextField
         fullWidth
-        label="Описание задания"
+        label={t("Task description")}
         value={newExercise.titlea}
         onChange={(e) => handleExerciseChange("titlea", e.target.value)}
         margin="normal"
@@ -55,7 +57,7 @@ const AntonymExercise = ({ newExercise, handleExerciseChange }) => {
       />
       <TextField
         fullWidth
-        label="Слово"
+        label={t("Word")}
         value={newExercise.word}
         onChange={(e) => handleExerciseChange("word", e.target.value)}
         margin="normal"
@@ -73,7 +75,7 @@ const AntonymExercise = ({ newExercise, handleExerciseChange }) => {
             <Radio value={index} />
             <TextField
               fullWidth
-              label={`Ответ ${index + 1}`}
+              label={`${t("Answer")} ${index + 1}`}
               value={optiona}
               onChange={(e) => handleOptionChange(index, e.target.value)}
               margin="normal"

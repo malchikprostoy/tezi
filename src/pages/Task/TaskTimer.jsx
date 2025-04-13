@@ -10,8 +10,10 @@ import {
 } from "@mui/material";
 import { format } from "date-fns"; // Для форматирования времени
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const TaskTimer = ({ taskId }) => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [startTime, setStartTime] = useState(
     format(new Date(), "yyyy-MM-dd'T'HH:mm")
@@ -47,7 +49,7 @@ const TaskTimer = ({ taskId }) => {
           },
         }
       );
-      toast("Таймер успешно сохранён");
+      toast(t("Timer saved successfully"));
       handleClose();
     } catch (error) {
       console.error("Ошибка при сохранении таймера:", error);
@@ -57,13 +59,13 @@ const TaskTimer = ({ taskId }) => {
   return (
     <>
       <Button variant="outlined" onClick={handleClickOpen}>
-        Установить таймер
+        {t("Set timer")}
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Установить таймер</DialogTitle>
+        <DialogTitle>{t("Set timer")}</DialogTitle>
         <DialogContent>
           <TextField
-            label="Время начала"
+            label={t("Start time")}
             type="datetime-local"
             fullWidth
             value={startTime}
@@ -71,7 +73,7 @@ const TaskTimer = ({ taskId }) => {
             sx={{ mb: 2, mt: 2 }}
           />
           <TextField
-            label="Продолжительность (минуты)"
+            label={t("Duration (minutes)")}
             type="number"
             fullWidth
             value={duration}
@@ -79,8 +81,8 @@ const TaskTimer = ({ taskId }) => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Отменить</Button>
-          <Button onClick={handleSave}>Сохранить</Button>
+          <Button onClick={handleClose}>{t("Cancel")}</Button>
+          <Button onClick={handleSave}>{t("Save")}</Button>
         </DialogActions>
       </Dialog>
     </>

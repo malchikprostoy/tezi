@@ -25,8 +25,10 @@ import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 import { toast } from "react-toastify";
 import AudioPlayer from "../../components/AudioPlayer/AudioPlayer";
+import { useTranslation } from "react-i18next";
 
 const TaskStudent = () => {
+  const { t } = useTranslation();
   const { lessonId, taskId } = useParams();
   const [task, setTask] = useState(null);
   const [exercises, setExercises] = useState([]);
@@ -56,7 +58,7 @@ const TaskStudent = () => {
   const fetchTask = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
-      toast.error("Необходимо войти в систему");
+      toast.error(t("You need to log in"));
       return;
     }
 
@@ -75,12 +77,12 @@ const TaskStudent = () => {
         setLoading(false);
         fetchTimer(data._id);
       } else {
-        toast.error("Ошибка: задание не найдено");
+        toast.error(t("Task not found"));
         setLoading(false);
       }
     } catch (error) {
-      console.error("Ошибка при загрузке задания:", error);
-      toast.error("Ошибка загрузки задания");
+      console.error(t("Error loading the task:"), error);
+      toast.error(t("Error loading the task"));
       setLoading(false);
     }
   };
@@ -89,7 +91,7 @@ const TaskStudent = () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        toast.error("Необходимо войти в систему");
+        toast.error(t("You need to log in"));
         return;
       }
 
@@ -107,7 +109,7 @@ const TaskStudent = () => {
       }
     } catch (error) {
       console.error("Ошибка при загрузке таймера:", error);
-      toast.error("Ошибка при загрузке таймера");
+      toast.error(t("Error loading the timer"));
     }
   };
 
@@ -139,7 +141,7 @@ const TaskStudent = () => {
   const fetchLesson = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
-      toast.error("Необходимо войти в систему");
+      toast.error(t("You need to log in"));
       return;
     }
 
@@ -155,11 +157,11 @@ const TaskStudent = () => {
       if (data && data._id) {
         setLesson(data);
       } else {
-        toast.error("Ошибка: урок не найден");
+        toast.error(t("Lesson not found"));
       }
     } catch (error) {
       console.error("Ошибка при загрузке урока:", error);
-      toast.error("Ошибка загрузки урока");
+      toast.error(t("Error loading the lesson"));
     }
   };
 
@@ -205,7 +207,7 @@ const TaskStudent = () => {
   };
 
   if (loading) return <LinearProgress />;
-  if (!task) return <Alert severity="info">Задание не найдено</Alert>;
+  if (!task) return <Alert severity="info">{t("Task not found")}</Alert>;
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
@@ -257,9 +259,7 @@ const TaskStudent = () => {
           </Box>
         )}
 
-        <Typography variant="h6" sx={{ mt: 4 }}>
-          Упражнения:
-        </Typography>
+        <Typography variant="h6">{t("Exercises:")}</Typography>
         <List>
           {exercises.map((exercise) => (
             <ListItem key={exercise._id}>
@@ -267,7 +267,7 @@ const TaskStudent = () => {
                 {exercise.type === "text" && (
                   <>
                     <Typography variant="h6">{exercise.title}</Typography>
-                    <Typography>{exercise.text || "Нет текста"}</Typography>
+                    <Typography>{exercise.text}</Typography>
                   </>
                 )}
 
@@ -324,7 +324,7 @@ const TaskStudent = () => {
                         sx={{ mt: 1, bgcolor: "#fff" }}
                       >
                         <MenuItem disabled value="">
-                          Выберите
+                          {t("Choose")}
                         </MenuItem>
                         {exercise.optionas.map((optiona, i) => (
                           <MenuItem key={i} value={optiona}>
@@ -333,7 +333,7 @@ const TaskStudent = () => {
                         ))}
                       </Select>
                     ) : (
-                      <Typography>Антонимы не добавлены</Typography>
+                      <Typography>{t("No antonyms added")}</Typography>
                     )}
                   </Box>
                 )}
@@ -361,14 +361,14 @@ const TaskStudent = () => {
             onClick={handleFinish}
             size="large"
           >
-            Завершить
+            {t("Finish")}
           </Button>
         </Box>
 
         {/* Результаты */}
         {showResults && (
           <Alert severity="success" sx={{ mt: 3 }}>
-            Вы завершили задание! Проверьте свои ответы выше.
+            {t("You've completed the task! Check your answers above.")}
           </Alert>
         )}
       </Container>
@@ -376,7 +376,7 @@ const TaskStudent = () => {
 
       {/* Диалог с результатами */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-        <DialogTitle>Результаты</DialogTitle>
+        <DialogTitle>{t("Results")}</DialogTitle>
         <DialogContent>
           {answers.map((answer, index) => (
             <Box key={index} sx={{ mb: 2 }}>
@@ -387,14 +387,14 @@ const TaskStudent = () => {
                   fontWeight: "bold",
                 }}
               >
-                {answer.correct ? "Правильно" : "Неправильно"}
+                {answer.correct ? t("Correct") : t("Incorrect")}
               </Typography>
             </Box>
           ))}
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenDialog(false)} color="primary">
-            Закрыть
+            {t("Close")}
           </Button>
         </DialogActions>
       </Dialog>
