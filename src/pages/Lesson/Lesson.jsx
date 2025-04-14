@@ -11,9 +11,11 @@ import {
   List,
   ListItemText,
   ListItemButton,
+  IconButton,
 } from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import CloseIcon from "@mui/icons-material/Close";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import Header from "../../components/header/Header";
@@ -76,6 +78,23 @@ const LessonPage = () => {
     } catch (error) {
       console.error("❌ Ошибка удаления урока:", error);
       toast.error(t("Error deleting lesson"));
+    }
+  };
+
+  const handleDeleteTask = async (taskId) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(
+        `http://localhost:5000/api/lessons/${lessonId}/tasks/${taskId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      toast.success(t("Task deleted successfully"));
+      fetchLesson(); // Обновим список заданий
+    } catch (error) {
+      console.error("❌ Ошибка удаления задания:", error);
+      toast.error(t("Error deleting task"));
     }
   };
 
@@ -156,16 +175,35 @@ const LessonPage = () => {
         {lesson.tasks && lesson.tasks.length > 0 ? (
           <List sx={{ mt: 2 }}>
             {lesson.tasks.map((task) => (
-              <ListItemButton
+              <Box
                 key={task._id}
-                onClick={() => {
-                  navigate(
-                    `/teacher/lesson/${lessonId}/tasks/${task._id}/edit`
-                  );
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  p: 1,
+                  mb: 1,
                 }}
               >
-                <ListItemText primary={task.title} />
-              </ListItemButton>
+                <ListItemButton
+                  sx={{ flex: 1 }}
+                  onClick={() => {
+                    navigate(
+                      `/teacher/lesson/${lessonId}/tasks/${task._id}/edit`
+                    );
+                  }}
+                >
+                  <ListItemText primary={task.title} />
+                </ListItemButton>
+                <IconButton
+                  variant="outlined"
+                  color="error"
+                  onClick={() => handleDeleteTask(task._id)}
+                  sx={{ ml: 2 }}
+                >
+                  <CloseIcon />
+                </IconButton>
+              </Box>
             ))}
           </List>
         ) : (
