@@ -129,7 +129,7 @@ const LessonPage = () => {
         {/* Breadcrumbs */}
         <Breadcrumbs separator="›" aria-label="breadcrumb" sx={{ mb: 2 }}>
           <Link to="/" style={{ textDecoration: "none", color: "#1976d2" }}>
-            <HomeOutlinedIcon />
+            <HomeOutlinedIcon sx={{ color: "#d93125" }} />
           </Link>
           <Typography color="text.primary">{lesson.title}</Typography>
         </Breadcrumbs>
@@ -151,18 +151,33 @@ const LessonPage = () => {
           sx={{ mt: 2 }}
         />
         <Button
-          variant="contained"
-          color="primary"
-          sx={{ mt: 2 }}
+          variant="outlined"
+          color="error"
+          sx={{
+            mt: 2,
+            "&:hover": {
+              backgroundColor: "#a30000", // чуть светлее при наведении
+              boxShadow: "0px -4px 12px rgba(0, 0, 0, 0.5)",
+              color: "#fff",
+            },
+          }}
           onClick={updateLessonTitle}
         >
           {t("Save")}
         </Button>
 
         <Button
-          variant="contained"
+          variant="outlined"
           color="error"
-          sx={{ mt: 2, ml: 2 }}
+          sx={{
+            mt: 2,
+            ml: 2,
+            "&:hover": {
+              backgroundColor: "#a30000", // чуть светлее при наведении
+              boxShadow: "0px -4px 12px rgba(0, 0, 0, 0.5)",
+              color: "#fff",
+            },
+          }}
           onClick={deleteLesson}
         >
           {t("Delete Lesson")}
@@ -221,9 +236,16 @@ const LessonPage = () => {
             onChange={(e) => setNewTask(e.target.value)}
           />
           <Button
-            variant="contained"
-            color="secondary"
-            sx={{ mt: 2 }}
+            variant="outlined"
+            color="error"
+            sx={{
+              mt: 2,
+              "&:hover": {
+                backgroundColor: "#a30000", // чуть светлее при наведении
+                boxShadow: "0px -4px 12px rgba(0, 0, 0, 0.5)",
+                color: "#fff",
+              },
+            }}
             onClick={addTask}
           >
             {t("Add Task")}

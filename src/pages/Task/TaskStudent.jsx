@@ -215,7 +215,7 @@ const TaskStudent = () => {
       <Container sx={{ flexGrow: 1, mt: 4 }}>
         <Breadcrumbs separator="›" aria-label="breadcrumb" sx={{ mb: 2 }}>
           <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-            <HomeOutlinedIcon />
+            <HomeOutlinedIcon sx={{ color: "#d93125" }} />
           </Link>
           {lesson && (
             <Link
@@ -356,10 +356,17 @@ const TaskStudent = () => {
         {/* Кнопка завершения задания */}
         <Box sx={{ mt: 3, mb: 3 }}>
           <Button
-            variant="contained"
-            color="primary"
+            variant="outlined"
+            color="error"
             onClick={handleFinish}
             size="large"
+            sx={{
+              "&:hover": {
+                backgroundColor: "#a30000", // чуть светлее при наведении
+                boxShadow: "0px -4px 12px rgba(0, 0, 0, 0.5)",
+                color: "#fff",
+              },
+            }}
           >
             {t("Finish")}
           </Button>

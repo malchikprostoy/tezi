@@ -58,7 +58,18 @@ const TaskTimer = ({ taskId }) => {
 
   return (
     <>
-      <Button variant="outlined" onClick={handleClickOpen}>
+      <Button
+        variant="outlined"
+        color="error"
+        sx={{
+          "&:hover": {
+            backgroundColor: "#a30000", // чуть светлее при наведении
+            boxShadow: "0px -4px 12px rgba(0, 0, 0, 0.5)",
+            color: "#fff",
+          },
+        }}
+        onClick={handleClickOpen}
+      >
         {t("Set timer")}
       </Button>
       <Dialog open={open} onClose={handleClose}>
@@ -81,8 +92,12 @@ const TaskTimer = ({ taskId }) => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>{t("Cancel")}</Button>
-          <Button onClick={handleSave}>{t("Save")}</Button>
+          <Button variant="outlined" color="error" onClick={handleClose}>
+            {t("Cancel")}
+          </Button>
+          <Button variant="outlined" color="error" onClick={handleSave}>
+            {t("Save")}
+          </Button>
         </DialogActions>
       </Dialog>
     </>

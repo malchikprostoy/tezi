@@ -114,7 +114,18 @@ const TeacherDashboard = () => {
         sx={{ mb: 2 }}
       />
 
-      <Button variant="contained" color="primary" onClick={createLesson}>
+      <Button
+        variant="outlined"
+        color="error"
+        onClick={createLesson}
+        sx={{
+          "&:hover": {
+            backgroundColor: "#a30000", // чуть светлее при наведении
+            boxShadow: "0px -4px 12px rgba(0, 0, 0, 0.5)",
+            color: "#fff",
+          },
+        }}
+      >
         {t("Create Lesson")}
       </Button>
     </Container>

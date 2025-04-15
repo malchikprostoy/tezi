@@ -312,7 +312,7 @@ const TaskTeacher = () => {
       <Box sx={{ flex: 1, p: 3 }}>
         <Breadcrumbs separator="›" aria-label="breadcrumb" sx={{ mb: 2 }}>
           <Link to="/" style={{ textDecoration: "none", color: "#1976d2" }}>
-            <HomeOutlinedIcon />
+            <HomeOutlinedIcon sx={{ color: "#d93125" }} />
           </Link>
           {lesson && (
             <Link
@@ -330,7 +330,18 @@ const TaskTeacher = () => {
           {task?.title || "Загрузка задания..."}
         </Typography>
 
-        <Button variant="contained" onClick={handleOpenMenu}>
+        <Button
+          variant="outlined"
+          color="error"
+          onClick={handleOpenMenu}
+          sx={{
+            "&:hover": {
+              backgroundColor: "#a30000", // чуть светлее при наведении
+              boxShadow: "0px -4px 12px rgba(0, 0, 0, 0.5)",
+              color: "#fff",
+            },
+          }}
+        >
           {t("Add exercise")}
         </Button>
 
@@ -357,7 +368,19 @@ const TaskTeacher = () => {
           {/* Добавим проверку на существование task перед отображением таймера */}
           {task && task._id && <TaskTimer taskId={task._id} />}
           {/* Кнопка сохранения задания */}
-          <Button variant="contained" onClick={handleSaveTask} sx={{ ml: 1 }}>
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={handleSaveTask}
+            sx={{
+              ml: 1,
+              "&:hover": {
+                backgroundColor: "#a30000", // чуть светлее при наведении
+                boxShadow: "0px -4px 12px rgba(0, 0, 0, 0.5)",
+                color: "#fff",
+              },
+            }}
+          >
             {t("Save task")}
           </Button>
         </Box>
@@ -544,9 +567,18 @@ const TaskTeacher = () => {
               )}
             </Box>
             <Button
-              variant="contained"
+              variant="outlined"
+              color="error"
               onClick={handleAddExercise}
-              sx={{ mt: 2, width: "100%" }}
+              sx={{
+                mt: 2,
+                width: "100%",
+                "&:hover": {
+                  backgroundColor: "#a30000", // чуть светлее при наведении
+                  boxShadow: "0px -4px 12px rgba(0, 0, 0, 0.5)",
+                  color: "#fff",
+                },
+              }}
             >
               {t("Save")}
             </Button>

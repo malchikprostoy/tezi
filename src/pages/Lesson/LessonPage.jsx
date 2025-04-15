@@ -113,7 +113,7 @@ const LessonPageStudent = () => {
       <Container sx={{ flexGrow: 1, mt: 4 }}>
         <Breadcrumbs separator="›" aria-label="breadcrumb" sx={{ mb: 2 }}>
           <Link color="inherit" onClick={() => navigate("/")}>
-            <HomeOutlinedIcon />
+            <HomeOutlinedIcon sx={{ color: "#d93125" }} />
           </Link>
           <Typography color="text.primary">{lesson.title}</Typography>
         </Breadcrumbs>
@@ -170,9 +170,16 @@ const LessonPageStudent = () => {
         </List>
 
         <Button
-          variant="contained"
-          color="secondary"
-          sx={{ mt: 3 }}
+          variant="outlined"
+          color="error"
+          sx={{
+            mt: 3,
+            "&:hover": {
+              backgroundColor: "#a30000", // чуть светлее при наведении
+              boxShadow: "0px -4px 12px rgba(0, 0, 0, 0.5)",
+              color: "#fff",
+            },
+          }}
           onClick={leaveLesson}
           disabled={leaving}
         >
