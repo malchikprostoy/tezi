@@ -103,5 +103,6 @@
     "My account": "Менин аккаунтум",
     "Logout": "Чыгуу",
     "Task deleted successfully": "Тапшырма ийгиликтүү алынып салынды",
-    "Error deleting task": "Тапшырманы алып салууда ката кетти"
+    "Error deleting task": "Тапшырманы алып салууда ката кетти",
+    "This task will be available at": "Бул тапшырманын ачылыш убакытысы"
 }

@@ -103,5 +103,6 @@
     "My account": "Мой аккаунт",
     "Logout": "Выйти",
     "Task deleted successfully": "Задача успешно удалена ",
-    "Error deleting task": "Ошибка при удалении задачи"
+    "Error deleting task": "Ошибка при удалении задачи",
+    "This task will be available at": "Это задание будет доступно"
 }

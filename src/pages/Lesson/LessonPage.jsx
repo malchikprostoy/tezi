@@ -15,6 +15,7 @@ import {
   ListItemButton,
 } from "@mui/material";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import HttpsOutlinedIcon from "@mui/icons-material/HttpsOutlined";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 import { toast } from "react-toastify";
@@ -129,17 +130,42 @@ const LessonPageStudent = () => {
               {t("There are no assignments for this lesson")}
             </Typography>
           ) : (
-            tasks.map((task) => (
-              <ListItemButton
-                key={task._id}
-                onClick={() => handleTaskClick(task._id)}
-              >
-                <ListItemText
-                  primary={task.title}
-                  secondary={renderTaskInfo(task)}
-                />
-              </ListItemButton>
-            ))
+            tasks.map((task) => {
+              const now = new Date();
+              const startTime = task.timer?.startTime
+                ? new Date(task.timer.startTime)
+                : null;
+              const isLocked = startTime && now < startTime;
+
+              const handleClick = () => {
+                if (isLocked) {
+                  toast.info(
+                    `${t("This task will be available at")}: ${format(
+                      startTime,
+                      "dd.MM.yyyy HH:mm"
+                    )}`
+                  );
+                } else {
+                  handleTaskClick(task._id);
+                }
+              };
+
+              return (
+                <ListItemButton key={task._id} onClick={handleClick}>
+                  <ListItemText
+                    primary={
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                      >
+                        {task.title}
+                        {isLocked && <HttpsOutlinedIcon color="action" />}
+                      </Box>
+                    }
+                    secondary={renderTaskInfo(task)}
+                  />
+                </ListItemButton>
+              );
+            })
           )}
         </List>
 

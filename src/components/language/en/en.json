@@ -102,5 +102,6 @@
     "My account": "My account",
     "Logout": "Logout",
     "Task deleted successfully": "Task deleted successfully",
-    "Error deleting task": "Error deleting task"
+    "Error deleting task": "Error deleting task",
+    "This task will be available at": "This task will be available at"
 }

@@ -14,7 +14,7 @@
   "There are no assignments for this lesson": "Bu derste görev yok",
   "Tasks": "Görevler",
   "Lesson not found": "Ders bulunamadı",
-  "Start": "Zamanı",
+  "Start": "Açılış zamanı",
   "Duration": "Süre",
   "min": "dak",
   "Not specified": "Belirtilmemiş",
@@ -103,5 +103,6 @@
   "My account": "Hesabım",
   "Logout": "Çıkış yap",
   "Task deleted successfully": "Görev başarıyla kaldırıldı",
-  "Error deleting task": "Görevi silerken hata oluştu"
+  "Error deleting task": "Görevi silerken hata oluştu",
+  "This task will be available at": "Bu görevi açılış zamanı"
 }
