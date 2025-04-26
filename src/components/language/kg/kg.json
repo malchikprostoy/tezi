@@ -104,5 +104,6 @@
     "Logout": "Чыгуу",
     "Task deleted successfully": "Тапшырма ийгиликтүү алынып салынды",
     "Error deleting task": "Тапшырманы алып салууда ката кетти",
-    "This task will be available at": "Бул тапшырманын ачылыш убакытысы"
+    "This task will be available at": "Бул тапшырманын ачылыш убакытысы",
+    "You are not logged in. Redirection to the login page...": "Сиз системага кирүү жасаган жоксуз. Кирүү барагына багыттоо..."
 }

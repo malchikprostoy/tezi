@@ -36,7 +36,7 @@ const Main = () => {
 
     if (!isCheckingAuth && !user && !storedToken) {
       toast.warning(
-        t("Вы не авторизованы. Перенаправление на страницу входа..."),
+        t("You are not logged in. Redirection to the login page..."),
         {
           autoClose: 3000,
         }

@@ -103,5 +103,6 @@
     "Logout": "Logout",
     "Task deleted successfully": "Task deleted successfully",
     "Error deleting task": "Error deleting task",
-    "This task will be available at": "This task will be available at"
+    "This task will be available at": "This task will be available at",
+    "You are not logged in. Redirection to the login page...": "You are not logged in. Redirection to the login page..."
 }

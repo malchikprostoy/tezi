@@ -104,5 +104,6 @@
     "Logout": "Выйти",
     "Task deleted successfully": "Задача успешно удалена ",
     "Error deleting task": "Ошибка при удалении задачи",
-    "This task will be available at": "Это задание будет доступно"
+    "This task will be available at": "Это задание будет доступно",
+    "You are not logged in. Redirection to the login page...": "Вы не вошли в систему. Перенаправление на страницу входа в систему..."
 }
