@@ -20,10 +20,10 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
-import AntonymExercise from "./AntonymExercise";
-import TestExercise from "./TestExercise";
-import TextExercise from "./TextExercise";
-import TaskTimer from "./TaskTimer";
+import AntonymExercise from "../Task/AntonymExercise";
+import TestExercise from "../Task/TestExercise";
+import TextExercise from "../Task/TextExercise";
+import TaskTimer from "../Task/TaskTimer";
 import axios from "axios";
 import { toast } from "react-toastify";
 import AudioPlayer from "../../components/AudioPlayer/AudioPlayer";
@@ -40,6 +40,7 @@ const TaskTeacher = () => {
   const [openModal, setOpenModal] = useState(false);
   const [selectedAntonym, setSelectedAntonym] = useState("");
   const [audioSrc, setAudioSrc] = useState(null);
+  const [students, setStudents] = useState([]);
   const [newExercise, setNewExercise] = useState({
     title: "",
     titlet: "",
@@ -103,6 +104,33 @@ const TaskTeacher = () => {
       fetchLessonAndTask();
     }
   }, [lessonId, taskId]);
+
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) return toast.error(t("You are not authorized"));
+
+        const { data } = await axios.get(
+          `http://localhost:5000/api/tasks/${taskId}/results`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setStudents(data); // предполагаем, что backend возвращает массив студентов с результатами
+      } catch (error) {
+        console.error("Ошибка при загрузке студентов:", error);
+        toast.error(t("Error loading students"));
+      }
+    };
+
+    if (taskId) {
+      fetchStudents();
+    }
+  }, [taskId]);
 
   // Открытие/закрытие меню
   const handleOpenMenu = (event) => setAnchorEl(event.currentTarget);
@@ -383,6 +411,44 @@ const TaskTeacher = () => {
           >
             {t("Save task")}
           </Button>
+        </Box>
+
+        <Box sx={{ mt: 4 }}>
+          <Typography variant="h5" sx={{ mb: 2 }}>
+            {t("Students' Results")}
+          </Typography>
+          {students.length > 0 ? (
+            <List>
+              {students.map((student) => (
+                <ListItem
+                  key={student.studentId}
+                  button
+                  onClick={() =>
+                    navigate(
+                      `/teacher/lesson/${lessonId}/task/${taskId}/result/${student.studentId}`
+                    )
+                  }
+                  sx={{
+                    borderBottom: "1px solid #eee",
+                    "&:hover": {
+                      backgroundColor: "#f0f0f0",
+                    },
+                  }}
+                >
+                  <ListItemText
+                    primary={`${student.name || "Без имени"} (${
+                      student.email || "-"
+                    })`}
+                    secondary={`${t("Completed")}: ${
+                      student.completed ? t("Yes") : t("No")
+                    }`}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          ) : (
+            <Typography>{t("No students found for this task")}</Typography>
+          )}
         </Box>
 
         {/* Список упражнений */}

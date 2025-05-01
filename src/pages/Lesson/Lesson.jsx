@@ -12,6 +12,13 @@ import {
   ListItemText,
   ListItemButton,
   IconButton,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Paper,
+  TableContainer,
 } from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
@@ -27,10 +34,14 @@ const LessonPage = () => {
   const [lesson, setLesson] = useState(null);
   const [newTitle, setNewTitle] = useState("");
   const [newTask, setNewTask] = useState("");
+  const [students, setStudents] = useState([]);
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (lessonId) fetchLesson();
+    if (lessonId) {
+      fetchLesson();
+      fetchStudents();
+    }
   }, [lessonId]);
 
   const fetchLesson = async () => {
@@ -47,6 +58,19 @@ const LessonPage = () => {
     } catch (error) {
       console.error("❌ Ошибка загрузки урока:", error);
       toast.error(t("Error loading lesson"));
+    }
+  };
+
+  const fetchStudents = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(
+        `http://localhost:5000/api/lessons/${lessonId}/students`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setStudents(res.data);
+    } catch (err) {
+      toast.error(t("Error loading students"));
     }
   };
 
@@ -182,6 +206,37 @@ const LessonPage = () => {
         >
           {t("Delete Lesson")}
         </Button>
+
+        {students.length === 0 ? (
+          <Typography variant="body2" sx={{ mt: 2 }}>
+            {t("No students have joined this lesson yet")}
+          </Typography>
+        ) : (
+          <TableContainer component={Paper} sx={{ mt: 2 }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>{t("Students")}</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {students.map((student) => (
+                  <TableRow key={student._id}>
+                    <TableCell
+                      onClick={() => {
+                        navigate(
+                          `/teacher/lesson/${lessonId}/student/${student._id}/results`
+                        );
+                      }}
+                    >
+                      {student.name || student.email}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
 
         {/* Блок с заданиями */}
         <Typography variant="h5" sx={{ mt: 4 }}>

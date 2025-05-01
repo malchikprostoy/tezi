@@ -14,6 +14,7 @@ const {
   leaveLesson,
   updateLesson,
   deleteLesson,
+  getStudentsByLessonId,
 } = require("../controllers/lessonController");
 const { authenticateToken } = require("../middleware/authRoutes");
 
@@ -29,5 +30,6 @@ router.post("/:lessonId/tasks", authenticateToken, addTask);
 router.get("/:lessonId/tasks", authenticateToken, getTasksByLessonId);
 router.delete("/:lessonId/tasks/:taskId", authenticateToken, deleteTask);
 router.get("/:lessonId", authenticateToken, getLessonById);
+router.get("/:lessonId/students", authenticateToken, getStudentsByLessonId);
 
 module.exports = router;

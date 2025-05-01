@@ -11,8 +11,12 @@ import LessonPageStudent from "./pages/Lesson/LessonPage";
 import StudentDashboard from "./pages/Student/StudentDashboard";
 import TeacherDashboard from "./pages/Teacher/TeacherDashboard";
 import LessonPage from "./pages/Lesson/Lesson";
-import TaskTeacher from "./pages/Task/TaskTeacher";
-import TaskStudent from "./pages/Task/TaskStudent";
+import TaskTeacher from "./pages/Teacher/TaskTeacher";
+import TaskStudent from "./pages/Student/TaskStudent";
+import TaskResultPage from "./pages/Student/TaskResult";
+import StudentResultsPage from "./pages/Teacher/StudentResultsPage";
+import StudentTaskResultPage from "./pages/Teacher/StudentTaskResultPage";
+import StudentResultView from "./pages/Teacher/StudentResultView";
 
 function App() {
   return (
@@ -33,8 +37,24 @@ function App() {
             element={<TaskTeacher />}
           />
           <Route
+            path="/teacher/lesson/:lessonId/task/:taskId/result/:studentId"
+            element={<StudentResultView />}
+          />
+          <Route
+            path="/teacher/lesson/:lessonId/student/:studentId/results"
+            element={<StudentResultsPage />}
+          />
+          <Route
+            path="/teacher/lesson/:lessonId/student/:studentId/task/:taskId"
+            element={<StudentTaskResultPage />}
+          />
+          <Route
             path="/student/lesson/:lessonId/tasks/:taskId"
             element={<TaskStudent />}
+          />
+          <Route
+            path="/student/lesson/:lessonId/tasks/:taskId/results"
+            element={<TaskResultPage />}
           />
         </Routes>
       </AuthProvider>

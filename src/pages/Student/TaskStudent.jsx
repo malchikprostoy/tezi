@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   Typography,
@@ -14,10 +14,6 @@ import {
   MenuItem,
   Breadcrumbs,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
 } from "@mui/material";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -30,6 +26,7 @@ import { useTranslation } from "react-i18next";
 const TaskStudent = () => {
   const { t } = useTranslation();
   const { lessonId, taskId } = useParams();
+  const navigate = useNavigate();
   const [task, setTask] = useState(null);
   const [exercises, setExercises] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -173,33 +170,65 @@ const TaskStudent = () => {
     );
   };
 
-  const handleFinish = () => {
-    setAnswers(
-      exercises
-        .filter(
-          (exercise) => exercise.type === "test" || exercise.type === "antonym"
-        )
-        .map((exercise) => {
-          if (exercise.type === "test") {
-            return {
-              type: "test",
-              question: exercise.question,
-              selectedOption: exercise.selectedOption,
-              correct: exercise.selectedOption === exercise.correctOption,
-            };
-          } else if (exercise.type === "antonym") {
-            return {
-              type: "antonym",
-              question: exercise.word,
-              selectedOption: exercise.selectedAntonym,
-              correct: exercise.selectedAntonym === exercise.correctAntonym,
-            };
-          }
-        })
-    );
+  const saveResults = async (answers) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error(t("You need to log in"));
+      return;
+    }
 
+    try {
+      await axios.post(
+        `http://localhost:5000/api/results`,
+        {
+          lessonId,
+          taskId,
+          answers,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      toast.success(t("Results saved successfully!"));
+    } catch (error) {
+      console.error("Ошибка при сохранении результатов:", error);
+      toast.error(t("Error saving the results"));
+    }
+  };
+
+  const handleFinish = async () => {
+    const calculatedAnswers = exercises
+      .filter(
+        (exercise) => exercise.type === "test" || exercise.type === "antonym"
+      )
+      .map((exercise) => {
+        if (exercise.type === "test") {
+          return {
+            type: "test",
+            question: exercise.question,
+            selectedOption: exercise.selectedOption,
+            correctAnswer: exercise.correctAnswer, // добавлено
+            correct: exercise.selectedOption === exercise.correctAnswer,
+          };
+        } else if (exercise.type === "antonym") {
+          return {
+            type: "antonym",
+            question: exercise.word,
+            selectedOption: exercise.selectedAntonym,
+            correctAnswer: exercise.correctAntonym, // добавлено
+            correct: exercise.selectedAntonym === exercise.correctAntonym,
+          };
+        }
+      });
+
+    setAnswers(calculatedAnswers);
+    await saveResults(calculatedAnswers);
     setShowResults(true);
-    setOpenDialog(true); // Open the dialog to show results
+    setOpenDialog(true);
+
+    navigate(`/lesson/${lesson._id}`);
   };
 
   const handleAudioChange = (newAudioSrc) => {
@@ -214,13 +243,20 @@ const TaskStudent = () => {
       <Header />
       <Container sx={{ flexGrow: 1, mt: 4 }}>
         <Breadcrumbs separator="›" aria-label="breadcrumb" sx={{ mb: 2 }}>
-          <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+          <Link to="/" color="inherit">
             <HomeOutlinedIcon sx={{ color: "#d93125" }} />
           </Link>
           {lesson && (
             <Link
               to={`/lesson/${lesson._id}`}
-              style={{ textDecoration: "none", color: "inherit" }}
+              style={{
+                textDecoration: "none",
+                color: "inherit",
+              }}
+              onMouseEnter={(e) =>
+                (e.target.style.textDecoration = "underline")
+              }
+              onMouseLeave={(e) => (e.target.style.textDecoration = "none")}
             >
               {lesson.title}
             </Link>
@@ -318,8 +354,16 @@ const TaskStudent = () => {
                     {exercise.optionas && exercise.optionas.length > 0 ? (
                       <Select
                         autoWidth
-                        value={selectedAntonym}
-                        onChange={(e) => setSelectedAntonym(e.target.value)}
+                        value={exercise.selectedAntonym || ""}
+                        onChange={(e) =>
+                          setExercises((prevExercises) =>
+                            prevExercises.map((ex) =>
+                              ex._id === exercise._id
+                                ? { ...ex, selectedAntonym: e.target.value }
+                                : ex
+                            )
+                          )
+                        }
                         displayEmpty
                         sx={{ mt: 1, bgcolor: "#fff" }}
                       >
@@ -371,40 +415,8 @@ const TaskStudent = () => {
             {t("Finish")}
           </Button>
         </Box>
-
-        {/* Результаты */}
-        {showResults && (
-          <Alert severity="success" sx={{ mt: 3 }}>
-            {t("You've completed the task! Check your answers above.")}
-          </Alert>
-        )}
       </Container>
       <Footer />
-
-      {/* Диалог с результатами */}
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-        <DialogTitle>{t("Results")}</DialogTitle>
-        <DialogContent>
-          {answers.map((answer, index) => (
-            <Box key={index} sx={{ mb: 2 }}>
-              <Typography variant="body1">{answer.question}</Typography>
-              <Typography
-                sx={{
-                  color: answer.correct ? "green" : "red",
-                  fontWeight: "bold",
-                }}
-              >
-                {answer.correct ? t("Correct") : t("Incorrect")}
-              </Typography>
-            </Box>
-          ))}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDialog(false)} color="primary">
-            {t("Close")}
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Box>
   );
 };

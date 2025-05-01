@@ -9,6 +9,7 @@ const jwt = require("jsonwebtoken");
 const User = require("./models/User");
 const lessonRoutes = require("./routes/lessonRoutes");
 const taskRoutes = require("./routes/taskRoutes");
+const resultRoutes = require("./routes/resultRoutes");
 const path = require("path");
 
 dotenv.config({ path: "../.env.local" });
@@ -125,6 +126,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api", require("./routes/auth"));
 app.use("/api/lessons", lessonRoutes);
 app.use("/api/tasks", taskRoutes);
+app.use("/api/results", resultRoutes);
 
 const PORT = process.env.PORT || 5000;
 

@@ -16,6 +16,8 @@ import {
 } from "@mui/material";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import HttpsOutlinedIcon from "@mui/icons-material/HttpsOutlined";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 import { toast } from "react-toastify";
@@ -30,6 +32,7 @@ const LessonPageStudent = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [leaving, setLeaving] = useState(false);
+  const [completedTasks, setCompletedTasks] = useState([]);
 
   useEffect(() => {
     fetchLesson();
@@ -57,6 +60,13 @@ const LessonPageStudent = () => {
       );
 
       setTasks(tasksData.data);
+
+      const resultsData = await axios.get(
+        `http://localhost:5000/api/results/lesson/${lessonId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      const completed = resultsData.data.map((r) => r.taskId.toString());
+      setCompletedTasks(completed);
     } catch (error) {
       toast.error(t("Error loading the lesson"));
       navigate("/");
@@ -104,6 +114,19 @@ const LessonPageStudent = () => {
     )}: ${formattedDuration}`;
   };
 
+  const hasTimeEnded = (task) => {
+    const startTime = task.timer?.startTime
+      ? new Date(task.timer.startTime).getTime()
+      : null;
+    const duration = task.timer?.duration ? task.timer.duration * 1000 : null; // в миллисекундах
+
+    if (!startTime || !duration) return false;
+
+    const endTime = startTime + duration;
+    const now = new Date().getTime();
+    return now > endTime; // если сейчас позже конца задания
+  };
+
   if (loading) return <LinearProgress />;
   if (!lesson) return <Alert severity="error">{t("Lesson not found")}</Alert>;
 
@@ -117,8 +140,6 @@ const LessonPageStudent = () => {
           </Link>
           <Typography color="text.primary">{lesson.title}</Typography>
         </Breadcrumbs>
-
-        <Typography variant="h4">{lesson.title}</Typography>
 
         <Typography variant="h6" sx={{ mt: 4 }}>
           {t("Tasks")}
@@ -137,6 +158,8 @@ const LessonPageStudent = () => {
                 : null;
               const isLocked = startTime && now < startTime;
 
+              const isCompleted = completedTasks.includes(task._id.toString());
+
               const handleClick = () => {
                 if (isLocked) {
                   toast.info(
@@ -145,6 +168,8 @@ const LessonPageStudent = () => {
                       "dd.MM.yyyy HH:mm"
                     )}`
                   );
+                } else if (hasTimeEnded(task)) {
+                  toast.warn(t("Time for this task has expired"));
                 } else {
                   handleTaskClick(task._id);
                 }
@@ -159,6 +184,22 @@ const LessonPageStudent = () => {
                       >
                         {task.title}
                         {isLocked && <HttpsOutlinedIcon color="action" />}
+                        {isCompleted && (
+                          <CheckCircleIcon color="success" fontSize="small" />
+                        )}
+                        {/* Показываем VisibilityIcon если время истекло */}
+                        {!isLocked && hasTimeEnded(task) && (
+                          <VisibilityIcon
+                            color="action"
+                            sx={{ cursor: "pointer" }}
+                            onClick={(e) => {
+                              e.stopPropagation(); // чтобы не срабатывал navigate к задаче
+                              navigate(
+                                `/student/lesson/${lessonId}/tasks/${task._id}/results`
+                              );
+                            }}
+                          />
+                        )}
                       </Box>
                     }
                     secondary={renderTaskInfo(task)}

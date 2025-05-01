@@ -204,6 +204,21 @@ const deleteLesson = async (req, res) => {
   }
 };
 
+const getStudentsByLessonId = async (req, res) => {
+  try {
+    const lesson = await Lesson.findById(req.params.lessonId).populate(
+      "students",
+      "name email"
+    );
+    if (!lesson) return res.status(404).json({ message: "Lesson not found" });
+
+    res.json(lesson.students);
+  } catch (error) {
+    console.error("Ошибка при получении студентов:", error);
+    res.status(500).json({ message: "Failed to get students" });
+  }
+};
+
 module.exports = {
   createLesson,
   joinLesson,
@@ -213,4 +228,5 @@ module.exports = {
   leaveLesson,
   updateLesson,
   deleteLesson,
+  getStudentsByLessonId,
 };
