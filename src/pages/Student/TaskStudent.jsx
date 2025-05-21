@@ -302,15 +302,17 @@ const TaskStudent = () => {
               <Box sx={{ flex: 1 }}>
                 {exercise.type === "text" && (
                   <>
-                    <Typography variant="h6">{exercise.title}</Typography>
+                    <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                      {exercise.title}
+                    </Typography>
                     <Typography>{exercise.text}</Typography>
                   </>
                 )}
 
                 {exercise.type === "test" && (
                   <Box>
-                    <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                      {exercise.title}
+                    <Typography sx={{ fontWeight: "bold" }}>
+                      {exercise.titlet}
                     </Typography>
                     <Typography sx={{ mb: 1 }}>{exercise.question}</Typography>
 

@@ -307,7 +307,7 @@ const LessonPage = () => {
           </Button>
         </Box>
       </Container>
-      <Footer content={t} />
+      <Footer />
     </Box>
   );
 };

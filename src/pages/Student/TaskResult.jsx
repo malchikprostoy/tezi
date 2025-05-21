@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import {
   Box,
@@ -25,6 +25,9 @@ const ResultPageStudent = () => {
   const navigate = useNavigate();
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const studentId = queryParams.get("studentId");
 
   useEffect(() => {
     fetchResults();
@@ -57,12 +60,13 @@ const ResultPageStudent = () => {
     }
 
     try {
-      const { data } = await axios.get(
-        `http://localhost:5000/api/results/task/${taskId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const url = studentId
+        ? `http://localhost:5000/api/results/task/${taskId}/student/${studentId}`
+        : `http://localhost:5000/api/results/task/${taskId}`;
+
+      const { data } = await axios.get(url, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setResults(data);
     } catch (error) {
       toast.error(t("Error loading the results"));

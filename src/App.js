@@ -16,7 +16,6 @@ import TaskStudent from "./pages/Student/TaskStudent";
 import TaskResultPage from "./pages/Student/TaskResult";
 import StudentResultsPage from "./pages/Teacher/StudentResultsPage";
 import StudentTaskResultPage from "./pages/Teacher/StudentTaskResultPage";
-import StudentResultView from "./pages/Teacher/StudentResultView";
 
 function App() {
   return (
@@ -35,10 +34,6 @@ function App() {
           <Route
             path="/teacher/lesson/:lessonId/tasks/:taskId/edit"
             element={<TaskTeacher />}
-          />
-          <Route
-            path="/teacher/lesson/:lessonId/task/:taskId/result/:studentId"
-            element={<StudentResultView />}
           />
           <Route
             path="/teacher/lesson/:lessonId/student/:studentId/results"

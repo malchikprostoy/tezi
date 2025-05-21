@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Result = require("../models/Result");
+const Task = require("../models/Task");
 
 const getResultsByLesson = async (req, res) => {
   try {
@@ -17,18 +18,33 @@ const getResultsByLesson = async (req, res) => {
 
 const saveResult = async (req, res) => {
   try {
-    const userId = req.user.userId; // из токена
+    const userId = req.user.userId;
     const { lessonId, taskId, answers } = req.body;
 
     if (!lessonId || !taskId || !answers) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
+    // Получаем задачу, чтобы вытянуть варианты ответов
+    const task = await Task.findById(taskId);
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    // Добавляем options к каждому ответу
+    const enrichedAnswers = answers.map((answer, index) => {
+      const taskExercise = task.exercises[index];
+      return {
+        ...answer,
+        options: taskExercise?.options || [], // Добавляем список вариантов
+      };
+    });
+
     const newResult = new Result({
       userId,
       lessonId,
       taskId,
-      answers, // предполагается, что ответы содержат информацию о выбранных вариантах
+      answers: enrichedAnswers,
     });
 
     await newResult.save();

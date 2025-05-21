@@ -28,6 +28,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import AudioPlayer from "../../components/AudioPlayer/AudioPlayer";
 import { useTranslation } from "react-i18next";
+import StudentResultsPage from "./StudentResultsPage";
 
 const TaskTeacher = () => {
   const { t } = useTranslation();
@@ -104,33 +105,6 @@ const TaskTeacher = () => {
       fetchLessonAndTask();
     }
   }, [lessonId, taskId]);
-
-  useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) return toast.error(t("You are not authorized"));
-
-        const { data } = await axios.get(
-          `http://localhost:5000/api/tasks/${taskId}/results`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        setStudents(data); // предполагаем, что backend возвращает массив студентов с результатами
-      } catch (error) {
-        console.error("Ошибка при загрузке студентов:", error);
-        toast.error(t("Error loading students"));
-      }
-    };
-
-    if (taskId) {
-      fetchStudents();
-    }
-  }, [taskId]);
 
   // Открытие/закрытие меню
   const handleOpenMenu = (event) => setAnchorEl(event.currentTarget);
@@ -413,43 +387,7 @@ const TaskTeacher = () => {
           </Button>
         </Box>
 
-        <Box sx={{ mt: 4 }}>
-          <Typography variant="h5" sx={{ mb: 2 }}>
-            {t("Students' Results")}
-          </Typography>
-          {students.length > 0 ? (
-            <List>
-              {students.map((student) => (
-                <ListItem
-                  key={student.studentId}
-                  button
-                  onClick={() =>
-                    navigate(
-                      `/teacher/lesson/${lessonId}/task/${taskId}/result/${student.studentId}`
-                    )
-                  }
-                  sx={{
-                    borderBottom: "1px solid #eee",
-                    "&:hover": {
-                      backgroundColor: "#f0f0f0",
-                    },
-                  }}
-                >
-                  <ListItemText
-                    primary={`${student.name || "Без имени"} (${
-                      student.email || "-"
-                    })`}
-                    secondary={`${t("Completed")}: ${
-                      student.completed ? t("Yes") : t("No")
-                    }`}
-                  />
-                </ListItem>
-              ))}
-            </List>
-          ) : (
-            <Typography>{t("No students found for this task")}</Typography>
-          )}
-        </Box>
+        <StudentResultsPage />
 
         {/* Список упражнений */}
         <Box sx={{ mt: 3 }}>

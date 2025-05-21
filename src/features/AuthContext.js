@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }) => {
     if (tokenFromUrl && !token) {
       localStorage.setItem("token", tokenFromUrl);
       token = tokenFromUrl;
-      navigate("/", { replace: true }); // ✅ Избегаем лишнего вызова
+      navigate("/", { replace: true });
     }
 
     if (token && !user) {
@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }) => {
     } else {
       setLoading(false);
     }
-  }, [location.search]); // ✅ Убрали user из зависимостей
+  }, [location.search]);
 
   const determineRole = (email) => {
     const username = email.split("@")[0];
@@ -112,7 +112,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const loginWithToken = (token) => {
-    if (isFetching.current) return; // ⚠️ Предотвращает повторные вызовы
+    if (isFetching.current) return;
     localStorage.setItem("token", token);
     fetchUserProfile(token);
   };

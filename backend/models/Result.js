@@ -5,6 +5,7 @@ const answerSchema = new mongoose.Schema({
   question: { type: String, required: true },
   selectedOption: { type: mongoose.Schema.Types.Mixed }, // может быть строка или число
   correct: { type: Boolean, required: true },
+  options: [{ type: String }],
 });
 
 const resultSchema = new mongoose.Schema(

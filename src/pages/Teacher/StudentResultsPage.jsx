@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 const StudentResultsPage = () => {
   const { lessonId, studentId } = useParams();
   const [tasks, setTasks] = useState([]);
-  const [student, setStudent] = useState(null);
+  const [students, setStudents] = useState([]);
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -42,15 +42,26 @@ const StudentResultsPage = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.get(
-        `http://localhost:5000/api/users/${studentId}`,
+        `http://localhost:5000/api/lessons/${lessonId}/students`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      setStudent(res.data);
+      setStudents(res.data);
     } catch (error) {
       console.error("Ошибка при загрузке студента:", error);
     }
+  };
+
+  const onStudentClick = (studentId) => {
+    if (tasks.length === 0) {
+      alert("Нет заданий для этого урока");
+      return;
+    }
+    const firstTaskId = tasks[0]._id || tasks[0].id;
+    navigate(
+      `/teacher/lesson/${lessonId}/student/${studentId}/task/${firstTaskId}`
+    );
   };
 
   if (!tasks) return <LinearProgress />;
@@ -58,28 +69,19 @@ const StudentResultsPage = () => {
   return (
     <Container>
       <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>
-        {t("Tasks of student")}: {student?.name || student?.email || studentId}
+        Список студентов
       </Typography>
-
-      {tasks.length === 0 ? (
-        <Typography variant="body1">{t("No tasks in this lesson")}</Typography>
-      ) : (
-        <List>
-          {tasks.map((task) => (
-            <ListItem
-              key={task._id}
-              button
-              onClick={() =>
-                navigate(
-                  `/teacher/lesson/${lessonId}/student/${studentId}/task/${task._id}`
-                )
-              }
-            >
-              <ListItemText primary={task.title} />
-            </ListItem>
-          ))}
-        </List>
-      )}
+      <List>
+        {students.map((student) => (
+          <ListItem
+            button
+            key={student._id || student.id}
+            onClick={() => onStudentClick(student._id || student.id)}
+          >
+            <ListItemText primary={student.name || student.email} />
+          </ListItem>
+        ))}
+      </List>
     </Container>
   );
 };
