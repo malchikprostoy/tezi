@@ -69,7 +69,7 @@ const Register = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "${process.env.REACT_APP_API_URL}/auth/google";
+    window.location.href = `${process.env.REACT_APP_API_URL}/auth/google`;
   };
 
   const VisuallyHiddenInput = styled("input")({

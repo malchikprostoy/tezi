@@ -55,7 +55,8 @@ const Login = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = `${process.env.REACT_APP_API_URL}/auth/google`;
+    const baseUrl = process.env.REACT_APP_API_URL.replace(/\/+$/, "");
+    window.location.href = `${baseUrl}/auth/google`;
   };
 
   const inputStyles = {
