@@ -23,22 +23,28 @@ const StudentTaskResultPage = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
+    console.log("Fetching result for taskId:", taskId, "studentId:", studentId);
     const fetchResult = async () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
           `http://localhost:5000/api/results/task/${taskId}/student/${studentId}`,
           {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
         setResult(res.data);
+        console.log("Result received:", res.data);
       } catch (err) {
         console.error("Ошибка при загрузке результата:", err);
       }
     };
 
-    fetchResult();
+    if (taskId && studentId) {
+      fetchResult();
+    }
   }, [taskId, studentId]);
 
   useEffect(() => {

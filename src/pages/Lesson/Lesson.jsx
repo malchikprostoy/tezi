@@ -27,6 +27,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
+import StudentResultsPage from "../Teacher/StudentResultsPage";
 
 const LessonPage = () => {
   const { lessonId } = useParams();
@@ -207,36 +208,7 @@ const LessonPage = () => {
           {t("Delete Lesson")}
         </Button>
 
-        {students.length === 0 ? (
-          <Typography variant="body2" sx={{ mt: 2 }}>
-            {t("No students have joined this lesson yet")}
-          </Typography>
-        ) : (
-          <TableContainer component={Paper} sx={{ mt: 2 }}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>{t("Students")}</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {students.map((student) => (
-                  <TableRow key={student._id}>
-                    <TableCell
-                      onClick={() => {
-                        navigate(
-                          `/teacher/lesson/${lessonId}/student/${student._id}/results`
-                        );
-                      }}
-                    >
-                      {student.name || student.email}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        )}
+        <StudentResultsPage />
 
         {/* Блок с заданиями */}
         <Typography variant="h5" sx={{ mt: 4 }}>

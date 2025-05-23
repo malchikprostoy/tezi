@@ -28,7 +28,6 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import AudioPlayer from "../../components/AudioPlayer/AudioPlayer";
 import { useTranslation } from "react-i18next";
-import StudentResultsPage from "./StudentResultsPage";
 
 const TaskTeacher = () => {
   const { t } = useTranslation();
@@ -386,8 +385,6 @@ const TaskTeacher = () => {
             {t("Save task")}
           </Button>
         </Box>
-
-        <StudentResultsPage />
 
         {/* Список упражнений */}
         <Box sx={{ mt: 3 }}>
