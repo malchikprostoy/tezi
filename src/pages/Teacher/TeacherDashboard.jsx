@@ -28,7 +28,7 @@ const TeacherDashboard = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "${process.env.REACT_APP_API_URL}/api/lessons/my",
+        `${process.env.REACT_APP_API_URL}/api/lessons/my`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -61,7 +61,7 @@ const TeacherDashboard = () => {
       const lessonData = { title };
 
       const response = await axios.post(
-        "${process.env.REACT_APP_API_URL}/api/lessons/create",
+        `${process.env.REACT_APP_API_URL}/api/lessons/create`,
         lessonData,
         {
           headers: {

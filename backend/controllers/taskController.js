@@ -220,7 +220,6 @@ const addExercise = async (req, res) => {
 
 const uploadAudio = async (req, res) => {
   if (req.file) {
-    // Включаем базовый URL сервера (например, ${process.env.REACT_APP_API_URL})
     const audioPath = `${process.env.REACT_APP_API_URL}/uploads/audio/${req.file.filename}`;
     res.json({ path: audioPath });
   } else {

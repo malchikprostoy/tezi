@@ -53,7 +53,7 @@ const Register = () => {
       if (photo) formData.append("photo", photo);
 
       const response = await axios.post(
-        "${process.env.REACT_APP_API_URL}/api/register",
+        `${process.env.REACT_APP_API_URL}/api/register`,
         formData
       );
 

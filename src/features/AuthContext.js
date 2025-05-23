@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
 
     try {
       const response = await axios.get(
-        "${process.env.REACT_APP_API_URL}/api/profile",
+        `${process.env.REACT_APP_API_URL}/api/profile`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -82,7 +82,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const response = await axios.post(
-        "${process.env.REACT_APP_API_URL}/api/login",
+        `${process.env.REACT_APP_API_URL}/api/login`,
         {
           email,
           password,
@@ -99,7 +99,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (name, email, password) => {
     try {
-      await axios.post("${process.env.REACT_APP_API_URL}/api/register", {
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/register`, {
         name,
         email,
         password,
