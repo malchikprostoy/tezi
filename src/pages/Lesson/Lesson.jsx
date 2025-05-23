@@ -49,7 +49,7 @@ const LessonPage = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `http://localhost:5000/api/lessons/${lessonId}`,
+        `${process.env.REACT_APP_API_URL}/api/lessons/${lessonId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -66,7 +66,7 @@ const LessonPage = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.get(
-        `http://localhost:5000/api/lessons/${lessonId}/students`,
+        `${process.env.REACT_APP_API_URL}/api/lessons/${lessonId}/students`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setStudents(res.data);
@@ -79,7 +79,7 @@ const LessonPage = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.put(
-        `http://localhost:5000/api/lessons/${lessonId}`,
+        `${process.env.REACT_APP_API_URL}/api/lessons/${lessonId}`,
         { title: newTitle },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -95,9 +95,12 @@ const LessonPage = () => {
   const deleteLesson = async () => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/api/lessons/${lessonId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.delete(
+        `${process.env.REACT_APP_API_URL}/api/lessons/${lessonId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       navigate("/");
       toast.success(t("Lesson deleted successfully"));
     } catch (error) {
@@ -110,7 +113,7 @@ const LessonPage = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.delete(
-        `http://localhost:5000/api/lessons/${lessonId}/tasks/${taskId}`,
+        `${process.env.REACT_APP_API_URL}/api/lessons/${lessonId}/tasks/${taskId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -129,7 +132,7 @@ const LessonPage = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `http://localhost:5000/api/lessons/${lessonId}/tasks`,
+        `${process.env.REACT_APP_API_URL}/api/lessons/${lessonId}/tasks`,
         { lessonId, title: newTask },
         { headers: { Authorization: `Bearer ${token}` } }
       );

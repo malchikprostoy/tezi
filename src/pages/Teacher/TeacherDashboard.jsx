@@ -27,9 +27,12 @@ const TeacherDashboard = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:5000/api/lessons/my", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        "${process.env.REACT_APP_API_URL}/api/lessons/my",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setLessons(response.data.lessons);
     } catch (error) {
       console.error("❌ Ошибка загрузки уроков:", error);
@@ -58,7 +61,7 @@ const TeacherDashboard = () => {
       const lessonData = { title };
 
       const response = await axios.post(
-        "http://localhost:5000/api/lessons/create",
+        "${process.env.REACT_APP_API_URL}/api/lessons/create",
         lessonData,
         {
           headers: {

@@ -48,21 +48,21 @@ const LessonPageStudent = () => {
 
     try {
       const { data } = await axios.get(
-        `http://localhost:5000/api/lessons/${lessonId}`,
+        `${process.env.REACT_APP_API_URL}/api/lessons/${lessonId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       setLesson(data);
 
       const tasksData = await axios.get(
-        `http://localhost:5000/api/lessons/${lessonId}/tasks`,
+        `${process.env.REACT_APP_API_URL}/api/lessons/${lessonId}/tasks`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       setTasks(tasksData.data);
 
       const resultsData = await axios.get(
-        `http://localhost:5000/api/results/lesson/${lessonId}`,
+        `${process.env.REACT_APP_API_URL}/api/results/lesson/${lessonId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const completed = resultsData.data.map((r) => r.taskId.toString());
@@ -79,7 +79,7 @@ const LessonPageStudent = () => {
     setLeaving(true);
     try {
       await axios.delete(
-        `http://localhost:5000/api/lessons/${lessonId}/leave`,
+        `${process.env.REACT_APP_API_URL}/api/lessons/${lessonId}/leave`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }

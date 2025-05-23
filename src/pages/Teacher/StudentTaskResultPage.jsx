@@ -23,12 +23,11 @@ const StudentTaskResultPage = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    console.log("Fetching result for taskId:", taskId, "studentId:", studentId);
     const fetchResult = async () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          `http://localhost:5000/api/results/task/${taskId}/student/${studentId}`,
+          `${process.env.REACT_APP_API_URL}/api/results/task/${taskId}/student/${studentId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -36,7 +35,6 @@ const StudentTaskResultPage = () => {
           }
         );
         setResult(res.data);
-        console.log("Result received:", res.data);
       } catch (err) {
         console.error("Ошибка при загрузке результата:", err);
       }
@@ -62,10 +60,13 @@ const StudentTaskResultPage = () => {
         }
 
         const [lessonRes, taskRes] = await Promise.all([
-          axios.get(`http://localhost:5000/api/lessons/${lessonId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get(`http://localhost:5000/api/tasks/${taskId}`, {
+          axios.get(
+            `${process.env.REACT_APP_API_URL}/api/lessons/${lessonId}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          ),
+          axios.get(`${process.env.REACT_APP_API_URL}/api/tasks/${taskId}`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);

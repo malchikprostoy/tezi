@@ -39,7 +39,7 @@ const ResultPageStudent = () => {
     const token = localStorage.getItem("token");
     try {
       const { data } = await axios.get(
-        `http://localhost:5000/api/tasks/${taskId}`,
+        `${process.env.REACT_APP_API_URL}/api/tasks/${taskId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -61,8 +61,8 @@ const ResultPageStudent = () => {
 
     try {
       const url = studentId
-        ? `http://localhost:5000/api/results/task/${taskId}/student/${studentId}`
-        : `http://localhost:5000/api/results/task/${taskId}`;
+        ? `${process.env.REACT_APP_API_URL}/api/results/task/${taskId}/student/${studentId}`
+        : `${process.env.REACT_APP_API_URL}/api/results/task/${taskId}`;
 
       const { data } = await axios.get(url, {
         headers: { Authorization: `Bearer ${token}` },
@@ -85,7 +85,7 @@ const ResultPageStudent = () => {
 
     try {
       const { data } = await axios.get(
-        `http://localhost:5000/api/lessons/${lessonId}`,
+        `${process.env.REACT_APP_API_URL}/api/lessons/${lessonId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

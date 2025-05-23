@@ -52,7 +52,7 @@ const Profile = () => {
   const cachedPhoto = localStorage.getItem("userPhoto");
   const profilePhoto = user?.photo?.startsWith("http")
     ? user.photo
-    : cachedPhoto || `http://localhost:5000${user.photo}`;
+    : cachedPhoto || `${process.env.REACT_APP_API_URL}${user.photo}`;
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center" gap={2}>

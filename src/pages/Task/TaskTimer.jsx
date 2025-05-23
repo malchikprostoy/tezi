@@ -41,7 +41,7 @@ const TaskTimer = ({ taskId }) => {
       const durationInSeconds = duration * 60; // Продолжительность в секундах
 
       const response = await axios.post(
-        `http://localhost:5000/api/tasks/${taskId}/timer`,
+        `${process.env.REACT_APP_API_URL}/api/tasks/${taskId}/timer`,
         { startTime, duration: durationInSeconds },
         {
           headers: {

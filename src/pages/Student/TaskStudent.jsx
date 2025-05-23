@@ -61,7 +61,7 @@ const TaskStudent = () => {
 
     try {
       const { data } = await axios.get(
-        `http://localhost:5000/api/tasks/${taskId}`,
+        `${process.env.REACT_APP_API_URL}/api/tasks/${taskId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -93,7 +93,7 @@ const TaskStudent = () => {
       }
 
       const { data } = await axios.get(
-        `http://localhost:5000/api/tasks/${taskId}/timer`,
+        `${process.env.REACT_APP_API_URL}/api/tasks/${taskId}/timer`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -144,7 +144,7 @@ const TaskStudent = () => {
 
     try {
       const { data } = await axios.get(
-        `http://localhost:5000/api/lessons/${lessonId}`,
+        `${process.env.REACT_APP_API_URL}/api/lessons/${lessonId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -179,7 +179,7 @@ const TaskStudent = () => {
 
     try {
       await axios.post(
-        `http://localhost:5000/api/results`,
+        `${process.env.REACT_APP_API_URL}/api/results`,
         {
           lessonId,
           taskId,

@@ -84,10 +84,13 @@ const TaskTeacher = () => {
         }
 
         const [lessonRes, taskRes] = await Promise.all([
-          axios.get(`http://localhost:5000/api/lessons/${lessonId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          axios.get(`http://localhost:5000/api/tasks/${taskId}`, {
+          axios.get(
+            `${process.env.REACT_APP_API_URL}/api/lessons/${lessonId}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          ),
+          axios.get(`${process.env.REACT_APP_API_URL}/api/tasks/${taskId}`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);
@@ -170,7 +173,7 @@ const TaskTeacher = () => {
       }
 
       const { data } = await axios.post(
-        `http://localhost:5000/api/tasks/${taskId}/exercises`,
+        `${process.env.REACT_APP_API_URL}/api/tasks/${taskId}/exercises`,
         newExercise,
         {
           headers: {
@@ -215,7 +218,7 @@ const TaskTeacher = () => {
       }
 
       await axios.delete(
-        `http://localhost:5000/api/tasks/${taskId}/exercises/${exerciseId}`,
+        `${process.env.REACT_APP_API_URL}/api/tasks/${taskId}/exercises/${exerciseId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Добавляем токен
@@ -250,7 +253,7 @@ const TaskTeacher = () => {
       };
 
       const { data } = await axios.put(
-        `http://localhost:5000/api/tasks/${taskId}`,
+        `${process.env.REACT_APP_API_URL}/api/tasks/${taskId}`,
         updatedTask,
         {
           headers: {
@@ -283,7 +286,7 @@ const TaskTeacher = () => {
 
       try {
         const res = await axios.post(
-          `http://localhost:5000/api/tasks/${taskId}/upload-audio`,
+          `${process.env.REACT_APP_API_URL}/api/tasks/${taskId}/upload-audio`,
           formData,
           {
             headers: {

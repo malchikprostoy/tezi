@@ -25,9 +25,12 @@ export const AuthProvider = ({ children }) => {
     isFetching.current = true;
 
     try {
-      const response = await axios.get("http://localhost:5000/api/profile", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        "${process.env.REACT_APP_API_URL}/api/profile",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       const { email, photo } = response.data.user;
       const role = determineRole(email);
@@ -78,10 +81,13 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post("http://localhost:5000/api/login", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "${process.env.REACT_APP_API_URL}/api/login",
+        {
+          email,
+          password,
+        }
+      );
 
       const { token } = response.data;
       localStorage.setItem("token", token);
@@ -93,7 +99,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (name, email, password) => {
     try {
-      await axios.post("http://localhost:5000/api/register", {
+      await axios.post("${process.env.REACT_APP_API_URL}/api/register", {
         name,
         email,
         password,

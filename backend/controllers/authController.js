@@ -209,7 +209,7 @@ const getUserProfile = async (req, res) => {
     if (user.photo) {
       photoUrl = user.photo.startsWith("http")
         ? user.photo // Если это URL, оставляем как есть
-        : `http://localhost:5000/${user.photo.replace(/\\/g, "/")}`; // Если локальный, добавляем базовый URL
+        : `${process.env.REACT_APP_API_URL}/${user.photo.replace(/\\/g, "/")}`; // Если локальный, добавляем базовый URL
     }
 
     return res.status(200).json({

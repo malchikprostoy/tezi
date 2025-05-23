@@ -41,7 +41,7 @@ const StudentDashboard = () => {
 
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/lessons/student",
+        "${process.env.REACT_APP_API_URL}/api/lessons/student",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -75,7 +75,7 @@ const StudentDashboard = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/lessons/join",
+        "${process.env.REACT_APP_API_URL}/api/lessons/join",
         { code },
         { headers: { Authorization: `Bearer ${token}` } }
       );

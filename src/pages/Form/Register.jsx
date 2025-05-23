@@ -53,7 +53,7 @@ const Register = () => {
       if (photo) formData.append("photo", photo);
 
       const response = await axios.post(
-        "http://localhost:5000/api/register",
+        "${process.env.REACT_APP_API_URL}/api/register",
         formData
       );
 
@@ -69,7 +69,7 @@ const Register = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:5000/auth/google";
+    window.location.href = "${process.env.REACT_APP_API_URL}/auth/google";
   };
 
   const VisuallyHiddenInput = styled("input")({

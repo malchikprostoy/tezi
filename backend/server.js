@@ -36,7 +36,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:5000/auth/google/callback",
+      callbackURL: "https://tezi-api.onrender.com/auth/google/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -102,7 +102,7 @@ app.get(
     );
 
     // Успешная авторизация, перенаправляем на главную страницу
-    res.redirect(`http://localhost:3000/login?token=${token}`);
+    res.redirect(`https://tezi.vercel.app/login?token=${token}`);
   }
 );
 
@@ -112,7 +112,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Middlewares
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "https://tezi.vercel.app"],
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     allowedHeaders: "Content-Type,Authorization",
