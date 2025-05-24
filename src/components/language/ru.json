@@ -117,5 +117,13 @@
     "No selected": "Нет выбранных",
     "Unknown": "Неизвестный",
     "Selected answer": "Выбранный вариант",
-    "Correct answer": "Правильный ответ"
+    "Correct answer": "Правильный ответ",
+    "Your answer": "Ваш ответ",
+    "Task data not found": "Данные о задаче не найдены",
+    "Back to lesson": "Вернуться к уроку",
+    "Result": "Результат",
+    "No answers submitted": "Ответов не поступало",
+    "Error loading the results": "Ошибка при загрузке результатов",
+    "Results saved successfully!": "Результаты успешно сохранены!",
+    "Time for this task has expired": "Время выполнения этой задачи истекло"
 }

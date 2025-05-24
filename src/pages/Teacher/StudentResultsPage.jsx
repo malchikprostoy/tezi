@@ -8,6 +8,11 @@ import {
   ListItem,
   ListItemText,
   LinearProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
@@ -16,6 +21,7 @@ const StudentResultsPage = () => {
   const [tasks, setTasks] = useState([]);
   const [students, setStudents] = useState([]);
   const [selectedStudentId, setSelectedStudentId] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -23,7 +29,7 @@ const StudentResultsPage = () => {
     if (lessonId) {
       fetchLessonTasks();
       fetchStudents();
-      setSelectedStudentId(null); // сброс при смене урока
+      setSelectedStudentId(null);
     }
   }, [lessonId]);
 
@@ -59,6 +65,7 @@ const StudentResultsPage = () => {
 
   const onStudentClick = (studentId) => {
     setSelectedStudentId(studentId);
+    setOpenDialog(true); // Открываем модальное окно
   };
 
   const onTaskClick = (taskId) => {
@@ -66,9 +73,15 @@ const StudentResultsPage = () => {
       alert(t("Please, select a student"));
       return;
     }
+    setOpenDialog(false); // Закрываем модалку
     navigate(
       `/teacher/lesson/${lessonId}/student/${selectedStudentId}/task/${taskId}`
     );
+  };
+
+  const handleClose = () => {
+    setOpenDialog(false);
+    setSelectedStudentId(null);
   };
 
   if (!tasks.length || !students.length) return <LinearProgress />;
@@ -91,11 +104,9 @@ const StudentResultsPage = () => {
         ))}
       </List>
 
-      {selectedStudentId && (
-        <>
-          <Typography variant="h5" sx={{ mt: 4, mb: 2 }}>
-            {t("Select the student's task")}
-          </Typography>
+      <Dialog open={openDialog} onClose={handleClose} fullWidth maxWidth="sm">
+        <DialogTitle>{t("Select the student's task")}</DialogTitle>
+        <DialogContent dividers>
           <List>
             {tasks.map((task) => (
               <ListItem
@@ -107,8 +118,13 @@ const StudentResultsPage = () => {
               </ListItem>
             ))}
           </List>
-        </>
-      )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="error">
+            {t("Cancel")}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

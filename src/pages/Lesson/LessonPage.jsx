@@ -136,7 +136,9 @@ const LessonPageStudent = () => {
       <Container sx={{ flexGrow: 1, mt: 4 }}>
         <Breadcrumbs separator="›" aria-label="breadcrumb" sx={{ mb: 2 }}>
           <Link color="inherit" onClick={() => navigate("/")}>
-            <HomeOutlinedIcon sx={{ color: "#d93125" }} />
+            <HomeOutlinedIcon
+              sx={{ color: "#d93125", "&:hover": { cursor: "pointer" } }}
+            />
           </Link>
           <Typography color="text.primary">{lesson.title}</Typography>
         </Breadcrumbs>

@@ -60,8 +60,8 @@ const Main = () => {
         display: "flex",
         flexDirection: "column",
         color: "white",
-        px: 0, // Убираем отступы по бокам
-        m: 0, // Убираем отступы по бокам
+        px: 0,
+        m: 0,
       }}
     >
       <Header />

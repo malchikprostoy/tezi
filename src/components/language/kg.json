@@ -117,5 +117,13 @@
     "No selected": "Тандалган жок",
     "Unknown": "Белгисиз",
     "Selected answer": "Тандалган жооп",
-    "Correct answer": "Туура жооп"
+    "Correct answer": "Туура жооп",
+    "Your answer": "Сиздин жооп",
+    "Task data not found": "Тапшырманын маалыматтары табылган жок",
+    "Back to lesson": "Сабакка кайтуу",
+    "Result": "Жыйынтык",
+    "No answers submitted": "Берилген жооптор жок",
+    "Error loading the results": "Жыйынтыктар жүктөөдө ката кетти",
+    "Results saved successfully!": "Жыйынтыктар ийгиликтүү сакталды!",
+    "Time for this task has expired": "Бул тапшырманын убактысы бүттү"
 }

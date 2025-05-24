@@ -129,7 +129,11 @@ const ResultPageStudent = () => {
               {lesson.title}
             </Link>
           )}
-          <Typography color="text.primary">{t("Result")}</Typography>
+          {task && (
+            <Typography color="text.primary">
+              {t("Result")} ({task.title})
+            </Typography>
+          )}
         </Breadcrumbs>
 
         <Box sx={{ mt: 2 }}>
@@ -222,7 +226,7 @@ const ResultPageStudent = () => {
                           {answer.selectedOption !== undefined &&
                           answer.selectedOption !== null
                             ? exercise.options[answer.selectedOption]
-                            : t("Not selected")}
+                            : t("No selected")}
                         </Typography>
                       </Box>
                     </Box>

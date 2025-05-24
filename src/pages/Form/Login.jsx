@@ -215,7 +215,7 @@ const Login = () => {
             onClick={handleGoogleLogin}
             style={{ color: "black", border: "1px solid #000" }}
           >
-            Войти через Google
+            Sign in with Google
           </Button>
         </Box>
       </div>

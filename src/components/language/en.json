@@ -116,5 +116,13 @@
     "No selected": "No selected",
     "Unknown": "Unknown",
     "Selected answer": "Selected answer",
-    "Correct answer": "Correct answer"
+    "Correct answer": "Correct answer",
+    "Your answer": "Your answer",
+    "Task data not found": "Task data not found",
+    "Back to lesson": "Back to lesson",
+    "Result": "Result",
+    "No answers submitted": "No answers submitted",
+    "Error loading the results": "Error loading the results",
+    "Results saved successfully!": "Results saved successfully!",
+    "Time for this task has expired": "Time for this task has expired"
 }

@@ -110,12 +110,20 @@
   "Select the student's task": "Öğrencinin görevini seçin",
   "Please, select a student": "Lütfen bir öğrenci seçin",
   "Task Result": "Görev Sonucu",
-  "Student": "Student",
+  "Student": "Öğrenci",
   "Task": "Görev",
   "Submitted at": "Gönderilmiş",
   "Answers": "Cevaplar",
   "No selected": "Seçilmedi",
   "Unknown": "Bilinmeyen",
   "Selected answer": "Seçilen cevap",
-  "Correct answer": "Doğru cevap"
+  "Correct answer": "Doğru cevap",
+  "Your answer": "Cevabınız",
+  "Task data not found": "Görev verileri bulunamadı",
+  "Back to lesson": "Derse geri dön",
+  "Result": "Sonuç",
+  "No answers submitted": "Cevaplar gönderilmedi",
+  "Error loading the results": "Sonuçlar yüklenirken hata oluştu",
+  "Results saved successfully!": "Sonuçlar başarıyla kaydedildi!",
+  "Time for this task has expired": "Bu görevin süresi bitti"
 }
