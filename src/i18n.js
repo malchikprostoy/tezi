@@ -1,11 +1,10 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
-// Импортируйте ваши переводы
-import translationEN from "./components/language/en/en.json";
-import translationRU from "./components/language/ru/ru.json";
-import translationKG from "./components/language/kg/kg.json";
-import translationTR from "./components/language/tr/tr.json";
+import translationEN from "./components/language/en.json";
+import translationRU from "./components/language/ru.json";
+import translationKG from "./components/language/kg.json";
+import translationTR from "./components/language/tr.json";
 
 const savedLanguage = localStorage.getItem("language") || "tr";
 

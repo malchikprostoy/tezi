@@ -102,7 +102,7 @@ app.get(
     );
 
     // Успешная авторизация, перенаправляем на главную страницу
-    res.redirect(`https://tezi-frontend.onrender.com/login?token=${token}`);
+    res.redirect(`${process.env.FRONTEND_URL}/login?token=${token}`);
   }
 );
 

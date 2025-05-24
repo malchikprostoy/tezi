@@ -148,7 +148,7 @@ const StudentTaskResultPage = () => {
                     <strong>{t("Question")}:</strong> {answer.question}
                   </Typography>
                   <Typography>
-                    <strong>{t("Selected")}:</strong> {selectedText}
+                    <strong>{t("Selected answer")}:</strong> {selectedText}
                   </Typography>
                   <Typography>
                     <strong>{t("Correct answer")}:</strong> {correctOptionText}

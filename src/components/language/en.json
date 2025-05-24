@@ -104,5 +104,17 @@
     "Task deleted successfully": "Task deleted successfully",
     "Error deleting task": "Error deleting task",
     "This task will be available at": "This task will be available at",
-    "You are not logged in. Redirection to the login page...": "You are not logged in. Redirection to the login page..."
+    "You are not logged in. Redirection to the login page...": "You are not logged in. Redirection to the login page...",
+    "List of students": "List of students",
+    "Select the student's task": "Select the student's task",
+    "Please, select a student": "Please, select a student",
+    "Task Result": "Task Result",
+    "Student": "Student",
+    "Task": "Task",
+    "Submitted at": "Submitted at",
+    "Answers": "Answers",
+    "No selected": "No selected",
+    "Unknown": "Unknown",
+    "Selected answer": "Selected answer",
+    "Correct answer": "Correct answer"
 }

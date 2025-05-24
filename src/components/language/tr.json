@@ -105,5 +105,17 @@
   "Task deleted successfully": "Görev başarıyla kaldırıldı",
   "Error deleting task": "Görevi silerken hata oluştu",
   "This task will be available at": "Bu görevi açılış zamanı",
-  "You are not logged in. Redirection to the login page...": "Oturum açmadınız. Giriş sayfasına yönlendirme..."
+  "You are not logged in. Redirection to the login page...": "Oturum açmadınız. Giriş sayfasına yönlendirme...",
+  "List of students": "Öğrenci listesi",
+  "Select the student's task": "Öğrencinin görevini seçin",
+  "Please, select a student": "Lütfen bir öğrenci seçin",
+  "Task Result": "Görev Sonucu",
+  "Student": "Student",
+  "Task": "Görev",
+  "Submitted at": "Gönderilmiş",
+  "Answers": "Cevaplar",
+  "No selected": "Seçilmedi",
+  "Unknown": "Bilinmeyen",
+  "Selected answer": "Seçilen cevap",
+  "Correct answer": "Doğru cevap"
 }

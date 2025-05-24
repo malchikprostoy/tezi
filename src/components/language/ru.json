@@ -105,5 +105,17 @@
     "Task deleted successfully": "Задача успешно удалена ",
     "Error deleting task": "Ошибка при удалении задачи",
     "This task will be available at": "Это задание будет доступно",
-    "You are not logged in. Redirection to the login page...": "Вы не вошли в систему. Перенаправление на страницу входа в систему..."
+    "You are not logged in. Redirection to the login page...": "Вы не вошли в систему. Перенаправление на страницу входа в систему...",
+    "List of students": "Список студентов",
+    "Select the student's task": "Выберите задание студента",
+    "Please, select a student": "Пожалуйста, выберите студента",
+    "Task Result": "Результат задачи",
+    "Student": "Студент",
+    "Task": "Задание",
+    "Submitted at": "Подтверждение",
+    "Answers": "Ответы",
+    "No selected": "Нет выбранных",
+    "Unknown": "Неизвестный",
+    "Selected answer": "Выбранный вариант",
+    "Correct answer": "Правильный ответ"
 }

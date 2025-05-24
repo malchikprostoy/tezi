@@ -13,6 +13,8 @@ import {
   ListItemText,
   Select,
   Breadcrumbs,
+  LinearProgress,
+  CircularProgress,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
@@ -327,11 +329,11 @@ const TaskTeacher = () => {
             </Link>
           )}
           <Typography color="text.primary">
-            {task?.title || "Загрузка..."}
+            {task?.title || <CircularProgress />}
           </Typography>
         </Breadcrumbs>
         <Typography variant="h4" sx={{ mb: 2 }}>
-          {task?.title || "Загрузка задания..."}
+          {task?.title || <LinearProgress />}
         </Typography>
 
         <Button

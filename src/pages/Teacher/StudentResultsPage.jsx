@@ -63,7 +63,7 @@ const StudentResultsPage = () => {
 
   const onTaskClick = (taskId) => {
     if (!selectedStudentId) {
-      alert(t("Пожалуйста, выберите студента"));
+      alert(t("Please, select a student"));
       return;
     }
     navigate(
@@ -76,7 +76,7 @@ const StudentResultsPage = () => {
   return (
     <Container>
       <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>
-        {t("Список студентов")}
+        {t("List of students")}
       </Typography>
       <List>
         {students.map((student) => (
@@ -94,7 +94,7 @@ const StudentResultsPage = () => {
       {selectedStudentId && (
         <>
           <Typography variant="h5" sx={{ mt: 4, mb: 2 }}>
-            {t("Задания урока")}
+            {t("Select the student's task")}
           </Typography>
           <List>
             {tasks.map((task) => (

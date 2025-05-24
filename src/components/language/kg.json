@@ -105,5 +105,17 @@
     "Task deleted successfully": "Тапшырма ийгиликтүү алынып салынды",
     "Error deleting task": "Тапшырманы алып салууда ката кетти",
     "This task will be available at": "Бул тапшырманын ачылыш убакытысы",
-    "You are not logged in. Redirection to the login page...": "Сиз системага кирүү жасаган жоксуз. Кирүү барагына багыттоо..."
+    "You are not logged in. Redirection to the login page...": "Сиз системага кирүү жасаган жоксуз. Кирүү барагына багыттоо...",
+    "List of students": "Студенттердин тизмеси",
+    "Select the student's task": "Студенттин тапшырмасын тандаңыз",
+    "Please, select a student": "Сураныч, студентти тандаңыз",
+    "Task Result": "Тапшырманын жыйынтыгы",
+    "Student": "Студент",
+    "Task": "Тапшырма",
+    "Submitted at": "Тастыктоо",
+    "Answers": "Жооптор",
+    "No selected": "Тандалган жок",
+    "Unknown": "Белгисиз",
+    "Selected answer": "Тандалган жооп",
+    "Correct answer": "Туура жооп"
 }
