@@ -127,6 +127,7 @@ app.use("/api", require("./routes/auth"));
 app.use("/api/lessons", lessonRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/results", resultRoutes);
+app.use("/api/admin", require("./routes/adminRoutes"));
 
 const PORT = process.env.PORT || 5000;
 

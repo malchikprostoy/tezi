@@ -349,7 +349,7 @@ const TaskStudent = () => {
                 {exercise.type === "antonym" && (
                   <Box sx={{ p: 2, bgcolor: "#f5f5f5", borderRadius: 2 }}>
                     <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                      {exercise.title}
+                      {exercise.titlea}
                     </Typography>
                     <Typography>{exercise.word}</Typography>
 

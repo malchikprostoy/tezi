@@ -411,7 +411,9 @@ const TaskTeacher = () => {
               <Box sx={{ flex: 1 }}>
                 {exercise.type === "text" && (
                   <>
-                    <Typography variant="h6">{exercise.title}</Typography>
+                    <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                      {exercise.title}
+                    </Typography>
                     <Typography>{exercise.text || "no text"}</Typography>
                   </>
                 )}

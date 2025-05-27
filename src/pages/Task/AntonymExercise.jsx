@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   TextField,
   Box,
@@ -13,36 +13,40 @@ import { useTranslation } from "react-i18next";
 
 const AntonymExercise = ({ newExercise, handleExerciseChange }) => {
   const { t } = useTranslation();
-  const [optionas, setOptionas] = useState([""]); // Начальное состояние — одно поле
 
-  // Добавить новое поле для ответа
+  // ✅ Инициализируем из newExercise.optionas (или по умолчанию)
+  const [optionas, setOptionas] = useState(newExercise.optionas || [""]);
+
+  // ✅ Следим за обновлением newExercise.optionas извне
+  useEffect(() => {
+    if (Array.isArray(newExercise.optionas)) {
+      setOptionas(newExercise.optionas);
+    }
+  }, [newExercise.optionas]);
+
   const handleAddOptionField = () => {
-    setOptionas([...optionas, ""]);
+    const updated = [...optionas, ""];
+    setOptionas(updated);
+    handleExerciseChange("optionas", updated);
   };
 
-  // Удалить поле ответа по индексу
   const handleRemoveOptionField = (index) => {
     if (optionas.length > 1) {
-      const updatedOptionas = optionas.filter((_, i) => i !== index);
-      setOptionas(updatedOptionas);
+      const updated = optionas.filter((_, i) => i !== index);
+      setOptionas(updated);
+      handleExerciseChange("optionas", updated);
     }
   };
 
-  // Обновить значение конкретного ответа
   const handleOptionChange = (index, value) => {
-    const updatedOptionas = [...optionas];
-    updatedOptionas[index] = value;
-    setOptionas(updatedOptionas);
-    handleExerciseChange("optionas", updatedOptionas); // Сохраняем массив в options
+    const updated = [...optionas];
+    updated[index] = value;
+    setOptionas(updated);
+    handleExerciseChange("optionas", updated);
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <Box sx={{ display: "flex", flexDirection: "column" }}>
       <Typography variant="h6" gutterBottom>
         {t("Add exercise")}
       </Typography>
@@ -63,12 +67,13 @@ const AntonymExercise = ({ newExercise, handleExerciseChange }) => {
         margin="normal"
       />
 
-      {/* Поля для ввода ответов */}
       <RadioGroup
         value={newExercise.correctOption}
-        onChange={(e) =>
-          handleExerciseChange("correctOption", Number(e.target.value))
-        }
+        onChange={(e) => {
+          const selectedIdx = Number(e.target.value);
+          handleExerciseChange("correctOption", selectedIdx);
+          handleExerciseChange("correctAntonym", optionas[selectedIdx]); // <-- добавляем сюда
+        }}
       >
         {optionas.map((optiona, index) => (
           <Box key={index} sx={{ display: "flex", alignItems: "center" }}>
@@ -90,6 +95,7 @@ const AntonymExercise = ({ newExercise, handleExerciseChange }) => {
           </Box>
         ))}
       </RadioGroup>
+
       <IconButton color="primary" onClick={handleAddOptionField}>
         <AddIcon />
       </IconButton>

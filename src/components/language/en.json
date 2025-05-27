@@ -124,5 +124,10 @@
     "No answers submitted": "No answers submitted",
     "Error loading the results": "Error loading the results",
     "Results saved successfully!": "Results saved successfully!",
-    "Time for this task has expired": "Time for this task has expired"
+    "Time for this task has expired": "Time for this task has expired",
+    "You only had one attempt to complete this task": "You only had one attempt to complete this task",
+    "Confirm Exit": "Confirmation of exit",
+    "Are you sure you want to leave the lesson?": "Are you sure you want to leave the lesson?",
+    "Yes": "Yes",
+    "No": "No"
 }

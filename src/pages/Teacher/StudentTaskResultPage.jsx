@@ -115,7 +115,6 @@ const StudentTaskResultPage = () => {
           </Typography>
         </Breadcrumbs>
 
-        <Typography variant="h4">{t("Task Result")}</Typography>
         <Paper sx={{ p: 3, mt: 2 }}>
           <Typography variant="h6">
             {t("Student")}: {result.userId?.name || result.userId?.email}
@@ -128,31 +127,181 @@ const StudentTaskResultPage = () => {
           </Typography>
 
           <Box sx={{ mt: 3 }}>
-            <Typography variant="h6">{t("Answers")}</Typography>
-            {result.answers.map((answer, index) => {
-              const isSelected = answer.selectedOption != null;
-              const isCorrect = isSelected && answer.correct;
-              const options = answer.options || [];
-              const selectedText = isSelected
-                ? options[answer.selectedOption]
-                : t("No selected");
-
-              const correctOptionIndex =
-                task?.exercises?.[index]?.correctOption;
-              const correctOptionText =
-                options[correctOptionIndex] || t("Unknown");
+            {task?.exercises?.map((exercise, index) => {
+              const answer = result.answers.find((a) => {
+                if (exercise.type === "antonym") {
+                  return (
+                    (a.question || "").trim().toLowerCase() ===
+                    (exercise.word || "").trim().toLowerCase()
+                  );
+                } else if (exercise.type === "test") {
+                  return (
+                    (a.question || "").trim().toLowerCase() ===
+                    (exercise.question || "").trim().toLowerCase()
+                  );
+                } else if (exercise.type === "text") {
+                  return (
+                    (a.text || "").trim().toLowerCase() ===
+                    (exercise.text || "").trim().toLowerCase()
+                  );
+                }
+                return false;
+              });
 
               return (
-                <Paper key={index} sx={{ p: 2, my: 1 }}>
-                  <Typography>
-                    <strong>{t("Question")}:</strong> {answer.question}
-                  </Typography>
-                  <Typography>
-                    <strong>{t("Selected answer")}:</strong> {selectedText}
-                  </Typography>
-                  <Typography>
-                    <strong>{t("Correct answer")}:</strong> {correctOptionText}
-                  </Typography>
+                <Paper key={index} sx={{ p: 2, my: 2 }}>
+                  {/* TEXT TYPE */}
+                  {exercise.type === "text" && (
+                    <>
+                      <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                        {exercise.title}
+                      </Typography>
+                      <Typography sx={{ mt: 1, whiteSpace: "pre-line" }}>
+                        {exercise.text}
+                      </Typography>
+                    </>
+                  )}
+
+                  {/* TEST TYPE */}
+                  {exercise.type === "test" && (
+                    <>
+                      <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                        {exercise.titlet}
+                      </Typography>
+                      <Typography>{exercise.question}</Typography>
+                      <Box sx={{ mt: 2 }}>
+                        {exercise.options?.map((option, idx) => {
+                          const isCorrect = idx === exercise.correctOption;
+                          const isSelected = idx === answer?.selectedOption;
+                          let bgColor = "inherit";
+                          let color = "inherit";
+
+                          if (isSelected && isCorrect) {
+                            bgColor = "#c8e6c9"; // green
+                            color = "green";
+                          } else if (isSelected && !isCorrect) {
+                            bgColor = "#ffcdd2"; // red
+                            color = "red";
+                          } else if (!isSelected && isCorrect) {
+                            bgColor = "#c8e6c9";
+                            color = "green";
+                          }
+
+                          return (
+                            <Typography
+                              key={idx}
+                              sx={{
+                                bgcolor: bgColor,
+                                color,
+                                p: 1,
+                                mb: 1,
+                                borderRadius: 1,
+                                fontWeight:
+                                  isSelected || isCorrect ? "bold" : "normal",
+                              }}
+                            >
+                              {option}
+                            </Typography>
+                          );
+                        })}
+                        <Box
+                          sx={{
+                            mt: 2,
+                            p: 2,
+                            borderRadius: 2,
+                            bgcolor: "#f0f0f0",
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Typography sx={{ fontWeight: "bold", mr: 1 }}>
+                            {t("Your answer")}:
+                          </Typography>
+                          <Typography
+                            sx={{
+                              color:
+                                answer.selectedOption !== undefined &&
+                                answer.selectedOption !== null
+                                  ? "text.primary"
+                                  : "text.disabled",
+                              fontStyle:
+                                answer.selectedOption !== undefined &&
+                                answer.selectedOption !== null
+                                  ? "normal"
+                                  : "italic",
+                            }}
+                          >
+                            {answer.selectedOption !== undefined &&
+                            answer.selectedOption !== null
+                              ? exercise.options[answer.selectedOption]
+                              : t("No selected")}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </>
+                  )}
+
+                  {/* ANTONYM TYPE */}
+                  {exercise.type === "antonym" && (
+                    <>
+                      <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                        {exercise.titlea}
+                      </Typography>
+                      <Typography>{exercise.word}</Typography>
+                      <Box sx={{ mt: 2 }}>
+                        {exercise.optionas?.map((opt, idx) => {
+                          const isCorrect = idx === exercise.correctOption;
+                          const isSelected =
+                            answer?.selectedAntonym === opt ||
+                            answer?.selectedOption === idx;
+                          let bgColor = "inherit";
+                          let color = "inherit";
+
+                          if (isSelected && isCorrect) {
+                            bgColor = "#c8e6c9";
+                            color = "green";
+                          } else if (isSelected && !isCorrect) {
+                            bgColor = "#ffcdd2";
+                            color = "red";
+                          } else if (!isSelected && isCorrect) {
+                            bgColor = "#c8e6c9";
+                            color = "green";
+                          }
+
+                          return (
+                            <Typography
+                              key={idx}
+                              sx={{
+                                bgcolor: bgColor,
+                                color,
+                                p: 1,
+                                mb: 1,
+                                borderRadius: 1,
+                                fontWeight:
+                                  isSelected || isCorrect ? "bold" : "normal",
+                              }}
+                            >
+                              {opt}
+                            </Typography>
+                          );
+                        })}
+
+                        <Box sx={{ mt: 2 }}>
+                          <Typography>
+                            <strong>{t("Correct answer")}:</strong>{" "}
+                            {exercise.optionas?.[exercise.correctOption] ||
+                              t("Unknown")}
+                          </Typography>
+                          <Typography>
+                            <strong>{t("Your answer")}:</strong>{" "}
+                            {answer?.selectedAntonym ||
+                              answer?.selectedOption ||
+                              t("No selected")}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </>
+                  )}
                 </Paper>
               );
             })}

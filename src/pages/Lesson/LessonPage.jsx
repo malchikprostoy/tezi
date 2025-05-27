@@ -13,6 +13,11 @@ import {
   Breadcrumbs,
   Link,
   ListItemButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import HttpsOutlinedIcon from "@mui/icons-material/HttpsOutlined";
@@ -33,6 +38,10 @@ const LessonPageStudent = () => {
   const [loading, setLoading] = useState(true);
   const [leaving, setLeaving] = useState(false);
   const [completedTasks, setCompletedTasks] = useState([]);
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleOpenDialog = () => setOpenDialog(true);
+  const handleCloseDialog = () => setOpenDialog(false);
 
   useEffect(() => {
     fetchLesson();
@@ -76,6 +85,7 @@ const LessonPageStudent = () => {
   };
 
   const leaveLesson = async () => {
+    handleCloseDialog();
     setLeaving(true);
     try {
       await axios.delete(
@@ -172,6 +182,10 @@ const LessonPageStudent = () => {
                   );
                 } else if (hasTimeEnded(task)) {
                   toast.warn(t("Time for this task has expired"));
+                } else if (isCompleted) {
+                  toast.info(
+                    t("You only had one attempt to complete this task")
+                  );
                 } else {
                   handleTaskClick(task._id);
                 }
@@ -218,16 +232,32 @@ const LessonPageStudent = () => {
           sx={{
             mt: 3,
             "&:hover": {
-              backgroundColor: "#a30000", // чуть светлее при наведении
+              backgroundColor: "#a30000",
               boxShadow: "0px -4px 12px rgba(0, 0, 0, 0.5)",
               color: "#fff",
             },
           }}
-          onClick={leaveLesson}
+          onClick={handleOpenDialog}
           disabled={leaving}
         >
           {t(leaving ? "Leaving..." : "Leave the lesson")}
         </Button>
+        <Dialog open={openDialog} onClose={handleCloseDialog}>
+          <DialogTitle>{t("Confirm Exit")}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              {t("Are you sure you want to leave the lesson?")}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDialog} color="primary">
+              {t("No")}
+            </Button>
+            <Button onClick={leaveLesson} color="error" autoFocus>
+              {t("Yes")}
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Container>
       <Footer />
     </Box>

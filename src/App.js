@@ -16,6 +16,8 @@ import TaskStudent from "./pages/Student/TaskStudent";
 import TaskResultPage from "./pages/Student/TaskResult";
 import StudentResultsPage from "./pages/Teacher/StudentResultsPage";
 import StudentTaskResultPage from "./pages/Teacher/StudentTaskResultPage";
+import PrivateRoute from "./pages/Admin/PrivateRoute";
+import AdminPanel from "./pages/Admin/AdminPanel";
 
 function App() {
   return (
@@ -50,6 +52,14 @@ function App() {
           <Route
             path="/student/lesson/:lessonId/tasks/:taskId/results"
             element={<TaskResultPage />}
+          />
+          <Route
+            path="/admin"
+            element={
+              <PrivateRoute roles={["admin"]}>
+                <AdminPanel />
+              </PrivateRoute>
+            }
           />
         </Routes>
       </AuthProvider>

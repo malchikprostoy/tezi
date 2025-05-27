@@ -125,5 +125,10 @@
     "No answers submitted": "Берилген жооптор жок",
     "Error loading the results": "Жыйынтыктар жүктөөдө ката кетти",
     "Results saved successfully!": "Жыйынтыктар ийгиликтүү сакталды!",
-    "Time for this task has expired": "Бул тапшырманын убактысы бүттү"
+    "Time for this task has expired": "Бул тапшырманын убактысы бүттү",
+    "You only had one attempt to complete this task": "Бул тапшырманы аткаруу үчүн бир гана аракет бар болчу",
+    "Confirm Exit": "Чыгууну тастыктоо",
+    "Are you sure you want to leave the lesson?": "Сабактан кетүүнү каалайсызбы?",
+    "Yes": "Ооба",
+    "No": "Жок"
 }

@@ -21,7 +21,7 @@ const ResultPageStudent = () => {
   const { t } = useTranslation();
   const [lesson, setLesson] = useState(null);
   const [task, setTask] = useState(null);
-  const { lessonId, taskId } = useParams(); // Получаем lessonId и taskId из URL
+  const { lessonId, taskId } = useParams();
   const navigate = useNavigate();
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -50,7 +50,6 @@ const ResultPageStudent = () => {
     }
   };
 
-  // Функция для получения результатов
   const fetchResults = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -98,13 +97,13 @@ const ResultPageStudent = () => {
         toast.error(t("Lesson not found"));
       }
     } catch (error) {
-      console.error("Ошибка при загрузке урока:", error);
       toast.error(t("Error loading the lesson"));
     }
   };
 
-  if (loading) return <LinearProgress />;
+  const normalize = (str) => (str || "").trim().toLowerCase();
 
+  if (loading) return <LinearProgress />;
   if (!results) return <Alert severity="error">{t("Results not found")}</Alert>;
 
   return (
@@ -137,27 +136,47 @@ const ResultPageStudent = () => {
         </Breadcrumbs>
 
         <Box sx={{ mt: 2 }}>
-          {results.answers.length === 0 ? (
-            <Typography variant="body1">{t("No answers submitted")}</Typography>
-          ) : (
-            results.answers.map((answer, index) => {
-              const exercise = task?.exercises?.find(
-                (ex) => ex.question === answer.question
-              );
+          {task?.exercises?.map((exercise, index) => {
+            const answer = results.answers.find((a) => {
+              if (exercise.type === "antonym") {
+                return normalize(a.question) === normalize(exercise.word);
+              } else if (exercise.type === "test") {
+                return normalize(a.question) === normalize(exercise.question);
+              } else if (exercise.type === "text") {
+                return normalize(a.text) === normalize(exercise.text);
+              }
+              return false;
+            });
 
-              return (
-                <Box
-                  key={index}
-                  sx={{
-                    mb: 4,
-                    bgcolor: "#f9f9f9",
-                    p: 3,
-                    borderRadius: "8px",
-                  }}
-                >
-                  <Typography variant="h6">{answer.question}</Typography>
+            return (
+              <Box
+                key={index}
+                sx={{
+                  mb: 4,
+                  bgcolor: "#f9f9f9",
+                  p: 3,
+                  borderRadius: "8px",
+                }}
+              >
+                {/* TEXT TYPE */}
+                {exercise.type === "text" && (
+                  <>
+                    <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                      {exercise.title}
+                    </Typography>
+                    <Typography sx={{ mt: 1, whiteSpace: "pre-line" }}>
+                      {exercise.text}
+                    </Typography>
+                  </>
+                )}
 
-                  {exercise ? (
+                {/* TEST TYPE */}
+                {exercise.type === "test" && answer && (
+                  <>
+                    <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                      {exercise.titlet}
+                    </Typography>
+                    <Typography variant="h6">{answer.question}</Typography>
                     <Box sx={{ mt: 2 }}>
                       {exercise.options.map((option, idx) => {
                         const isCorrect = idx === exercise.correctOption;
@@ -167,13 +186,13 @@ const ResultPageStudent = () => {
                         let textColor = "inherit";
 
                         if (isSelected && isCorrect) {
-                          bgColor = "#c8e6c9"; // выбран и правильный — зелёный
+                          bgColor = "#c8e6c9";
                           textColor = "green";
                         } else if (isSelected && !isCorrect) {
-                          bgColor = "#ffcdd2"; // выбран и неправильный — красный
+                          bgColor = "#ffcdd2";
                           textColor = "red";
                         } else if (!isSelected && isCorrect) {
-                          bgColor = "#c8e6c9"; // правильный, но не выбран — зелёный
+                          bgColor = "#c8e6c9";
                           textColor = "green";
                         }
 
@@ -230,13 +249,95 @@ const ResultPageStudent = () => {
                         </Typography>
                       </Box>
                     </Box>
-                  ) : (
-                    <Typography>{t("Task data not found")}</Typography>
-                  )}
-                </Box>
-              );
-            })
-          )}
+                  </>
+                )}
+
+                {/* ANTONYM TYPE */}
+                {exercise.type === "antonym" && (
+                  <>
+                    <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                      {exercise.titlea}
+                    </Typography>
+                    <Typography sx={{ mt: 1 }}>{exercise.word}</Typography>
+
+                    <Box sx={{ mt: 2 }}>
+                      {exercise.optionas?.map((optiona, idx) => {
+                        const isCorrect = optiona === exercise.correctAntonym;
+                        const isSelected =
+                          answer?.selectedAntonym === optiona ||
+                          answer?.selectedOption === optiona;
+
+                        let bgColor = "inherit";
+                        let textColor = "inherit";
+
+                        if (isSelected && isCorrect) {
+                          bgColor = "#c8e6c9";
+                          textColor = "green";
+                        } else if (isSelected && !isCorrect) {
+                          bgColor = "#ffcdd2";
+                          textColor = "red";
+                        } else if (!isSelected && isCorrect) {
+                          bgColor = "#c8e6c9";
+                          textColor = "green";
+                        }
+
+                        return (
+                          <Typography
+                            key={idx}
+                            sx={{
+                              display: "block",
+                              bgcolor: bgColor,
+                              color: textColor,
+                              p: 1,
+                              borderRadius: 1,
+                              mb: 1,
+                              fontWeight:
+                                isSelected || isCorrect ? "bold" : "normal",
+                            }}
+                          >
+                            {optiona}
+                          </Typography>
+                        );
+                      })}
+
+                      <Box
+                        sx={{
+                          mt: 2,
+                          p: 2,
+                          borderRadius: 2,
+                          bgcolor: "#f0f0f0",
+                        }}
+                      >
+                        <Typography sx={{ fontWeight: "bold", mb: 1 }}>
+                          {t("Correct answer: ")}
+                          <span style={{ color: "green" }}>
+                            {exercise.optionas?.[exercise.correctOption] ||
+                              t("No data")}
+                          </span>
+                        </Typography>
+                        <Typography sx={{ fontWeight: "bold" }}>
+                          {t("Your answer: ")}
+                          <span
+                            style={{
+                              color:
+                                answer?.selectedAntonym ||
+                                answer?.selectedOption
+                                  ? "black"
+                                  : "gray",
+                            }}
+                          >
+                            {answer?.selectedAntonym ||
+                              answer?.selectedOption ||
+                              t("No selected")}
+                          </span>
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </>
+                )}
+              </Box>
+            );
+          })}
         </Box>
 
         <Button

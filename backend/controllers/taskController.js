@@ -186,6 +186,54 @@ const addExercise = async (req, res) => {
       return res.status(404).json({ message: "Задание не найдено" });
     }
 
+    // Очистка ненужных полей по типу
+    if (type === "antonym") {
+      // Очищаем лишние поля
+      title = undefined;
+      titlet = undefined;
+      text = undefined;
+      question = undefined;
+      description = undefined;
+      options = undefined;
+      audioSrc = undefined;
+    }
+
+    if (type === "text") {
+      titlet = undefined;
+      titlea = undefined;
+      question = undefined;
+      description = undefined;
+      word = undefined;
+      antonym = undefined;
+      options = undefined;
+      optionas = undefined;
+      correctOption = undefined;
+      audioSrc = undefined;
+    }
+
+    if (type === "test") {
+      title = undefined;
+      titlea = undefined;
+      word = undefined;
+      optionas = undefined;
+      antonym = undefined;
+      audioSrc = undefined;
+      description = undefined;
+    }
+
+    if (type === "audio") {
+      title = undefined;
+      titlet = undefined;
+      titlea = undefined;
+      word = undefined;
+      antonym = undefined;
+      question = undefined;
+      text = undefined;
+      options = undefined;
+      optionas = undefined;
+      correctOption = undefined;
+    }
+
     // Создаем новое упражнение с `_id`
     const newExercise = {
       _id: new mongoose.Types.ObjectId(), // Генерируем уникальный `_id`
@@ -203,6 +251,11 @@ const addExercise = async (req, res) => {
       correctOption,
       audioSrc,
     };
+
+    // Удаляем из объекта поля со значением undefined
+    Object.keys(newExercise).forEach(
+      (key) => newExercise[key] === undefined && delete newExercise[key]
+    );
 
     // Добавляем упражнение в задание
     task.exercises.push(newExercise);

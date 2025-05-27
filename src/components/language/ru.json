@@ -125,5 +125,10 @@
     "No answers submitted": "Ответов не поступало",
     "Error loading the results": "Ошибка при загрузке результатов",
     "Results saved successfully!": "Результаты успешно сохранены!",
-    "Time for this task has expired": "Время выполнения этой задачи истекло"
+    "Time for this task has expired": "Время выполнения этой задачи истекло",
+    "You only had one attempt to complete this task": "У вас была только одна попытка выполнить это задание",
+    "Confirm Exit": "Подтверждение выхода",
+    "Are you sure you want to leave the lesson?": "Вы уверены, что хотите выйти с урока?",
+    "Yes": "Да",
+    "No": "Нет"
 }

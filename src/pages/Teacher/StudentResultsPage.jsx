@@ -84,7 +84,12 @@ const StudentResultsPage = () => {
     setSelectedStudentId(null);
   };
 
-  if (!tasks.length || !students.length) return <LinearProgress />;
+  if (!tasks.length || !students.length)
+    return (
+      <Typography variant="h6" sx={{ mt: 4, mb: 2 }}>
+        {t("No one joined in")}
+      </Typography>
+    );
 
   return (
     <Container>

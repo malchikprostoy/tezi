@@ -125,5 +125,10 @@
   "No answers submitted": "Cevaplar gönderilmedi",
   "Error loading the results": "Sonuçlar yüklenirken hata oluştu",
   "Results saved successfully!": "Sonuçlar başarıyla kaydedildi!",
-  "Time for this task has expired": "Bu görevin süresi bitti"
+  "Time for this task has expired": "Bu görevin süresi bitti",
+  "You only had one attempt to complete this task": "Bu görevi tamamlamak için yalnızca bir denemeniz vardı.",
+  "Confirm Exit": "Çıkış onaylaması",
+  "Are you sure you want to leave the lesson?": "Dersten ayrılmak istediğineze emin misiniz?",
+  "Yes": "Evet",
+  "No": "Hayır"
 }
