@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 import { toast } from "react-toastify";
+import ScrollToTopButton from "../../components/ScrollToTopButton";
 
 const StudentTaskResultPage = () => {
   const { lessonId, taskId, studentId } = useParams();
@@ -89,7 +90,7 @@ const StudentTaskResultPage = () => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Header />
-      <Container sx={{ mt: 4 }}>
+      <Container maxWidth="lg" sx={{ flex: 1, mt: 4, mb: 3 }}>
         <Breadcrumbs separator="›" aria-label="breadcrumb" sx={{ mb: 2 }}>
           <Link to="/" style={{ textDecoration: "none", color: "#1976d2" }}>
             <HomeOutlinedIcon sx={{ color: "#d93125" }} />
@@ -248,23 +249,26 @@ const StudentTaskResultPage = () => {
                         {exercise.titlea}
                       </Typography>
                       <Typography>{exercise.word}</Typography>
-                      <Box sx={{ mt: 2 }}>
+
+                      <Box sx={{ mt: 2, display: "flex", flexWrap: "wrap" }}>
                         {exercise.optionas?.map((opt, idx) => {
-                          const isCorrect = idx === exercise.correctOption;
+                          const isCorrect =
+                            opt.trim() ===
+                            exercise.optionas[exercise.correctOption].trim();
                           const isSelected =
-                            answer?.selectedAntonym === opt ||
-                            answer?.selectedOption === idx;
+                            answer?.selectedOption?.trim() === opt.trim();
+
                           let bgColor = "inherit";
                           let color = "inherit";
 
                           if (isSelected && isCorrect) {
-                            bgColor = "#c8e6c9";
+                            bgColor = "#c8e6c9"; // зеленый
                             color = "green";
                           } else if (isSelected && !isCorrect) {
-                            bgColor = "#ffcdd2";
+                            bgColor = "#ffcdd2"; // красный
                             color = "red";
                           } else if (!isSelected && isCorrect) {
-                            bgColor = "#c8e6c9";
+                            bgColor = "#c8e6c9"; // зеленый
                             color = "green";
                           }
 
@@ -276,6 +280,7 @@ const StudentTaskResultPage = () => {
                                 color,
                                 p: 1,
                                 mb: 1,
+                                mr: 1,
                                 borderRadius: 1,
                                 fontWeight:
                                   isSelected || isCorrect ? "bold" : "normal",
@@ -285,20 +290,18 @@ const StudentTaskResultPage = () => {
                             </Typography>
                           );
                         })}
+                      </Box>
 
-                        <Box sx={{ mt: 2 }}>
-                          <Typography>
-                            <strong>{t("Correct answer")}:</strong>{" "}
-                            {exercise.optionas?.[exercise.correctOption] ||
-                              t("Unknown")}
-                          </Typography>
-                          <Typography>
-                            <strong>{t("Your answer")}:</strong>{" "}
-                            {answer?.selectedAntonym ||
-                              answer?.selectedOption ||
-                              t("No selected")}
-                          </Typography>
-                        </Box>
+                      <Box sx={{ mt: 2 }}>
+                        <Typography>
+                          <strong>{t("Correct answer")}:</strong>{" "}
+                          {exercise.optionas?.[exercise.correctOption] ||
+                            t("Unknown")}
+                        </Typography>
+                        <Typography>
+                          <strong>{t("Your answer")}:</strong>{" "}
+                          {answer?.selectedOption?.trim() || t("No selected")}
+                        </Typography>
                       </Box>
                     </>
                   )}
@@ -308,6 +311,7 @@ const StudentTaskResultPage = () => {
           </Box>
         </Paper>
       </Container>
+      <ScrollToTopButton />
       <Footer />
     </Box>
   );

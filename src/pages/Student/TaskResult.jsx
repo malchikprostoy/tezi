@@ -16,6 +16,7 @@ import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import ScrollToTopButton from "../../components/ScrollToTopButton";
 
 const ResultPageStudent = () => {
   const { t } = useTranslation();
@@ -258,80 +259,60 @@ const ResultPageStudent = () => {
                     <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                       {exercise.titlea}
                     </Typography>
-                    <Typography sx={{ mt: 1 }}>{exercise.word}</Typography>
+                    <Typography>{exercise.word}</Typography>
 
-                    <Box sx={{ mt: 2 }}>
-                      {exercise.optionas?.map((optiona, idx) => {
-                        const isCorrect = optiona === exercise.correctAntonym;
+                    <Box sx={{ mt: 2, display: "flex", flexWrap: "wrap" }}>
+                      {exercise.optionas?.map((opt, idx) => {
+                        const isCorrect =
+                          opt.trim() ===
+                          exercise.optionas[exercise.correctOption].trim();
                         const isSelected =
-                          answer?.selectedAntonym === optiona ||
-                          answer?.selectedOption === optiona;
+                          answer?.selectedOption?.trim() === opt.trim();
 
                         let bgColor = "inherit";
-                        let textColor = "inherit";
+                        let color = "inherit";
 
                         if (isSelected && isCorrect) {
-                          bgColor = "#c8e6c9";
-                          textColor = "green";
+                          bgColor = "#c8e6c9"; // зеленый
+                          color = "green";
                         } else if (isSelected && !isCorrect) {
-                          bgColor = "#ffcdd2";
-                          textColor = "red";
+                          bgColor = "#ffcdd2"; // красный
+                          color = "red";
                         } else if (!isSelected && isCorrect) {
-                          bgColor = "#c8e6c9";
-                          textColor = "green";
+                          bgColor = "#c8e6c9"; // зеленый
+                          color = "green";
                         }
 
                         return (
                           <Typography
                             key={idx}
                             sx={{
-                              display: "block",
                               bgcolor: bgColor,
-                              color: textColor,
+                              color,
                               p: 1,
-                              borderRadius: 1,
                               mb: 1,
+                              mr: 1,
+                              borderRadius: 1,
                               fontWeight:
                                 isSelected || isCorrect ? "bold" : "normal",
                             }}
                           >
-                            {optiona}
+                            {opt}
                           </Typography>
                         );
                       })}
+                    </Box>
 
-                      <Box
-                        sx={{
-                          mt: 2,
-                          p: 2,
-                          borderRadius: 2,
-                          bgcolor: "#f0f0f0",
-                        }}
-                      >
-                        <Typography sx={{ fontWeight: "bold", mb: 1 }}>
-                          {t("Correct answer: ")}
-                          <span style={{ color: "green" }}>
-                            {exercise.optionas?.[exercise.correctOption] ||
-                              t("No data")}
-                          </span>
-                        </Typography>
-                        <Typography sx={{ fontWeight: "bold" }}>
-                          {t("Your answer: ")}
-                          <span
-                            style={{
-                              color:
-                                answer?.selectedAntonym ||
-                                answer?.selectedOption
-                                  ? "black"
-                                  : "gray",
-                            }}
-                          >
-                            {answer?.selectedAntonym ||
-                              answer?.selectedOption ||
-                              t("No selected")}
-                          </span>
-                        </Typography>
-                      </Box>
+                    <Box sx={{ mt: 2 }}>
+                      <Typography>
+                        <strong>{t("Correct answer")}:</strong>{" "}
+                        {exercise.optionas?.[exercise.correctOption] ||
+                          t("Unknown")}
+                      </Typography>
+                      <Typography>
+                        <strong>{t("Your answer")}:</strong>{" "}
+                        {answer?.selectedOption?.trim() || t("No selected")}
+                      </Typography>
                     </Box>
                   </>
                 )}
@@ -349,6 +330,7 @@ const ResultPageStudent = () => {
           {t("Back to lesson")}
         </Button>
       </Container>
+      <ScrollToTopButton />
       <Footer />
     </Box>
   );
