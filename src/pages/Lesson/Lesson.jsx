@@ -12,6 +12,11 @@ import {
   ListItemText,
   ListItemButton,
   IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
@@ -29,6 +34,7 @@ const LessonPage = () => {
   const [newTitle, setNewTitle] = useState("");
   const [newTask, setNewTask] = useState("");
   const [students, setStudents] = useState([]);
+  const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -138,6 +144,22 @@ const LessonPage = () => {
     }
   };
 
+  // Открываем окно подтверждения удаления
+  const handleOpenConfirmDelete = () => {
+    setOpenConfirmDelete(true);
+  };
+
+  // Закрываем окно подтверждения удаления
+  const handleCloseConfirmDelete = () => {
+    setOpenConfirmDelete(false);
+  };
+
+  // Удаление с закрытием окна
+  const confirmDeleteLesson = async () => {
+    await deleteLesson();
+    setOpenConfirmDelete(false);
+  };
+
   if (!lesson) return <LinearProgress />;
 
   return (
@@ -194,15 +216,42 @@ const LessonPage = () => {
             mt: 2,
             ml: 2,
             "&:hover": {
-              backgroundColor: "#a30000", // чуть светлее при наведении
+              backgroundColor: "#a30000",
               boxShadow: "0px -4px 12px rgba(0, 0, 0, 0.5)",
               color: "#fff",
             },
           }}
-          onClick={deleteLesson}
+          onClick={handleOpenConfirmDelete}
         >
           {t("Delete Lesson")}
         </Button>
+
+        {/* Модальное окно подтверждения */}
+        <Dialog
+          open={openConfirmDelete}
+          onClose={handleCloseConfirmDelete}
+          aria-labelledby="confirm-delete-title"
+          aria-describedby="confirm-delete-description"
+        >
+          <DialogTitle id="confirm-delete-title">
+            {t("Confirm Deletion")}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="confirm-delete-description">
+              {t(
+                "Are you sure you want to delete this lesson? This action cannot be undone."
+              )}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseConfirmDelete} color="primary">
+              {t("Cancel")}
+            </Button>
+            <Button onClick={confirmDeleteLesson} color="error" autoFocus>
+              {t("Delete")}
+            </Button>
+          </DialogActions>
+        </Dialog>
 
         <StudentResultsPage />
 

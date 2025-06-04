@@ -227,7 +227,7 @@ const ResultPageStudent = () => {
                         }}
                       >
                         <Typography sx={{ fontWeight: "bold", mr: 1 }}>
-                          {t("Your answer")}:
+                          {t("Your answer")}
                         </Typography>
                         <Typography
                           sx={{
@@ -305,12 +305,12 @@ const ResultPageStudent = () => {
 
                     <Box sx={{ mt: 2 }}>
                       <Typography>
-                        <strong>{t("Correct answer")}:</strong>{" "}
+                        <strong>{t("Correct answer")}</strong>{" "}
                         {exercise.optionas?.[exercise.correctOption] ||
                           t("Unknown")}
                       </Typography>
                       <Typography>
-                        <strong>{t("Your answer")}:</strong>{" "}
+                        <strong>{t("Your answer")}</strong>{" "}
                         {answer?.selectedOption?.trim() || t("No selected")}
                       </Typography>
                     </Box>

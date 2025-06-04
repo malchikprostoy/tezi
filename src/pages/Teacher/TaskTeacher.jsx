@@ -30,6 +30,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import AudioPlayer from "../../components/AudioPlayer/AudioPlayer";
 import { useTranslation } from "react-i18next";
+import ScrollToTopButton from "../../components/ScrollToTopButton";
 
 const TaskTeacher = () => {
   const { t } = useTranslation();
@@ -592,6 +593,7 @@ const TaskTeacher = () => {
             </Button>
           </Box>
         </Modal>
+        <ScrollToTopButton />
       </Box>
       <Footer />
     </Box>

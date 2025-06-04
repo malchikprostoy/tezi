@@ -22,6 +22,7 @@ import Footer from "../../components/footer/Footer";
 import { toast } from "react-toastify";
 import AudioPlayer from "../../components/AudioPlayer/AudioPlayer";
 import { useTranslation } from "react-i18next";
+import ScrollToTopButton from "../../components/ScrollToTopButton";
 
 const TaskStudent = () => {
   const { t } = useTranslation();
@@ -390,6 +391,8 @@ const TaskStudent = () => {
                       <AudioPlayer
                         audioSrc={exercise.audioSrc}
                         onAudioChange={handleAudioChange}
+                        isReadOnly
+                        maxPlays={2}
                       />
                     </Box>
                   </>
@@ -418,6 +421,7 @@ const TaskStudent = () => {
           </Button>
         </Box>
       </Container>
+      <ScrollToTopButton />
       <Footer />
     </Box>
   );
