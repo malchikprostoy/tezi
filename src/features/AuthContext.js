@@ -70,12 +70,11 @@ export const AuthProvider = ({ children }) => {
 
   const determineRole = (email) => {
     const username = email.split("@")[0];
-    const isOnlyNumbers = /^[\d.]+$/.test(username);
+    const digitCount = (username.match(/\d/g) || []).length;
     const hasLetters = /[a-zA-Z]/.test(username);
-    const hasNumbers = /\d/.test(username);
 
-    if (isOnlyNumbers) return "student";
-    if (hasLetters && hasNumbers) return "teacher";
+    if (digitCount > 4) return "student";
+    if (digitCount <= 4 && hasLetters) return "teacher";
     return "unknown";
   };
 

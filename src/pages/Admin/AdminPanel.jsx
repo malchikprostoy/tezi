@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
 import {
-  Container,
   Typography,
   Box,
   Button,
   Select,
   MenuItem,
+  Avatar,
+  Card,
+  CardContent,
+  Tooltip,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
+import AdminLayout from "./AdminLayout"; // импорт layout
 
 const roles = ["student", "teacher", "admin"];
 
@@ -67,9 +73,36 @@ const AdminPanel = () => {
   };
 
   const columns = [
-    { field: "_id", headerName: "ID", flex: 1 },
+    {
+      field: "photo",
+      headerName: "Avatar",
+      width: 80,
+      renderCell: (params) =>
+        params.value ? (
+          <Avatar src={params.value} alt="avatar" />
+        ) : (
+          <Avatar>{params.row.name?.[0]}</Avatar>
+        ),
+      sortable: false,
+      filterable: false,
+    },
     { field: "name", headerName: "Name", flex: 1 },
-    { field: "email", headerName: "Email", flex: 1 },
+    { field: "email", headerName: "Email", flex: 1.5 },
+    {
+      field: "isVerified",
+      headerName: "Verified",
+      width: 100,
+      renderCell: (params) =>
+        params.value ? (
+          <Tooltip title="Email подтверждён">
+            <CheckCircleIcon color="success" />
+          </Tooltip>
+        ) : (
+          <Tooltip title="Email не подтверждён">
+            <CancelIcon color="error" />
+          </Tooltip>
+        ),
+    },
     {
       field: "role",
       headerName: "Role",
@@ -79,6 +112,7 @@ const AdminPanel = () => {
           value={params.value}
           onChange={(e) => changeUserRole(params.row._id, e.target.value)}
           size="small"
+          sx={{ fontSize: 14 }}
         >
           {roles.map((role) => (
             <MenuItem key={role} value={role}>
@@ -96,7 +130,8 @@ const AdminPanel = () => {
       renderCell: (params) => (
         <Button
           color="error"
-          variant="outlined"
+          variant="contained"
+          size="small"
           onClick={() => deleteUser(params.row._id)}
         >
           Delete
@@ -106,21 +141,25 @@ const AdminPanel = () => {
   ];
 
   return (
-    <Container>
-      <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>
-        Admin Panel — Пользователи
+    <AdminLayout>
+      <Typography variant="h5" sx={{ mb: 2 }}>
+        👥 Управление пользователями
       </Typography>
-      <Box sx={{ height: 600, width: "100%" }}>
-        <DataGrid
-          rows={users}
-          columns={columns}
-          getRowId={(row) => row._id}
-          pageSize={10}
-          rowsPerPageOptions={[10]}
-          disableSelectionOnClick
-        />
-      </Box>
-    </Container>
+      <Card>
+        <CardContent>
+          <Box sx={{ height: 600, width: "100%" }}>
+            <DataGrid
+              rows={users}
+              columns={columns}
+              getRowId={(row) => row._id}
+              pageSize={10}
+              rowsPerPageOptions={[10]}
+              disableSelectionOnClick
+            />
+          </Box>
+        </CardContent>
+      </Card>
+    </AdminLayout>
   );
 };
 
