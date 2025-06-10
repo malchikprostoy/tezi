@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import logo from "../../assets/img/Manas_Logo.png";
+import logo from "../../assets/img/Manas_logo.png";
 import { useNavigate } from "react-router-dom";
 import { Avatar, MenuItem, Select, Box } from "@mui/material";
 import Profile from "../profile/Profile";
