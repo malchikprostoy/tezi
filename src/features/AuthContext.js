@@ -72,13 +72,11 @@ export const AuthProvider = ({ children }) => {
   }, [location.search]);
 
   const determineRole = (email) => {
-    const username = email.split("@")[0];
-    const digitCount = (username.match(/\d/g) || []).length;
-    const hasLetters = /[a-zA-Z]/.test(username);
+    const prefix = email.split("@")[0];
+    const digitCount = (prefix.match(/\d/g) || []).length;
 
-    if (digitCount > 4) return "student";
-    if (digitCount <= 4 && hasLetters) return "teacher";
-    return "unknown";
+    // Если цифр больше 4 — студент, иначе — преподаватель
+    return digitCount > 4 ? "student" : "teacher";
   };
 
   const login = async (email, password) => {

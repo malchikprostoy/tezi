@@ -45,15 +45,12 @@ passport.use(
         const email = profile.emails[0].value;
         let role = "student";
 
-        if (email.endsWith("@manas.edu.kg")) {
+        if (email.endsWith("@manas.edu.kg" || "@gmail.com")) {
           const prefix = email.split("@")[0];
           const digitCount = (prefix.match(/\d/g) || []).length;
 
-          if (digitCount > 4) {
-            role = "student";
-          } else {
-            role = "teacher";
-          }
+          // Если цифр больше 4 — студент, иначе — преподаватель
+          role = digitCount > 4 ? "student" : "teacher";
         }
 
         if (user) {
