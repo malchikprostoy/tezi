@@ -43,13 +43,15 @@ passport.use(
         let user = await User.findOne({ googleId: profile.id });
 
         const email = profile.emails[0].value;
-        let role = "student"; // значение по умолчанию
+        let role = "student";
 
         if (email.endsWith("@manas.edu.kg")) {
           const prefix = email.split("@")[0];
-          if (/^\d+\.\d+$/.test(prefix)) {
+          const digitCount = (prefix.match(/\d/g) || []).length;
+
+          if (digitCount > 4) {
             role = "student";
-          } else if (/^[a-zA-Z]+$/.test(prefix)) {
+          } else {
             role = "teacher";
           }
         }

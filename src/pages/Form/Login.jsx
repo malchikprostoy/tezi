@@ -12,6 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import GoogleIcon from "@mui/icons-material/Google";
 import { useAuth } from "../../features/AuthContext";
 import "./Form.scss";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -215,7 +216,7 @@ const Login = () => {
             onClick={handleGoogleLogin}
             style={{ color: "black", border: "1px solid #000" }}
           >
-            Sign in with Google
+            <GoogleIcon /> Sign in with Google
           </Button>
         </Box>
       </div>
