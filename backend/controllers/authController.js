@@ -49,7 +49,8 @@ const registerUser = async (req, res) => {
     const expirationTime = new Date(Date.now() + 3600000); // 1 час
 
     // ✅ Определяем роль: если только цифры — студент, иначе — учитель
-    const isStudent = /^\d+$/.test(username);
+    const localPart = email.split("@")[0];
+    const isStudent = /^\d+$/.test(localPart);
     const role = isStudent ? "student" : "teacher";
 
     // Создаем нового пользователя
@@ -71,7 +72,7 @@ const registerUser = async (req, res) => {
 
     // Создаем JWT токен
     const token = jwt.sign(
-      { userId: newUser._id, role: user.role },
+      { userId: newUser._id, role: newUser.role },
       process.env.JWT_SECRET,
       {
         expiresIn: "1h",
