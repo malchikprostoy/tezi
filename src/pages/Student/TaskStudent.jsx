@@ -150,6 +150,8 @@ const TaskStudent = () => {
         if (timeRemaining <= 0) {
           setTimeLeft("00:00:00!");
           clearInterval(timerIntervalRef.current);
+          toast.info(t("Time is up! The task will be completed automatically"));
+
           handleFinish(); // 🔥 Автоматический вызов
         } else {
           const hours = Math.floor(timeRemaining / 1000 / 3600)
