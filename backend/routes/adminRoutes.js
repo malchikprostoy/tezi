@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const { verifyToken } = require("../middleware/verifyToken");
 const { isAdmin } = require("../middleware/adminAuth");
 const User = require("../models/User");
 
-router.get("/users", isAdmin, async (req, res) => {
+router.get("/users", verifyToken, isAdmin, async (req, res) => {
   try {
     const users = await User.find();
     res.json(users);
@@ -13,7 +14,7 @@ router.get("/users", isAdmin, async (req, res) => {
 });
 
 // Удалить пользователя
-router.delete("/users/:userId", isAdmin, async (req, res) => {
+router.delete("/users/:userId", verifyToken, isAdmin, async (req, res) => {
   try {
     const { userId } = req.params;
     await User.findByIdAndDelete(userId);
@@ -24,7 +25,7 @@ router.delete("/users/:userId", isAdmin, async (req, res) => {
 });
 
 // Обновить роль пользователя
-router.put("/users/:userId/role", isAdmin, async (req, res) => {
+router.put("/users/:userId/role", verifyToken, isAdmin, async (req, res) => {
   try {
     const { userId } = req.params;
     const { role } = req.body;

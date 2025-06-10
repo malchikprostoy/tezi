@@ -42,15 +42,25 @@ passport.use(
       try {
         let user = await User.findOne({ googleId: profile.id });
 
+        const email = profile.emails[0].value;
+        let role = "student"; // значение по умолчанию
+
+        if (email.endsWith("@manas.edu.kg")) {
+          const prefix = email.split("@")[0];
+          if (/^\d+\.\d+$/.test(prefix)) {
+            role = "student";
+          } else if (/^[a-zA-Z]+$/.test(prefix)) {
+            role = "teacher";
+          }
+        }
+
         if (user) {
-          // ✅ Обновляем фото каждый раз при входе
           user.photo = profile._json.picture || "";
           await user.save();
         } else {
-          // ✅ Создаем нового пользователя
           user = new User({
             googleId: profile.id,
-            email: profile.emails[0].value,
+            email,
             name: profile.displayName,
             photo: profile._json.picture || "",
             isVerified: profile._json.email_verified,
@@ -92,7 +102,7 @@ app.get(
     if (!req.user) {
       return res.status(401).json({ message: "Authentication failed" });
     }
-    // Генерируем JWT токен после успешной авторизации через Google
+
     const token = jwt.sign(
       { userId: req.user._id, role: req.user.role },
       process.env.JWT_SECRET,
@@ -101,7 +111,6 @@ app.get(
       }
     );
 
-    // Успешная авторизация, перенаправляем на главную страницу
     res.redirect(`${process.env.FRONTEND_URL}/login?token=${token}`);
   }
 );
@@ -134,4 +143,5 @@ const PORT = process.env.PORT || 5000;
 app.get("/", (req, res) => {
   res.send("Tezi Backend is running ✅");
 });
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
