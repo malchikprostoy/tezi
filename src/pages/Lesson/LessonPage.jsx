@@ -60,21 +60,23 @@ const LessonPageStudent = () => {
         `${process.env.REACT_APP_API_URL}/api/lessons/${lessonId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
       setLesson(data);
 
       const tasksData = await axios.get(
         `${process.env.REACT_APP_API_URL}/api/lessons/${lessonId}/tasks`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
       setTasks(tasksData.data);
 
       const resultsData = await axios.get(
         `${process.env.REACT_APP_API_URL}/api/results/lesson/${lessonId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      const completed = resultsData.data.map((r) => r.taskId.toString());
+
+      const completed = resultsData.data.map((r) => ({
+        taskId: r.taskId.toString(),
+        completedAt: r.completedAt,
+      }));
       setCompletedTasks(completed);
     } catch (error) {
       toast.error(t("Error loading the lesson"));
@@ -128,13 +130,32 @@ const LessonPageStudent = () => {
     const startTime = task.timer?.startTime
       ? new Date(task.timer.startTime).getTime()
       : null;
-    const duration = task.timer?.duration ? task.timer.duration * 1000 : null; // в миллисекундах
+    const duration = task.timer?.duration ? task.timer.duration * 1000 : null;
 
     if (!startTime || !duration) return false;
 
     const endTime = startTime + duration;
     const now = new Date().getTime();
-    return now > endTime; // если сейчас позже конца задания
+    return now > endTime;
+  };
+
+  const canShowResult = (task) => {
+    const completed = completedTasks.find(
+      (c) => c.taskId === task._id.toString()
+    );
+    const hasTimer = task.timer?.startTime && task.timer?.duration;
+
+    if (!completed) return false;
+
+    if (hasTimer) {
+      return hasTimeEnded(task);
+    }
+
+    const completedAt = new Date(completed.completedAt).getTime();
+    const now = new Date().getTime();
+    const oneHour = 60 * 60 * 1000;
+
+    return now - completedAt >= oneHour;
   };
 
   if (loading) return <LinearProgress />;
@@ -170,7 +191,10 @@ const LessonPageStudent = () => {
                 : null;
               const isLocked = startTime && now < startTime;
 
-              const isCompleted = completedTasks.includes(task._id.toString());
+              const completedObj = completedTasks.find(
+                (c) => c.taskId === task._id.toString()
+              );
+              const isCompleted = !!completedObj;
 
               const handleClick = () => {
                 if (isLocked) {
@@ -203,13 +227,12 @@ const LessonPageStudent = () => {
                         {isCompleted && (
                           <CheckCircleIcon color="success" fontSize="small" />
                         )}
-                        {/* Показываем VisibilityIcon если время истекло */}
-                        {!isLocked && hasTimeEnded(task) && (
+                        {!isLocked && canShowResult(task) && (
                           <VisibilityIcon
                             color="action"
                             sx={{ cursor: "pointer" }}
                             onClick={(e) => {
-                              e.stopPropagation(); // чтобы не срабатывал navigate к задаче
+                              e.stopPropagation();
                               navigate(
                                 `/student/lesson/${lessonId}/tasks/${task._id}/results`
                               );
@@ -242,6 +265,7 @@ const LessonPageStudent = () => {
         >
           {t(leaving ? "Leaving..." : "Leave the lesson")}
         </Button>
+
         <Dialog open={openDialog} onClose={handleCloseDialog}>
           <DialogTitle>{t("Confirm Exit")}</DialogTitle>
           <DialogContent>

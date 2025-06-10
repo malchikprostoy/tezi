@@ -17,7 +17,7 @@
     "Start": "Баштоо",
     "Duration": "Убакыт",
     "min": "мин",
-    "Not specified": "Көрсөтүлгөн жок",
+    "Not specified": "Берилген жок",
     "You have left the lesson": "Сиз сабактан чыктыңыз",
     "Error leaving the lesson": "Сабактан чыгууда ката кетти",
     "You need to log in": "Сиз системага киришиңиз керек",
@@ -126,10 +126,13 @@
     "Error loading the results": "Жыйынтыктар жүктөөдө ката кетти",
     "Results saved successfully!": "Жыйынтыктар ийгиликтүү сакталды!",
     "Time for this task has expired": "Бул тапшырманын убактысы бүттү",
-    "You only had one attempt to complete this task": "Бул тапшырманы аткаруу үчүн бир гана аракет бар болчу",
+    "You only had one attempt to complete this task": "Бул тапшырманы аткаруу үчүн бир гана мүмкүнчүлүк бар болчу",
     "Confirm Exit": "Чыгууну тастыктоо",
     "Are you sure you want to leave the lesson?": "Сабактан кетүүнү каалайсызбы?",
     "Yes": "Ооба",
     "No": "Жок",
-    "Up":"Өйдө"
+    "Up":"Өйдө",
+    "Confirm Deletion":"Жок кылууну ырастоо",
+    "Are you sure you want to delete this lesson? This action cannot be undone":"Бул сабакты жок кылгыңыз келеби? Бул иш-аракетти жокко чыгарууга болбойт",
+    "Delete":"Жок кылуу"
 }

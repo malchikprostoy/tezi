@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import {
   Container,
@@ -8,6 +8,7 @@ import {
   Paper,
   Box,
   Breadcrumbs,
+  Button,
 } from "@mui/material";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import { useTranslation } from "react-i18next";
@@ -21,6 +22,7 @@ const StudentTaskResultPage = () => {
   const [task, setTask] = useState(null);
   const [lesson, setLesson] = useState(null);
   const [result, setResult] = useState(null);
+  const navigate = useNavigate();
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -310,6 +312,15 @@ const StudentTaskResultPage = () => {
             })}
           </Box>
         </Paper>
+
+        <Button
+          variant="outlined"
+          sx={{ mt: 4, mb: 3 }}
+          color="error"
+          onClick={() => navigate(`/teacher/lesson/${lessonId}`)}
+        >
+          {t("Back to lesson")}
+        </Button>
       </Container>
       <ScrollToTopButton />
       <Footer />

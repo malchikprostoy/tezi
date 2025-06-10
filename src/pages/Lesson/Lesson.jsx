@@ -239,7 +239,7 @@ const LessonPage = () => {
           <DialogContent>
             <DialogContentText id="confirm-delete-description">
               {t(
-                "Are you sure you want to delete this lesson? This action cannot be undone."
+                "Are you sure you want to delete this lesson? This action cannot be undone"
               )}
             </DialogContentText>
           </DialogContent>

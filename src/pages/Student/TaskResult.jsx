@@ -67,6 +67,7 @@ const ResultPageStudent = () => {
       const { data } = await axios.get(url, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      console.log("Fetched results:", data);
       setResults(data);
     } catch (error) {
       toast.error(t("Error loading the results"));

@@ -31,7 +31,6 @@ const TaskStudent = () => {
   const [task, setTask] = useState(null);
   const [exercises, setExercises] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedAntonym, setSelectedAntonym] = useState("");
   const [lesson, setLesson] = useState(null);
   const [showResults, setShowResults] = useState(false);
   const [timeLeft, setTimeLeft] = useState(null);
@@ -85,6 +84,33 @@ const TaskStudent = () => {
     }
   };
 
+  const fetchLesson = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error(t("You need to log in"));
+      return;
+    }
+
+    try {
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/lessons/${lessonId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (data && data._id) {
+        setLesson(data);
+      } else {
+        toast.error(t("Lesson not found"));
+      }
+    } catch (error) {
+      console.error("Ошибка при загрузке урока:", error);
+      toast.error(t("Error loading the lesson"));
+    }
+  };
+
   const fetchTimer = async (taskId) => {
     try {
       const token = localStorage.getItem("token");
@@ -124,44 +150,33 @@ const TaskStudent = () => {
         if (timeRemaining <= 0) {
           setTimeLeft("00:00:00!");
           clearInterval(timerIntervalRef.current);
+          handleFinish(); // 🔥 Автоматический вызов
         } else {
-          const hours = Math.floor(timeRemaining / 1000 / 3600);
-          const minutes = Math.floor((timeRemaining / 1000 / 60) % 60);
-          const seconds = Math.floor((timeRemaining / 1000) % 60);
+          const hours = Math.floor(timeRemaining / 1000 / 3600)
+            .toString()
+            .padStart(2, "0");
+          const minutes = Math.floor((timeRemaining / 1000 / 60) % 60)
+            .toString()
+            .padStart(2, "0");
+          const seconds = Math.floor((timeRemaining / 1000) % 60)
+            .toString()
+            .padStart(2, "0");
+
           setTimeLeft(`${hours}:${minutes}:${seconds}`);
         }
       };
 
+      updateTimer();
       timerIntervalRef.current = setInterval(updateTimer, 1000);
     }
   };
 
-  const fetchLesson = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      toast.error(t("You need to log in"));
-      return;
+  // 🔁 Вызов handleFinish заново, если lesson загрузился позже
+  useEffect(() => {
+    if (lesson && timeLeft === "00:00:00!" && !showResults) {
+      handleFinish();
     }
-
-    try {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/lessons/${lessonId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (data && data._id) {
-        setLesson(data);
-      } else {
-        toast.error(t("Lesson not found"));
-      }
-    } catch (error) {
-      console.error("Ошибка при загрузке урока:", error);
-      toast.error(t("Error loading the lesson"));
-    }
-  };
+  }, [lesson, timeLeft]);
 
   const handleAnswerSelect = (exerciseId, selectedOption) => {
     setExercises((prevExercises) =>
@@ -200,6 +215,12 @@ const TaskStudent = () => {
   };
 
   const handleFinish = async () => {
+    if (showResults) return;
+    if (!lesson) {
+      console.log("Lesson not loaded yet, skipping navigate.");
+      return;
+    }
+
     const calculatedAnswers = exercises
       .filter(
         (exercise) => exercise.type === "test" || exercise.type === "antonym"
@@ -210,7 +231,7 @@ const TaskStudent = () => {
             type: "test",
             question: exercise.question,
             selectedOption: exercise.selectedOption,
-            correctAnswer: exercise.correctAnswer, // добавлено
+            correctAnswer: exercise.correctAnswer,
             correct: exercise.selectedOption === exercise.correctAnswer,
           };
         } else if (exercise.type === "antonym") {
@@ -218,7 +239,7 @@ const TaskStudent = () => {
             type: "antonym",
             question: exercise.word,
             selectedOption: exercise.selectedAntonym,
-            correctAnswer: exercise.correctAntonym, // добавлено
+            correctAnswer: exercise.correctAntonym,
             correct: exercise.selectedAntonym === exercise.correctAntonym,
           };
         }
@@ -233,7 +254,7 @@ const TaskStudent = () => {
   };
 
   const handleAudioChange = (newAudioSrc) => {
-    setAudioSrc(newAudioSrc); // Update the state with the new audio source
+    setAudioSrc(newAudioSrc);
   };
 
   if (loading) return <LinearProgress />;
@@ -267,7 +288,6 @@ const TaskStudent = () => {
 
         <Typography variant="h4">{task.title}</Typography>
 
-        {/* Отображаем таймер */}
         {timeLeft && (
           <Box
             sx={{
@@ -362,7 +382,10 @@ const TaskStudent = () => {
                           setExercises((prevExercises) =>
                             prevExercises.map((ex) =>
                               ex._id === exercise._id
-                                ? { ...ex, selectedAntonym: e.target.value }
+                                ? {
+                                    ...ex,
+                                    selectedAntonym: e.target.value,
+                                  }
                                 : ex
                             )
                           )
@@ -386,23 +409,20 @@ const TaskStudent = () => {
                 )}
 
                 {exercise.type === "audio" && (
-                  <>
-                    <Box sx={{ p: 2, bgcolor: "#f5f5f5", borderRadius: 2 }}>
-                      <AudioPlayer
-                        audioSrc={exercise.audioSrc}
-                        onAudioChange={handleAudioChange}
-                        isReadOnly
-                        maxPlays={2}
-                      />
-                    </Box>
-                  </>
+                  <Box sx={{ p: 2, bgcolor: "#f5f5f5", borderRadius: 2 }}>
+                    <AudioPlayer
+                      audioSrc={exercise.audioSrc}
+                      onAudioChange={handleAudioChange}
+                      isReadOnly
+                      maxPlays={2}
+                    />
+                  </Box>
                 )}
               </Box>
             </ListItem>
           ))}
         </List>
 
-        {/* Кнопка завершения задания */}
         <Box sx={{ mt: 3, mb: 3 }}>
           <Button
             variant="outlined"
@@ -411,7 +431,7 @@ const TaskStudent = () => {
             size="large"
             sx={{
               "&:hover": {
-                backgroundColor: "#a30000", // чуть светлее при наведении
+                backgroundColor: "#a30000",
                 boxShadow: "0px -4px 12px rgba(0, 0, 0, 0.5)",
                 color: "#fff",
               },
