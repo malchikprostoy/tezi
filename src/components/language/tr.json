@@ -135,5 +135,6 @@
   "Confirm Deletion":"Silme İşlemini Onayla",
   "Are you sure you want to delete this lesson? This action cannot be undone":"Bu dersi silmek istediğinize emin misiniz? Bu eylem geri alınamaz",
   "Delete":"Sil",
-  "Time is up! The task will be completed automatically":"Zaman doldu! Görev otomatik olarak tamamlanacaktır"
+  "Time is up! The task will be completed automatically":"Zaman doldu! Görev otomatik olarak tamamlanacaktır",
+  "The student missed the task without completing it":"Öğrenci görevi tamamlamadan atladı"
 }

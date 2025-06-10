@@ -135,5 +135,6 @@
     "Confirm Deletion":"Подтвердите удаление",
     "Are you sure you want to delete this lesson? This action cannot be undone":"Вы уверены, что хотите удалить этот урок? Это действие невозможно отменить",
     "Delete":"Удалить",
-    "Time is up! The task will be completed automatically":"Время вышло! Задание будет завершено автоматически"
+    "Time is up! The task will be completed automatically":"Время вышло! Задание будет завершено автоматически",
+    "The student missed the task without completing it":"Ученик пропустил задание, не выполнив его"
 }

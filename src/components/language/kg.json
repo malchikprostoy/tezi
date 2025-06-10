@@ -135,5 +135,6 @@
     "Confirm Deletion":"Жок кылууну ырастоо",
     "Are you sure you want to delete this lesson? This action cannot be undone":"Бул сабакты жок кылгыңыз келеби? Бул иш-аракетти жокко чыгарууга болбойт",
     "Delete":"Жок кылуу",
-    "Time is up! The task will be completed automatically":"Убакыт бүттү! Тапшырма автоматтык түрдө аяктайт"
+    "Time is up! The task will be completed automatically":"Убакыт бүттү! Тапшырма автоматтык түрдө аяктайт",
+    "The student missed the task without completing it":"Студент тапшырманы аткарбай өткөрүп жиберди"
 }

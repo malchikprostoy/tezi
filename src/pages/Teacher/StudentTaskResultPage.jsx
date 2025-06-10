@@ -9,6 +9,7 @@ import {
   Box,
   Breadcrumbs,
   Button,
+  Alert,
 } from "@mui/material";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import { useTranslation } from "react-i18next";
@@ -87,7 +88,31 @@ const StudentTaskResultPage = () => {
     }
   }, [lessonId, taskId]);
 
-  if (!result) return <LinearProgress />;
+  if (!result)
+    return (
+      <>
+        <Box
+          sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+        >
+          <Header />
+          <Container maxWidth="lg" sx={{ flex: 1, mt: 4, mb: 3 }}>
+            <Alert severity="warning">
+              {t("The student missed the task without completing it")}
+            </Alert>
+            <Button
+              variant="outlined"
+              sx={{ mt: 4, mb: 3 }}
+              color="error"
+              onClick={() => navigate(`/teacher/lesson/${lessonId}`)}
+            >
+              {t("Back to lesson")}
+            </Button>
+          </Container>
+          <ScrollToTopButton />
+          <Footer />
+        </Box>
+      </>
+    );
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
