@@ -45,7 +45,7 @@ passport.use(
         const email = profile.emails[0].value;
         let role = "student";
 
-        if (email.endsWith("@manas.edu.kg" || "@gmail.com")) {
+        if (email.endsWith("@manas.edu.kg" && "@gmail.com")) {
           const prefix = email.split("@")[0];
           const digitCount = (prefix.match(/\d/g) || []).length;
 
