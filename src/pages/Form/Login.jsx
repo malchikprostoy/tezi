@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { TextField } from "@mui/material";
+import { Avatar, TextField } from "@mui/material";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
@@ -11,8 +11,8 @@ import {
   InputAdornment,
   Typography,
 } from "@mui/material";
+import GoogleIcon from "../../assets/img/GoogleIcon.svg";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import GoogleIcon from "@mui/icons-material/Google";
 import { useAuth } from "../../features/AuthContext";
 import "./Form.scss";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -216,7 +216,12 @@ const Login = () => {
             onClick={handleGoogleLogin}
             style={{ color: "black", border: "1px solid #000" }}
           >
-            <GoogleIcon /> Sign in with Google
+            <Avatar
+              alt="Google Logo"
+              sx={{ width: 30, height: 30, mr: 1 }}
+              src={GoogleIcon}
+            />
+            Sign in with Google
           </Button>
         </Box>
       </div>

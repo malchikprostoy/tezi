@@ -39,8 +39,11 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("userPhoto", photo);
       }
 
-      localStorage.setItem("userRole", role);
-      setUser({ ...response.data.user, role });
+      if (role) {
+        localStorage.setItem("userRole", role);
+      }
+
+      setUser(response.data.user);
     } catch (error) {
       console.error("❌ Ошибка при получении профиля:", error);
       localStorage.removeItem("token");

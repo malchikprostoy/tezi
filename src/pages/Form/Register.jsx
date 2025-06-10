@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextField } from "@mui/material";
+import { Avatar, TextField } from "@mui/material";
 import Link from "@mui/material/Link";
 import Button from "@mui/material/Button";
 import {
@@ -11,6 +11,7 @@ import {
   Typography,
   CircularProgress,
 } from "@mui/material";
+import GoogleIcon from "../../assets/img/GoogleIcon.svg";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from "axios";
@@ -257,6 +258,12 @@ const Register = () => {
             onClick={handleGoogleLogin}
             style={{ color: "black", border: "1px solid #000" }}
           >
+            {" "}
+            <Avatar
+              alt="Google Logo"
+              sx={{ width: 30, height: 30, mr: 1 }}
+              src={GoogleIcon}
+            />
             Войти через Google
           </Button>
         </Box>
