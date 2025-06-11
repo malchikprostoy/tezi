@@ -337,7 +337,14 @@ const TaskStudent = () => {
                     <Typography sx={{ fontWeight: "bold" }}>
                       {exercise.titlet}
                     </Typography>
-                    <Typography sx={{ mb: 1 }}>{exercise.question}</Typography>
+                    <Typography sx={{ mb: 1, display: "flex", gap: 2 }}>
+                      {exercise.question}{" "}
+                      {exercise.score !== undefined && (
+                        <Typography sx={{ fontStyle: "italic", mb: 1 }}>
+                          ({t("Score")}: {exercise.score})
+                        </Typography>
+                      )}
+                    </Typography>
 
                     <List>
                       {exercise.options?.map((option, i) => (
@@ -374,7 +381,14 @@ const TaskStudent = () => {
                     <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                       {exercise.titlea}
                     </Typography>
-                    <Typography>{exercise.word}</Typography>
+                    <Typography sx={{ display: "flex", gap: 2 }}>
+                      {exercise.word}{" "}
+                      {exercise.score !== undefined && (
+                        <Typography sx={{ fontStyle: "italic", mb: 1 }}>
+                          ({t("Score")}: {exercise.score})
+                        </Typography>
+                      )}
+                    </Typography>
 
                     {exercise.optionas && exercise.optionas.length > 0 ? (
                       <Select

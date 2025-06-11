@@ -4,7 +4,6 @@ import axios from "axios";
 import {
   Container,
   Typography,
-  LinearProgress,
   Paper,
   Box,
   Breadcrumbs,
@@ -90,29 +89,70 @@ const StudentTaskResultPage = () => {
 
   if (!result)
     return (
-      <>
-        <Box
-          sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
-        >
-          <Header />
-          <Container maxWidth="lg" sx={{ flex: 1, mt: 4, mb: 3 }}>
-            <Alert severity="warning">
-              {t("The student missed the task without completing it")}
-            </Alert>
-            <Button
-              variant="outlined"
-              sx={{ mt: 4, mb: 3 }}
-              color="error"
-              onClick={() => navigate(`/teacher/lesson/${lessonId}`)}
-            >
-              {t("Back to lesson")}
-            </Button>
-          </Container>
-          <ScrollToTopButton />
-          <Footer />
-        </Box>
-      </>
+      <Box
+        sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+      >
+        <Header />
+        <Container maxWidth="lg" sx={{ flex: 1, mt: 4, mb: 3 }}>
+          <Alert severity="warning">
+            {t("The student missed the task without completing it")}
+          </Alert>
+          <Button
+            variant="outlined"
+            sx={{ mt: 4, mb: 3 }}
+            color="error"
+            onClick={() => navigate(`/teacher/lesson/${lessonId}`)}
+          >
+            {t("Back to lesson")}
+          </Button>
+        </Container>
+        <ScrollToTopButton />
+        <Footer />
+      </Box>
     );
+
+  // Подсчет total и earned баллов
+  let totalScore = 0;
+  let earnedScore = 0;
+
+  task?.exercises?.forEach((exercise) => {
+    totalScore += exercise.score || 0;
+
+    const answer = result.answers.find((a) => {
+      if (exercise.type === "antonym") {
+        return (
+          (a.question || "").trim().toLowerCase() ===
+          (exercise.word || "").trim().toLowerCase()
+        );
+      } else if (exercise.type === "test") {
+        return (
+          (a.question || "").trim().toLowerCase() ===
+          (exercise.question || "").trim().toLowerCase()
+        );
+      } else if (exercise.type === "text") {
+        return (
+          (a.text || "").trim().toLowerCase() ===
+          (exercise.text || "").trim().toLowerCase()
+        );
+      }
+      return false;
+    });
+
+    if (
+      exercise.type === "test" &&
+      answer?.selectedOption === exercise.correctOption
+    ) {
+      earnedScore += exercise.score;
+    }
+
+    if (
+      exercise.type === "antonym" &&
+      answer?.selectedOption?.trim() ===
+        exercise.optionas?.[exercise.correctOption]?.trim()
+    ) {
+      earnedScore += exercise.score;
+    }
+  });
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
@@ -153,6 +193,9 @@ const StudentTaskResultPage = () => {
           <Typography sx={{ mt: 2 }}>
             {t("Submitted at")}: {new Date(result.createdAt).toLocaleString()}
           </Typography>
+          <Typography sx={{ mt: 2, fontWeight: "bold" }}>
+            {t("Score")}: {earnedScore} / {totalScore}
+          </Typography>
 
           <Box sx={{ mt: 3 }}>
             {task?.exercises?.map((exercise, index) => {
@@ -176,9 +219,16 @@ const StudentTaskResultPage = () => {
                 return false;
               });
 
+              const isCorrect =
+                (exercise.type === "test" &&
+                  answer?.selectedOption === exercise.correctOption) ||
+                (exercise.type === "antonym" &&
+                  answer?.selectedOption?.trim() ===
+                    exercise.optionas?.[exercise.correctOption]?.trim());
+
               return (
                 <Paper key={index} sx={{ p: 2, my: 2 }}>
-                  {/* TEXT TYPE */}
+                  {/* TEXT */}
                   {exercise.type === "text" && (
                     <>
                       <Typography variant="h6" sx={{ fontWeight: "bold" }}>
@@ -190,27 +240,41 @@ const StudentTaskResultPage = () => {
                     </>
                   )}
 
-                  {/* TEST TYPE */}
+                  {/* TEST */}
                   {exercise.type === "test" && (
                     <>
-                      <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                        {exercise.titlet}
-                      </Typography>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                          {exercise.titlet}
+                        </Typography>
+                        <Typography sx={{ fontWeight: "bold" }}>
+                          {isCorrect
+                            ? `${exercise.score} / ${exercise.score}`
+                            : `0 / ${exercise.score}`}
+                        </Typography>
+                      </Box>
                       <Typography>{exercise.question}</Typography>
                       <Box sx={{ mt: 2 }}>
                         {exercise.options?.map((option, idx) => {
-                          const isCorrect = idx === exercise.correctOption;
+                          const isCorrectOption =
+                            idx === exercise.correctOption;
                           const isSelected = idx === answer?.selectedOption;
                           let bgColor = "inherit";
                           let color = "inherit";
 
-                          if (isSelected && isCorrect) {
-                            bgColor = "#c8e6c9"; // green
+                          if (isSelected && isCorrectOption) {
+                            bgColor = "#c8e6c9";
                             color = "green";
-                          } else if (isSelected && !isCorrect) {
-                            bgColor = "#ffcdd2"; // red
+                          } else if (isSelected && !isCorrectOption) {
+                            bgColor = "#ffcdd2";
                             color = "red";
-                          } else if (!isSelected && isCorrect) {
+                          } else if (!isSelected && isCorrectOption) {
                             bgColor = "#c8e6c9";
                             color = "green";
                           }
@@ -225,61 +289,42 @@ const StudentTaskResultPage = () => {
                                 mb: 1,
                                 borderRadius: 1,
                                 fontWeight:
-                                  isSelected || isCorrect ? "bold" : "normal",
+                                  isSelected || isCorrectOption
+                                    ? "bold"
+                                    : "normal",
                               }}
                             >
                               {option}
                             </Typography>
                           );
                         })}
-                        <Box
-                          sx={{
-                            mt: 2,
-                            p: 2,
-                            borderRadius: 2,
-                            bgcolor: "#f0f0f0",
-                            display: "flex",
-                            alignItems: "center",
-                          }}
-                        >
-                          <Typography sx={{ fontWeight: "bold", mr: 1 }}>
-                            {t("Your answer")}:
-                          </Typography>
-                          <Typography
-                            sx={{
-                              color:
-                                answer.selectedOption !== undefined &&
-                                answer.selectedOption !== null
-                                  ? "text.primary"
-                                  : "text.disabled",
-                              fontStyle:
-                                answer.selectedOption !== undefined &&
-                                answer.selectedOption !== null
-                                  ? "normal"
-                                  : "italic",
-                            }}
-                          >
-                            {answer.selectedOption !== undefined &&
-                            answer.selectedOption !== null
-                              ? exercise.options[answer.selectedOption]
-                              : t("No selected")}
-                          </Typography>
-                        </Box>
                       </Box>
                     </>
                   )}
 
-                  {/* ANTONYM TYPE */}
+                  {/* ANTONYM */}
                   {exercise.type === "antonym" && (
                     <>
-                      <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                        {exercise.titlea}
-                      </Typography>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                          {exercise.titlea}
+                        </Typography>
+                        <Typography sx={{ fontWeight: "bold" }}>
+                          {isCorrect
+                            ? `${exercise.score} / ${exercise.score}`
+                            : `0 / ${exercise.score}`}
+                        </Typography>
+                      </Box>
                       <Typography>{exercise.word}</Typography>
-
                       <Box sx={{ mt: 2, display: "flex", flexWrap: "wrap" }}>
                         {exercise.optionas?.map((opt, idx) => {
-                          const isCorrect =
+                          const isCorrectOpt =
                             opt.trim() ===
                             exercise.optionas[exercise.correctOption].trim();
                           const isSelected =
@@ -288,14 +333,14 @@ const StudentTaskResultPage = () => {
                           let bgColor = "inherit";
                           let color = "inherit";
 
-                          if (isSelected && isCorrect) {
-                            bgColor = "#c8e6c9"; // зеленый
+                          if (isSelected && isCorrectOpt) {
+                            bgColor = "#c8e6c9";
                             color = "green";
-                          } else if (isSelected && !isCorrect) {
-                            bgColor = "#ffcdd2"; // красный
+                          } else if (isSelected && !isCorrectOpt) {
+                            bgColor = "#ffcdd2";
                             color = "red";
-                          } else if (!isSelected && isCorrect) {
-                            bgColor = "#c8e6c9"; // зеленый
+                          } else if (!isSelected && isCorrectOpt) {
+                            bgColor = "#c8e6c9";
                             color = "green";
                           }
 
@@ -310,7 +355,9 @@ const StudentTaskResultPage = () => {
                                 mr: 1,
                                 borderRadius: 1,
                                 fontWeight:
-                                  isSelected || isCorrect ? "bold" : "normal",
+                                  isSelected || isCorrectOpt
+                                    ? "bold"
+                                    : "normal",
                               }}
                             >
                               {opt}
@@ -318,7 +365,6 @@ const StudentTaskResultPage = () => {
                           );
                         })}
                       </Box>
-
                       <Box sx={{ mt: 2 }}>
                         <Typography>
                           <strong>{t("Correct answer")}:</strong>{" "}

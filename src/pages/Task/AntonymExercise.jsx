@@ -61,6 +61,17 @@ const AntonymExercise = ({ newExercise, handleExerciseChange }) => {
       />
       <TextField
         fullWidth
+        label={t("Score")}
+        type="number"
+        inputProps={{ step: "0.1", min: 0 }}
+        value={newExercise.score || ""}
+        onChange={(e) =>
+          handleExerciseChange("score", parseFloat(e.target.value))
+        }
+        margin="normal"
+      />
+      <TextField
+        fullWidth
         label={t("Word")}
         value={newExercise.word}
         onChange={(e) => handleExerciseChange("word", e.target.value)}

@@ -19,6 +19,7 @@ const ExerciseSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    score: Number,
   },
   { timestamps: true }
 );

@@ -168,6 +168,7 @@ const addExercise = async (req, res) => {
       optionas,
       correctOption,
       audioSrc,
+      score,
     } = req.body;
 
     // Проверяем корректность taskId
@@ -209,6 +210,7 @@ const addExercise = async (req, res) => {
       optionas = undefined;
       correctOption = undefined;
       audioSrc = undefined;
+      score = undefined;
     }
 
     if (type === "test") {
@@ -232,6 +234,7 @@ const addExercise = async (req, res) => {
       options = undefined;
       optionas = undefined;
       correctOption = undefined;
+      score = undefined;
     }
 
     // Создаем новое упражнение с `_id`
@@ -250,6 +253,7 @@ const addExercise = async (req, res) => {
       optionas,
       correctOption,
       audioSrc,
+      score,
     };
 
     // Удаляем из объекта поля со значением undefined

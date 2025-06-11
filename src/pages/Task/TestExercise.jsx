@@ -49,6 +49,17 @@ const TestExercise = ({ newExercise, handleExerciseChange }) => {
         onChange={(e) => handleExerciseChange("question", e.target.value)}
         margin="normal"
       />
+      <TextField
+        fullWidth
+        label={t("Score")}
+        type="number"
+        inputProps={{ step: "0.1", min: 0 }}
+        value={newExercise.score || ""}
+        onChange={(e) =>
+          handleExerciseChange("score", parseFloat(e.target.value))
+        }
+        margin="normal"
+      />
       {/* Варианты ответов */}
       <Typography variant="subtitle1">{t("Answer options")}:</Typography>
       <RadioGroup

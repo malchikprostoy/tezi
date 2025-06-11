@@ -57,6 +57,7 @@ const TaskTeacher = () => {
     antonym: "",
     type: "",
     audioSrc: "",
+    score: null,
   });
 
   const VisuallyHiddenInput = styled("input")({
@@ -393,7 +394,15 @@ const TaskTeacher = () => {
         </Box>
 
         {/* Список упражнений */}
-        <Box sx={{ mt: 3 }}>
+        <Box
+          sx={{
+            mt: 3,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+          }}
+        >
           {task?.exercises?.map((exercise, index) => (
             <Box
               key={exercise._id || index}
@@ -403,6 +412,8 @@ const TaskTeacher = () => {
                 justifyContent: "space-between",
                 p: 2,
                 mb: 2,
+                maxWidth: 1500,
+                width: "100%",
                 border: "1px solid #ddd",
                 borderRadius: 2,
                 backgroundColor: "#f9f9f9",
@@ -424,7 +435,14 @@ const TaskTeacher = () => {
                     <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                       {exercise.titlet}
                     </Typography>
-                    <Typography sx={{ mb: 1 }}>{exercise.question}</Typography>
+                    <Typography sx={{ mb: 1, display: "flex", gap: 2 }}>
+                      {exercise.question}{" "}
+                      {exercise.score !== undefined && (
+                        <Typography sx={{ fontStyle: "italic", mb: 1 }}>
+                          ({t("Score")}: {exercise.score})
+                        </Typography>
+                      )}
+                    </Typography>
 
                     <List>
                       {exercise.options?.map((option, i) => (
@@ -459,7 +477,14 @@ const TaskTeacher = () => {
                     <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                       {exercise.titlea}
                     </Typography>
-                    <Typography>{exercise.word}</Typography>
+                    <Typography sx={{ display: "flex", gap: 2 }}>
+                      {exercise.word}{" "}
+                      {exercise.score !== undefined && (
+                        <Typography sx={{ fontStyle: "italic", mb: 1 }}>
+                          ({t("Score")}: {exercise.score})
+                        </Typography>
+                      )}
+                    </Typography>
 
                     {exercise.optionas && exercise.optionas.length > 0 ? (
                       <Select
@@ -467,7 +492,7 @@ const TaskTeacher = () => {
                         value={selectedAntonym}
                         onChange={(e) => setSelectedAntonym(e.target.value)}
                         displayEmpty
-                        sx={{ mt: 1, bgcolor: "#fff" }}
+                        sx={{ mt: 1 }}
                       >
                         <MenuItem disabled value="">
                           {t("Select")}

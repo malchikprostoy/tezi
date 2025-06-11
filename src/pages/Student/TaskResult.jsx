@@ -107,6 +107,36 @@ const ResultPageStudent = () => {
   if (loading) return <LinearProgress />;
   if (!results) return <Alert severity="error">{t("Results not found")}</Alert>;
 
+  // === SCORE CALCULATION ===
+  let earnedScore = 0;
+  let totalScore = 0;
+
+  task?.exercises?.forEach((exercise) => {
+    const fullScore = exercise.score || 0;
+    totalScore += fullScore;
+
+    const answer = results.answers.find((a) => {
+      if (exercise.type === "antonym") {
+        return normalize(a.question) === normalize(exercise.word);
+      } else if (exercise.type === "test") {
+        return normalize(a.question) === normalize(exercise.question);
+      } else if (exercise.type === "text") {
+        return normalize(a.text) === normalize(exercise.text);
+      }
+      return false;
+    });
+
+    const isCorrect =
+      exercise.type === "test"
+        ? answer?.selectedOption === exercise.correctOption
+        : exercise.type === "antonym"
+        ? answer?.selectedOption?.trim().toLowerCase() ===
+          exercise.optionas?.[exercise.correctOption]?.trim().toLowerCase()
+        : false;
+
+    if (isCorrect) earnedScore += fullScore;
+  });
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Header />
@@ -136,6 +166,18 @@ const ResultPageStudent = () => {
           )}
         </Breadcrumbs>
 
+        {/* SCORE BLOCK */}
+        <Typography
+          variant="h5"
+          sx={{
+            fontWeight: "bold",
+            mb: 3,
+          }}
+        >
+          {t("Score")}: {earnedScore} / {totalScore}
+        </Typography>
+
+        {/* EXERCISES */}
         <Box sx={{ mt: 2 }}>
           {task?.exercises?.map((exercise, index) => {
             const answer = results.answers.find((a) => {
@@ -153,13 +195,45 @@ const ResultPageStudent = () => {
               <Box
                 key={index}
                 sx={{
+                  position: "relative",
                   mb: 4,
                   bgcolor: "#f9f9f9",
                   p: 3,
                   borderRadius: "8px",
                 }}
               >
-                {/* TEXT TYPE */}
+                {(exercise.type === "test" || exercise.type === "antonym") && (
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: 8,
+                      right: 12,
+                      color: "#000",
+                      px: 1.2,
+                      py: 0.3,
+                      border: "1px solid #000",
+                      borderRadius: "12px",
+                      fontSize: "1rem",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {(() => {
+                      const fullScore = exercise.score || 0;
+                      if (!answer) return `0 / ${fullScore}`;
+                      const isCorrect =
+                        exercise.type === "test"
+                          ? answer.selectedOption === exercise.correctOption
+                          : exercise.type === "antonym"
+                          ? answer.selectedOption?.trim().toLowerCase() ===
+                            exercise.optionas?.[exercise.correctOption]
+                              ?.trim()
+                              .toLowerCase()
+                          : false;
+                      return `${isCorrect ? fullScore : 0} / ${fullScore}`;
+                    })()}
+                  </Box>
+                )}
+
                 {exercise.type === "text" && (
                   <>
                     <Typography variant="h6" sx={{ fontWeight: "bold" }}>
@@ -171,7 +245,6 @@ const ResultPageStudent = () => {
                   </>
                 )}
 
-                {/* TEST TYPE */}
                 {exercise.type === "test" && answer && (
                   <>
                     <Typography variant="h6" sx={{ fontWeight: "bold" }}>
@@ -253,7 +326,6 @@ const ResultPageStudent = () => {
                   </>
                 )}
 
-                {/* ANTONYM TYPE */}
                 {exercise.type === "antonym" && (
                   <>
                     <Typography variant="h6" sx={{ fontWeight: "bold" }}>
@@ -273,13 +345,13 @@ const ResultPageStudent = () => {
                         let color = "inherit";
 
                         if (isSelected && isCorrect) {
-                          bgColor = "#c8e6c9"; // зеленый
+                          bgColor = "#c8e6c9";
                           color = "green";
                         } else if (isSelected && !isCorrect) {
-                          bgColor = "#ffcdd2"; // красный
+                          bgColor = "#ffcdd2";
                           color = "red";
                         } else if (!isSelected && isCorrect) {
-                          bgColor = "#c8e6c9"; // зеленый
+                          bgColor = "#c8e6c9";
                           color = "green";
                         }
 
