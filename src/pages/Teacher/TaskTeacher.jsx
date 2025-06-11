@@ -426,23 +426,45 @@ const TaskTeacher = () => {
                     <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                       {exercise.title}
                     </Typography>
-                    <Typography>{exercise.text || "no text"}</Typography>
+                    <Typography>{exercise.text || " "}</Typography>
                   </>
                 )}
 
                 {exercise.type === "test" && (
-                  <Box>
-                    <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                      {exercise.titlet}
-                    </Typography>
-                    <Typography sx={{ mb: 1, display: "flex", gap: 2 }}>
-                      {exercise.question}{" "}
+                  <Box
+                    sx={{
+                      position: "relative",
+                      p: 2,
+                      border: "1px solid #ddd",
+                      borderRadius: 2,
+                      mb: 2,
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                        {exercise.titlet}
+                      </Typography>
                       {exercise.score !== undefined && (
-                        <Typography sx={{ fontStyle: "italic", mb: 1 }}>
-                          ({t("Score")}: {exercise.score})
+                        <Typography
+                          sx={{
+                            fontStyle: "italic",
+                            fontWeight: "bold",
+                            color: "gray",
+                            fontSize: 14,
+                          }}
+                        >
+                          {t("Score")}: {exercise.score}
                         </Typography>
                       )}
-                    </Typography>
+                    </Box>
+
+                    <Typography sx={{ mb: 1 }}>{exercise.question}</Typography>
 
                     <List>
                       {exercise.options?.map((option, i) => (
@@ -473,18 +495,34 @@ const TaskTeacher = () => {
                 )}
 
                 {exercise.type === "antonym" && (
-                  <Box sx={{ p: 2, bgcolor: "#f5f5f5", borderRadius: 2 }}>
-                    <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                      {exercise.titlea}
-                    </Typography>
-                    <Typography sx={{ display: "flex", gap: 2 }}>
-                      {exercise.word}{" "}
+                  <Box
+                    sx={{ p: 2, bgcolor: "#f5f5f5", borderRadius: 2, mb: 2 }}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                        {exercise.titlea}
+                      </Typography>
                       {exercise.score !== undefined && (
-                        <Typography sx={{ fontStyle: "italic", mb: 1 }}>
-                          ({t("Score")}: {exercise.score})
+                        <Typography
+                          sx={{
+                            fontStyle: "italic",
+                            fontWeight: "bold",
+                            color: "gray",
+                            fontSize: 14,
+                          }}
+                        >
+                          {t("Score")}: {exercise.score}
                         </Typography>
                       )}
-                    </Typography>
+                    </Box>
+
+                    <Typography sx={{ mb: 1 }}>{exercise.word}</Typography>
 
                     {exercise.optionas && exercise.optionas.length > 0 ? (
                       <Select
@@ -495,7 +533,7 @@ const TaskTeacher = () => {
                         sx={{ mt: 1 }}
                       >
                         <MenuItem disabled value="">
-                          {t("Select")}
+                          {t("Answer")}
                         </MenuItem>
                         {exercise.optionas.map((optiona, i) => (
                           <MenuItem key={i} value={optiona}>
