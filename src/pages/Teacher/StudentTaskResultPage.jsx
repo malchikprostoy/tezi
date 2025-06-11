@@ -253,7 +253,17 @@ const StudentTaskResultPage = () => {
                         <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                           {exercise.titlet}
                         </Typography>
-                        <Typography sx={{ fontWeight: "bold" }}>
+                        <Typography
+                          sx={{
+                            color: "#000",
+                            px: 1.2,
+                            py: 0.3,
+                            border: "1px solid #000",
+                            borderRadius: "12px",
+                            fontSize: "1rem",
+                            fontWeight: "bold",
+                          }}
+                        >
                           {isCorrect
                             ? `${exercise.score} / ${exercise.score}`
                             : `0 / ${exercise.score}`}
@@ -298,6 +308,39 @@ const StudentTaskResultPage = () => {
                             </Typography>
                           );
                         })}
+                        <Box
+                          sx={{
+                            mt: 2,
+                            p: 2,
+                            borderRadius: 2,
+                            bgcolor: "#f0f0f0",
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Typography sx={{ fontWeight: "bold", mr: 1 }}>
+                            {t("Your answer")}
+                          </Typography>
+                          <Typography
+                            sx={{
+                              color:
+                                answer.selectedOption !== undefined &&
+                                answer.selectedOption !== null
+                                  ? "text.primary"
+                                  : "text.disabled",
+                              fontStyle:
+                                answer.selectedOption !== undefined &&
+                                answer.selectedOption !== null
+                                  ? "normal"
+                                  : "italic",
+                            }}
+                          >
+                            {answer.selectedOption !== undefined &&
+                            answer.selectedOption !== null
+                              ? exercise.options[answer.selectedOption]
+                              : t("No selected")}
+                          </Typography>
+                        </Box>
                       </Box>
                     </>
                   )}
@@ -315,7 +358,17 @@ const StudentTaskResultPage = () => {
                         <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                           {exercise.titlea}
                         </Typography>
-                        <Typography sx={{ fontWeight: "bold" }}>
+                        <Typography
+                          sx={{
+                            color: "#000",
+                            px: 1.2,
+                            py: 0.3,
+                            border: "1px solid #000",
+                            borderRadius: "12px",
+                            fontSize: "1rem",
+                            fontWeight: "bold",
+                          }}
+                        >
                           {isCorrect
                             ? `${exercise.score} / ${exercise.score}`
                             : `0 / ${exercise.score}`}
@@ -365,14 +418,23 @@ const StudentTaskResultPage = () => {
                           );
                         })}
                       </Box>
-                      <Box sx={{ mt: 2 }}>
+                      <Box
+                        sx={{
+                          mt: 2,
+                          p: 2,
+                          borderRadius: 2,
+                          bgcolor: "#f0f0f0",
+                          display: "flex",
+                          flexDirection: "column",
+                        }}
+                      >
                         <Typography>
-                          <strong>{t("Correct answer")}:</strong>{" "}
+                          <strong>{t("Correct answer")}</strong>{" "}
                           {exercise.optionas?.[exercise.correctOption] ||
                             t("Unknown")}
                         </Typography>
                         <Typography>
-                          <strong>{t("Your answer")}:</strong>{" "}
+                          <strong>{t("Your answer")}</strong>{" "}
                           {answer?.selectedOption?.trim() || t("No selected")}
                         </Typography>
                       </Box>

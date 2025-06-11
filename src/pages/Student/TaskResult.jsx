@@ -375,7 +375,16 @@ const ResultPageStudent = () => {
                       })}
                     </Box>
 
-                    <Box sx={{ mt: 2 }}>
+                    <Box
+                      sx={{
+                        mt: 2,
+                        p: 2,
+                        borderRadius: 2,
+                        bgcolor: "#f0f0f0",
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
                       <Typography>
                         <strong>{t("Correct answer")}</strong>{" "}
                         {exercise.optionas?.[exercise.correctOption] ||
