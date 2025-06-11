@@ -16,6 +16,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import "./Form.scss";
 
 const Register = () => {
@@ -37,14 +38,25 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setError("Invalid email adress");
+      setError("Invalid email address");
+      return;
+    }
+
+    const domain = email.split("@")[1];
+    const allowedDomains = ["gmail.com", "manas.edu.kg"];
+    if (!allowedDomains.includes(domain)) {
+      toast.info(
+        "Only @gmail.com or @manas.edu.kg email addresses are allowed"
+      );
       return;
     }
 
     const role = determineUserRole(email.split("@")[0]);
     setLoading(true);
+
     try {
       const formData = new FormData();
       formData.append("email", email);
@@ -66,6 +78,9 @@ const Register = () => {
         "Error registering:",
         error.response?.data || error.message
       );
+      setError(error.response?.data?.message || "Registration failed");
+    } finally {
+      setLoading(false);
     }
   };
 

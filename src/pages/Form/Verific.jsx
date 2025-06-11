@@ -61,7 +61,7 @@ const Verific = () => {
   const handleResendCode = async () => {
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/resend-code`,
+        `${process.env.REACT_APP_API_URL}/api/resend-verification`,
         { email }
       );
       toast.success(response.data.message); // Replace with a success message component

@@ -14,6 +14,7 @@ import {
 import GoogleIcon from "../../assets/img/GoogleIcon.svg";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useAuth } from "../../features/AuthContext";
+import { toast } from "react-toastify";
 import "./Form.scss";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -30,10 +31,22 @@ const Login = () => {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const token = params.get("token");
+    const error = params.get("error");
+
     if (token) {
       localStorage.setItem("token", token);
       loginWithToken(token);
       navigate("/"); // Перенаправляем на главную
+    }
+
+    if (error === "forbidden") {
+      setError(
+        "Доступ разрешён только с email адресами @gmail.com и @manas.edu.kg"
+      );
+    }
+
+    if (error === "server") {
+      setError("Ошибка сервера при входе через Google.");
     }
   }, [location, loginWithToken, navigate]);
 
@@ -42,6 +55,15 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    const domain = email.split("@")[1];
+    const allowedDomains = ["gmail.com", "manas.edu.kg"];
+    if (!allowedDomains.includes(domain)) {
+      toast.info(
+        "Only @gmail.com or @manas.edu.kg email addresses are allowed"
+      );
+      return;
+    }
     try {
       await login(email, password);
       const username = email.split("@")[0];

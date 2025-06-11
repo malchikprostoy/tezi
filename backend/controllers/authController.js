@@ -1,15 +1,22 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const User = require("../models/User"); // Модель User
+const User = require("../models/User");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto"); // Для генерации случайного кода
+
+const allowedDomains = ["gmail.com", "manas.edu.kg"];
+
+const isEmailAllowed = (email) => {
+  const domain = email.split("@")[1];
+  return allowedDomains.includes(domain);
+};
 
 // Функция для отправки верификационного email
 const sendVerificationEmail = async (user, verificationCode) => {
   const transporter = nodemailer.createTransport({
     host: "smtp.mail.ru",
-    port: 465, // Correct port for SSL
-    secure: true, // Use SSL
+    port: 465,
+    secure: true,
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
@@ -33,6 +40,13 @@ const sendVerificationEmail = async (user, verificationCode) => {
 // Регистрация пользователя
 const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
+
+  if (!isEmailAllowed(email)) {
+    return res.status(403).json({
+      message:
+        "Регистрация разрешена только для @gmail.com и @manas.edu.kg адресов.",
+    });
+  }
 
   try {
     // Проверяем, существует ли пользователь с таким email
@@ -160,6 +174,13 @@ const resendVerificationEmail = async (req, res) => {
 // Вход пользователя
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
+
+  if (!isEmailAllowed(email)) {
+    return res.status(403).json({
+      message:
+        "Доступ разрешён только с email-адресов @gmail.com и @manas.edu.kg",
+    });
+  }
 
   try {
     const user = await User.findOne({ email });
