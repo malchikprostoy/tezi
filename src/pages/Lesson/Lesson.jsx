@@ -244,10 +244,26 @@ const LessonPage = () => {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloseConfirmDelete} color="primary">
+            <Button
+              onClick={handleCloseConfirmDelete}
+              color="primary"
+              variant="outlined"
+            >
               {t("Cancel")}
             </Button>
-            <Button onClick={confirmDeleteLesson} color="error" autoFocus>
+            <Button
+              onClick={confirmDeleteLesson}
+              color="error"
+              variant="outlined"
+              sx={{
+                "&:hover": {
+                  backgroundColor: "#a30000", // чуть светлее при наведении
+                  boxShadow: "0px -4px 12px rgba(0, 0, 0, 0.5)",
+                  color: "#fff",
+                },
+              }}
+              autoFocus
+            >
               {t("Delete")}
             </Button>
           </DialogActions>

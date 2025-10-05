@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import { Box, Typography, Slider, IconButton } from "@mui/material";
 import PlayCircleOutlineOutlinedIcon from "@mui/icons-material/PlayCircleOutlineOutlined";
 import PauseCircleOutlinedIcon from "@mui/icons-material/PauseCircleOutlined";
-import StopCircleOutlinedIcon from "@mui/icons-material/StopCircleOutlined";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 
@@ -21,69 +20,82 @@ const AudioPlayer = ({
   const [error, setError] = useState(null);
   const [playCount, setPlayCount] = useState(0);
 
+  // === Загрузка количества прослушиваний из localStorage ===
   useEffect(() => {
-    const audio = audioRef.current;
-
-    if (audioSrc) {
-      audio.src = audioSrc;
-      audio.load();
-
-      const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
-      const handleLoadedMetadata = () => setDuration(audio.duration);
-      const handleError = (event) => {
-        console.error("Error loading audio:", event);
-        setError(event.message || "Unknown error");
-      };
-      const handleEnded = () => {
-        setPlayCount((prev) => prev + 1);
-        setPlaying(false);
-      };
-
-      audio.addEventListener("timeupdate", handleTimeUpdate);
-      audio.addEventListener("loadedmetadata", handleLoadedMetadata);
-      audio.addEventListener("error", handleError);
-      audio.addEventListener("ended", handleEnded);
-
-      return () => {
-        audio.removeEventListener("timeupdate", handleTimeUpdate);
-        audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
-        audio.removeEventListener("error", handleError);
-        audio.removeEventListener("ended", handleEnded);
-      };
+    if (!audioSrc) return;
+    const savedCount = localStorage.getItem(`audioPlayCount_${audioSrc}`);
+    if (savedCount) {
+      setPlayCount(Number(savedCount));
     }
   }, [audioSrc]);
 
-  const handlePlayPause = () => {
+  // === Настраиваем слушатели для аудио ===
+  useEffect(() => {
     const audio = audioRef.current;
+    if (!audio || !audioSrc) return;
 
-    if (playing) {
-      audio.pause();
+    const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
+    const handleLoadedMetadata = () => setDuration(audio.duration);
+    const handleError = (event) => {
+      console.error("Error loading audio:", event);
+      setError(event.message || "Unknown error");
+    };
+    const handleEnded = () => {
+      setPlayCount((prev) => {
+        const newCount = prev + 1;
+        localStorage.setItem(`audioPlayCount_${audioSrc}`, newCount);
+        if (onAudioChange) onAudioChange(audioSrc, newCount);
+        return newCount;
+      });
       setPlaying(false);
-    } else {
-      audio
-        .play()
-        .then(() => setPlaying(true))
-        .catch((err) => {
-          setError(err);
-          console.error("Error playing audio:", err);
-        });
+    };
+
+    audio.addEventListener("timeupdate", handleTimeUpdate);
+    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
+    audio.addEventListener("error", handleError);
+    audio.addEventListener("ended", handleEnded);
+
+    return () => {
+      audio.removeEventListener("timeupdate", handleTimeUpdate);
+      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      audio.removeEventListener("error", handleError);
+      audio.removeEventListener("ended", handleEnded);
+    };
+  }, [audioSrc, onAudioChange]);
+
+  const handlePlayPause = async () => {
+    const audio = audioRef.current;
+    if (!audio || playCount >= maxPlays) return;
+
+    try {
+      if (playing) {
+        audio.pause();
+        setPlaying(false);
+      } else {
+        // 🚫 Убираем audio.load() — оно сбрасывало воспроизведение
+        await audio.play();
+        setPlaying(true);
+      }
+    } catch (err) {
+      console.error("Error playing audio:", err);
+      setError(err);
     }
   };
 
   const handleVolumeChange = (e, newVolume) => {
     setVolume(newVolume);
-    audioRef.current.volume = newVolume;
+    if (audioRef.current) audioRef.current.volume = newVolume;
   };
 
   const handleMuteUnmute = () => {
     setMuted(!muted);
-    audioRef.current.muted = !muted;
+    if (audioRef.current) audioRef.current.muted = !muted;
   };
 
   const handleTimeChange = (e, newTime) => {
     if (isReadOnly) return;
     setCurrentTime(newTime);
-    audioRef.current.currentTime = newTime;
+    if (audioRef.current) audioRef.current.currentTime = newTime;
   };
 
   return (
@@ -96,7 +108,7 @@ const AudioPlayer = ({
         borderRadius: 2,
       }}
     >
-      <audio ref={audioRef} type="audio/mp3" />
+      <audio ref={audioRef} src={audioSrc} type="audio/mp3" />
       {error && <Typography color="error">{error.message}</Typography>}
 
       <Box
@@ -131,6 +143,7 @@ const AudioPlayer = ({
             .padStart(2, "0")}
         </Typography>
       </Box>
+
       <Box
         sx={{
           display: "flex",

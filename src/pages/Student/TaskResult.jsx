@@ -296,30 +296,26 @@ const ResultPageStudent = () => {
                           borderRadius: 2,
                           bgcolor: "#f0f0f0",
                           display: "flex",
-                          alignItems: "center",
+                          flexDirection: "column",
+                          gap: 0.5,
                         }}
                       >
-                        <Typography sx={{ fontWeight: "bold", mr: 1 }}>
+                        <Typography sx={{ fontWeight: "bold" }}>
                           {t("Your answer")}
+                          <span style={{ fontWeight: "normal" }}>
+                            {answer.selectedOption !== undefined &&
+                            answer.selectedOption !== null
+                              ? exercise.options[answer.selectedOption]
+                              : t("No selected")}
+                          </span>
                         </Typography>
-                        <Typography
-                          sx={{
-                            color:
-                              answer.selectedOption !== undefined &&
-                              answer.selectedOption !== null
-                                ? "text.primary"
-                                : "text.disabled",
-                            fontStyle:
-                              answer.selectedOption !== undefined &&
-                              answer.selectedOption !== null
-                                ? "normal"
-                                : "italic",
-                          }}
-                        >
-                          {answer.selectedOption !== undefined &&
-                          answer.selectedOption !== null
-                            ? exercise.options[answer.selectedOption]
-                            : t("No selected")}
+
+                        <Typography sx={{ fontWeight: "bold" }}>
+                          {t("Correct answer")}
+                          <span style={{ fontWeight: "normal" }}>
+                            {exercise.options?.[exercise.correctOption] ||
+                              t("Unknown")}
+                          </span>
                         </Typography>
                       </Box>
                     </Box>

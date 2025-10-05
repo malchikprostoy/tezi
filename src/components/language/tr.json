@@ -131,11 +131,13 @@
   "Are you sure you want to leave the lesson?": "Dersten ayrılmak istediğineze emin misiniz?",
   "Yes": "Evet",
   "No": "Hayır",
-  "Up":"Yukarı",
-  "Confirm Deletion":"Silme İşlemini Onayla",
-  "Are you sure you want to delete this lesson? This action cannot be undone":"Bu dersi silmek istediğinize emin misiniz? Bu eylem geri alınamaz",
-  "Delete":"Sil",
-  "Time is up! The task will be completed automatically":"Zaman doldu! Görev otomatik olarak tamamlanacaktır",
-  "The student missed the task without completing it":"Öğrenci görevi tamamlamadan atladı",
-  "Score":"Puan"
+  "Up": "Yukarı",
+  "Confirm Deletion": "Silme İşlemini Onayla",
+  "Are you sure you want to delete this lesson? This action cannot be undone": "Bu dersi silmek istediğinize emin misiniz? Bu eylem geri alınamaz",
+  "Delete": "Sil",
+  "Time is up! The task will be completed automatically": "Zaman doldu! Görev otomatik olarak tamamlanacaktır",
+  "The student missed the task without completing it": "Öğrenci görevi tamamlamadan atladı",
+  "Score": "Puan",
+  "Confirm Finish": "Bitirmeyi onaylaması",
+  "Are you sure you want to finish this task? You won’t be able to make changes after this": "Bu görevi bitirmek istediğine emin misin? Bundan sonra değişiklik yapamayacaksınız"
 }

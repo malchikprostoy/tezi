@@ -131,11 +131,13 @@
     "Are you sure you want to leave the lesson?": "Вы уверены, что хотите выйти с урока?",
     "Yes": "Да",
     "No": "Нет",
-    "Up":"Наверх",
-    "Confirm Deletion":"Подтвердите удаление",
-    "Are you sure you want to delete this lesson? This action cannot be undone":"Вы уверены, что хотите удалить этот урок? Это действие невозможно отменить",
-    "Delete":"Удалить",
-    "Time is up! The task will be completed automatically":"Время вышло! Задание будет завершено автоматически",
-    "The student missed the task without completing it":"Ученик пропустил задание, не выполнив его",
-    "Score":"Балл"
+    "Up": "Наверх",
+    "Confirm Deletion": "Подтвердите удаление",
+    "Are you sure you want to delete this lesson? This action cannot be undone": "Вы уверены, что хотите удалить этот урок? Это действие невозможно отменить",
+    "Delete": "Удалить",
+    "Time is up! The task will be completed automatically": "Время вышло! Задание будет завершено автоматически",
+    "The student missed the task without completing it": "Ученик пропустил задание, не выполнив его",
+    "Score": "Балл",
+    "Confirm Finish": "Подтверждение завершения",
+    "Are you sure you want to finish this task? You won’t be able to make changes after this": "Вы уверены, что хотите завершить это задание? После этого вы не сможете вносить изменения"
 }

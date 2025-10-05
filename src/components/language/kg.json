@@ -131,11 +131,13 @@
     "Are you sure you want to leave the lesson?": "Сабактан кетүүнү каалайсызбы?",
     "Yes": "Ооба",
     "No": "Жок",
-    "Up":"Өйдө",
-    "Confirm Deletion":"Жок кылууну ырастоо",
-    "Are you sure you want to delete this lesson? This action cannot be undone":"Бул сабакты жок кылгыңыз келеби? Бул иш-аракетти жокко чыгарууга болбойт",
-    "Delete":"Жок кылуу",
-    "Time is up! The task will be completed automatically":"Убакыт бүттү! Тапшырма автоматтык түрдө аяктайт",
-    "The student missed the task without completing it":"Студент тапшырманы аткарбай өткөрүп жиберди",
-    "Score":"Балл"
+    "Up": "Өйдө",
+    "Confirm Deletion": "Жок кылууну ырастоо",
+    "Are you sure you want to delete this lesson? This action cannot be undone": "Бул сабакты жок кылгыңыз келеби? Бул иш-аракетти жокко чыгарууга болбойт",
+    "Delete": "Жок кылуу",
+    "Time is up! The task will be completed automatically": "Убакыт бүттү! Тапшырма автоматтык түрдө аяктайт",
+    "The student missed the task without completing it": "Студент тапшырманы аткарбай өткөрүп жиберди",
+    "Score": "Балл",
+    "Confirm Finish": "Аяктоону тастыктоо",
+    "Are you sure you want to finish this task? You won’t be able to make changes after this": "Бул тапшырманы чын эле бүтүргүңүз келеби? Андан кийин өзгөртүү киргизе албайсыз"
 }

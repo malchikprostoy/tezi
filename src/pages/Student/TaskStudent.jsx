@@ -2,6 +2,11 @@ import { useEffect, useState, useRef } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
   Typography,
   LinearProgress,
   Box,
@@ -35,9 +40,12 @@ const TaskStudent = () => {
   const [showResults, setShowResults] = useState(false);
   const [timeLeft, setTimeLeft] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
+  const [openConfirmFinish, setOpenConfirmFinish] = useState(false);
   const [answers, setAnswers] = useState([]);
   const [audioSrc, setAudioSrc] = useState(null);
   const timerIntervalRef = useRef(null);
+
+  const LOCAL_STORAGE_KEY = `student-answers-${taskId}`;
 
   const { role } = JSON.parse(localStorage.getItem("user")) || {};
   const isStudent = role === "student";
@@ -70,7 +78,30 @@ const TaskStudent = () => {
       );
       if (data && data._id) {
         setTask(data);
-        setExercises(data.exercises || []);
+
+        // ✅ Восстанавливаем ответы из localStorage
+        const savedAnswers =
+          JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || {};
+        const restoredExercises = (data.exercises || []).map((ex) => {
+          if (
+            ex.type === "test" &&
+            savedAnswers[ex._id]?.selectedOption !== undefined
+          ) {
+            return {
+              ...ex,
+              selectedOption: savedAnswers[ex._id].selectedOption,
+            };
+          }
+          if (ex.type === "antonym" && savedAnswers[ex._id]?.selectedAntonym) {
+            return {
+              ...ex,
+              selectedAntonym: savedAnswers[ex._id].selectedAntonym,
+            };
+          }
+          return ex;
+        });
+
+        setExercises(restoredExercises);
         setLoading(false);
         fetchTimer(data._id);
       } else {
@@ -173,19 +204,26 @@ const TaskStudent = () => {
     }
   };
 
-  // 🔁 Вызов handleFinish заново, если lesson загрузился позже
   useEffect(() => {
     if (lesson && timeLeft === "00:00:00!" && !showResults) {
       handleFinish();
     }
   }, [lesson, timeLeft]);
 
+  // ✅ Сохраняем выбор для тестов
   const handleAnswerSelect = (exerciseId, selectedOption) => {
-    setExercises((prevExercises) =>
-      prevExercises.map((exercise) =>
+    setExercises((prevExercises) => {
+      const updated = prevExercises.map((exercise) =>
         exercise._id === exerciseId ? { ...exercise, selectedOption } : exercise
-      )
-    );
+      );
+
+      const savedAnswers =
+        JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || {};
+      savedAnswers[exerciseId] = { selectedOption };
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(savedAnswers));
+
+      return updated;
+    });
   };
 
   const saveResults = async (answers) => {
@@ -218,10 +256,7 @@ const TaskStudent = () => {
 
   const handleFinish = async () => {
     if (showResults) return;
-    if (!lesson) {
-      console.log("Lesson not loaded yet, skipping navigate.");
-      return;
-    }
+    if (!lesson) return;
 
     const calculatedAnswers = exercises
       .filter(
@@ -247,12 +282,24 @@ const TaskStudent = () => {
         }
       });
 
-    setAnswers(calculatedAnswers);
     await saveResults(calculatedAnswers);
     setShowResults(true);
     setOpenDialog(true);
 
+    // ✅ Очистка сохранённых ответов после завершения
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
+
     navigate(`/lesson/${lesson._id}`);
+  };
+
+  // Открыть/закрыть диалог
+  const handleOpenConfirmFinish = () => setOpenConfirmFinish(true);
+  const handleCloseConfirmFinish = () => setOpenConfirmFinish(false);
+
+  // Подтверждение завершения
+  const confirmFinishTask = () => {
+    handleFinish();
+    handleCloseConfirmFinish();
   };
 
   const handleAudioChange = (newAudioSrc) => {
@@ -433,18 +480,31 @@ const TaskStudent = () => {
                       <Select
                         autoWidth
                         value={exercise.selectedAntonym || ""}
-                        onChange={(e) =>
-                          setExercises((prevExercises) =>
-                            prevExercises.map((ex) =>
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setExercises((prevExercises) => {
+                            const updated = prevExercises.map((ex) =>
                               ex._id === exercise._id
-                                ? {
-                                    ...ex,
-                                    selectedAntonym: e.target.value,
-                                  }
+                                ? { ...ex, selectedAntonym: value }
                                 : ex
-                            )
-                          )
-                        }
+                            );
+
+                            // ✅ сохраняем antonym ответ
+                            const savedAnswers =
+                              JSON.parse(
+                                localStorage.getItem(LOCAL_STORAGE_KEY)
+                              ) || {};
+                            savedAnswers[exercise._id] = {
+                              selectedAntonym: value,
+                            };
+                            localStorage.setItem(
+                              LOCAL_STORAGE_KEY,
+                              JSON.stringify(savedAnswers)
+                            );
+
+                            return updated;
+                          });
+                        }}
                         displayEmpty
                         sx={{ mt: 1, bgcolor: "#fff" }}
                       >
@@ -482,11 +542,10 @@ const TaskStudent = () => {
           <Button
             variant="outlined"
             color="error"
-            onClick={handleFinish}
-            size="large"
+            onClick={handleOpenConfirmFinish}
             sx={{
               "&:hover": {
-                backgroundColor: "#a30000",
+                backgroundColor: "#a30000", // чуть светлее при наведении
                 boxShadow: "0px -4px 12px rgba(0, 0, 0, 0.5)",
                 color: "#fff",
               },
@@ -494,6 +553,49 @@ const TaskStudent = () => {
           >
             {t("Finish")}
           </Button>
+
+          {/* Модальное окно подтверждения */}
+          <Dialog
+            open={openConfirmFinish}
+            onClose={handleCloseConfirmFinish}
+            aria-labelledby="confirm-finish-title"
+            aria-describedby="confirm-finish-description"
+          >
+            <DialogTitle id="confirm-finish-title">
+              {t("Confirm Finish")}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="confirm-finish-description">
+                {t(
+                  "Are you sure you want to finish this task? You won’t be able to make changes after this"
+                )}
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={handleCloseConfirmFinish}
+                color="primary"
+                variant="outlined"
+              >
+                {t("Cancel")}
+              </Button>
+              <Button
+                onClick={confirmFinishTask}
+                color="error"
+                variant="outlined"
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "#a30000", // чуть светлее при наведении
+                    boxShadow: "0px -4px 12px rgba(0, 0, 0, 0.5)",
+                    color: "#fff",
+                  },
+                }}
+                autoFocus
+              >
+                {t("Finish")}
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Box>
       </Container>
       <ScrollToTopButton />
